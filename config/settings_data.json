@@ -26,8 +26,8 @@
     "popover_border": "none",
     "currency_code_enabled_product_pages": false,
     "currency_code_enabled_product_cards": false,
-    "product_corner_radius": 10,
-    "card_corner_radius": 10,
+    "product_corner_radius": 0,
+    "card_corner_radius": 0,
     "variant_button_radius": 100,
     "variant_button_width": "default-width-buttons",
     "color_schemes": {
