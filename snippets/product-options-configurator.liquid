@@ -1,0 +1,97 @@
+{% comment %}
+  Accepts:
+    - product: {Object} product object.
+    - section: {Object} section the liquid is rendered in
+{% endcomment %}
+
+<product-options
+  data-form-id="{{ product_form_id }}"
+  data-url="{{ product.url }}"
+  data-section-id="{{ section.id }}"
+  id="options-{{ section.id }}"
+  class="cover-configurator-options">
+  {% for option in product.options_with_values %}
+    <div class="h4 d--flex option-name mt-30 mb-16">{{ 'products.configurator.durability-taper' | t }}</div>
+    <fieldset class="cover-configurator-options__inner border-0 p-0 gap-20">
+      {%- for value in option.values -%}
+        <input
+          type="radio"
+          id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+          name="configurator_variant"
+          value="{{ value.variant.id | escape }}"
+          form="{{ product_form_id }}"
+          data-configurator-variant-price="{{ value.variant.price }}"
+          data-configurator-id="{{ value.variant.id }}"
+          data-configurator-title="{{ value.variant.title }}"
+          data-configurator-type="_main_product"
+          {% if option.selected_value == value or value.variant == selected_variant %}
+            checked
+          {% endif %}
+          class="visually-hidden configurator_variant {% if option_disabled %} disabled{% endif %}"
+        >
+        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="product-options-label configurator-option {% if option_disabled %} disabled{% endif %}">
+          <div class="d--flex justify--center configurator-option__top">
+            <img width="160" height="39" src="{{ value.variant.metafields.custom.taper_image | img_url: '320x' }}" alt="Visualization of the {{ value.variant.title }} Taper">
+          </div>
+          <div class="configurator-option__bottom">
+            <div class="d--flex align-items--center flex-wrap--wrap gap-10">
+              <span class="product-options-radio"></span>
+              <p class="h5">{{ value.variant.title }}</p>
+              {% if value.variant.metafields.custom.bestseller == true %}
+                <span class="cover-configurator-bestseller">– {{ 'products.configurator.bestseller' | t }}</span>
+              {% endif %}
+            </div>
+            {% if value.variant.metafields.custom.blurb != blank %}
+              <span class="options-blurb">
+                {{ value.variant.metafields.custom.blurb }}
+              </span>
+            {% endif %}
+            <div class="options-pricing">
+              <span class="current-price">{{ value.variant.price | money }}</span>
+              <span class="compare-at-price">{{ value.variant.compare_at_price | money }}</span>
+            </div>
+            <span class="visually-hidden">{{ 'products.product.unavailable' | t }}</span>
+          </div>
+        </label>
+      {%- endfor -%}
+    </fieldset>
+  {% endfor %}
+
+
+
+  <script type="application/json">
+    {{ product.variants | json }}
+  </script>
+</product-options>
+{%- assign meta_type = product.metafields.custom.cover_configurator.value.type -%}
+{%- assign type_name = 'Tub' -%}
+{%- if product.metafields.custom.cover_configurator.value.name contains "Spa" -%}
+  {%- assign type_name = 'Spa' -%}
+{%- endif -%}
+
+<div class="choose-brand-model">
+  <div class="choose-brand-model__title h4 d--flex option-name">{{ 'products.product.find_your_tub' | t: meta_type: type_name }}</div>
+  <tcg-click-to-reveal class="js-click-to-reveal show-more">
+    <div role="button" class="js-click-to-reveal-trigger show-more-headline" aria-controls="content-more-brand">
+      {{ 'products.configurator.brand-model-question' | t }}
+      {%- render 'icons-sprite-icon', id: 'icon-caret', size: 10, class: 'rotate--90' -%}
+    </div>
+    <p id="content-more-brand" class="js-click-to-reveal-text">{{ 'products.configurator.brand-model-desc' | t }}</p>
+  </tcg-click-to-reveal>
+
+  {%- assign total_pages = 0 -%}
+  {%- paginate shop.metaobjects[meta_type].values by 50 -%}
+  {{ pagination }}
+    {%- assign total_pages = paginate.pages -%}
+  {%- endpaginate -%}
+  <tcg-find-your-tub-product data-meta-type="{{ meta_type }}" data-pages="{{ total_pages }}" class="choose-brand-model__selections">
+    <label for="tub-brand" class="visually-hidden">{{ 'products.configurator.select-tub-brand' | t }}</label>
+    <select id="tub-brand" data-configurator-type="_brand" name="brands" data-select-text="{{ 'products.configurator.select-tub-brand' | t }}">
+    </select>
+    <label for="tub-model" class="visually-hidden">{{ 'products.configurator.select-tub-model' | t }}</label>
+    <select id="tub-model" data-configurator-type="_model" name="models" data-select-text="{{ 'products.configurator.select-tub-model' | t }}" disabled>
+    </select>
+    <select name="model-holder" class="d--none">
+    </select>
+  </tcg-find-your-tub-product>
+</div>

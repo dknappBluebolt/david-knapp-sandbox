@@ -1,0 +1,16 @@
+<div class="swiper-slide">
+  <div class="d--block relative ratio ratio--4-3" aria-hidden="true">
+    <img tabindex="-1"
+      class="d--block ratio__content ratio__content--cover ratio__content--no-stretch"
+      srcset="{{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 600 }} 600w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w"
+      alt="{{ image.alt | escape }}"
+      sizes="(max-width: 767px) 100vw, (min-width: 768px) and (max-width: 1023px) 50w, 758px"
+      {% unless lazyLoad == false %}
+        loading="lazy"
+      {% endunless %}
+      {% if fetchpriority == 'high' %}
+      fetchpriority="high"
+      {%- endif -%}
+    >
+  </div>
+</div>

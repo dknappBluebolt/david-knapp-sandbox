@@ -1,0 +1,133 @@
+{{- 'template-account.css' | asset_url | stylesheet_tag -}}
+
+<div class="customer account account--main page-width">
+  {%- assign title = 'customer.account.title' | t -%}
+  {%- render 'component-account-header', title: title, class: "page-section--sm border-b--gray" -%}
+
+  <div class="grid grid--xl">
+    <div class="grid__item lg-up--67 page-section">
+      <div class="rte rte--md mb-30">
+        <p>{{ 'customer.account.description' | t }}</p>
+      </div>
+      {%- render 'component-account-subscriptions-button', class: "lg-up--hide" -%}
+      <h2 class="h3--desktop">{{ 'customer.orders.title' | t }}</h2>
+      {%- paginate customer.orders by 6 -%}
+        {%- if customer.orders.size > 0 -%}
+          <table role="table" class="order-history sm--hide page-section--md">
+            <caption class="visually-hidden">
+              {{- 'customer.orders.title' | t -}}
+            </caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th id="ColumnOrder" class="h4 text--no-wrap" scope="col" role="columnheader">{{ 'customer.orders.order_number' | t }}</th>
+                <th id="ColumnDate" class="h4 text--no-wrap" scope="col" role="columnheader">{{ 'customer.orders.date' | t }}</th>
+                <th id="ColumnStatus" class="h4 text--no-wrap" scope="col" role="columnheader">
+                  {{- 'customer.orders.status' | t -}}
+                </th>
+                <th id="ColumnTotal" class="h4 text--no-wrap" scope="col" role="columnheader">{{ 'customer.orders.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              {%- for order in customer.orders -%}
+                <tr role="row">
+                  <td
+                    id="RowOrder"
+                    role="cell"
+                    headers="ColumnOrder"
+                    data-label="{{ 'customer.orders.order_number' | t }}"
+                  >
+                    <a
+                      class="link"
+                      href="{{ order.customer_url }}"
+                      aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}"
+                    >
+                      {{- order.name -}}
+                    </a>
+                  </td>
+                  <td headers="RowOrder ColumnDate" role="cell" data-label="{{ 'customer.orders.date' | t }}">
+                    {{- order.created_at | time_tag: format: 'date' -}}
+                  </td>
+                  <td class="text--center"
+                    headers="RowOrder ColumnStatus"
+                    role="cell"
+                    data-label="{{ 'customer.orders.status' | t }}"
+                  >
+                    {%- render 'component-order-fulfillment-status', order: order -%}
+                  </td>
+                  <td headers="RowOrder ColumnTotal" role="cell" data-label="{{ 'customer.orders.total' | t }}">
+                    {{- order.total_price | money }} for {{ order.item_count }} Item
+                    {%- if order.item_count > 1 %}s{%- endif -%}
+                  </td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- else -%}
+          <p>{{ 'customer.orders.none' | t }}</p>
+        {%- endif -%}
+        <div class="d--flex flex-column gap-40 width--100 md-up--hide">
+          {%- for order in customer.orders -%}
+            <div class="d--flex flex-column round border bg-color--gray-off-white p-24">
+              <div class="d--flex justify--space-between align-items--center pb-16 mb-16 border-b--gray">
+                <div class="text--bold">{{ 'customer.orders.order_number' | t }}</div>
+                <div>
+                  <a
+                    class="link"
+                    href="{{ order.customer_url }}"
+                    aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}"
+                  >
+                    {{- order.name -}}
+                  </a>
+                </div>
+              </div>
+              <div class="d--flex justify--space-between align-items--center pb-16 mb-16 border-b--gray">
+                <div class="text--bold">{{ 'customer.orders.date' | t }}</div>
+                <div>{{- order.created_at | time_tag: format: 'date' -}}</div>
+              </div>
+              <div class="d--flex justify--space-between align-items--center pb-16 mb-16 border-b--gray">
+                <div class="text--bold">{{ 'customer.orders.fulfillment_status' | t }}</div>
+                <div>{%- render 'component-order-fulfillment-status', order: order %}</div>
+              </div>
+              <div class="d--flex justify--space-between align-items--center">
+                <div class="text--bold">{{ 'customer.orders.total' | t }}</div>
+                <div>
+                  {{- order.total_price | money }} for {{ order.item_count }} Item
+                  {%- if order.item_count > 1 %}s{%- endif -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          {%- render 'component-pagination', paginate: paginate, class: 'mt-30' -%}
+        {%- endif -%}
+      {%- endpaginate -%}
+    </div>
+    <aside class="grid__item lg-up--33 order-sidebar page-section">
+      {%- render 'component-account-subscriptions-button', class: "lg-down--hide button--lg" -%}
+      <h5 class="bg-color--black color--white round--top px-30 py-20 m-0">
+        {{- 'customer.account.nav.default_address_title' | t -}}
+      </h5>
+      <div class="round--bottom p-30 bg-color--gray-off-white account-gray-box">
+        {%- if customer.default_address != blank -%}
+          {{- customer.default_address | format_address -}}
+        {%- else -%}
+          <p><em>
+            {{- 'customer.account.nav.no_saved_addresses' | t -}}
+          </em></p>
+        {%- endif -%}
+        <a href="{{ routes.account_addresses_url }}" class="link">
+          {{- 'customer.account.nav.manage_address_title' | t -}}
+        </a>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Account/Order History",
+  "class": "page-section page-top",
+  "settings": []
+}
+{% endschema %}

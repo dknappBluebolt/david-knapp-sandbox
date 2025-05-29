@@ -1,0 +1,23 @@
+{% comment %}
+  Accepts:
+    - product: {Object} product object.
+    - section: {Object} section object.
+{% endcomment %}
+
+<div>
+  <div class="d--flex gap-10 mb-16 sm--mt-16">
+    {%- for badge in product.metafields.custom.promotion_badges.value -%}
+      <div class="badge">{{ badge.name }}</div>
+    {%- endfor -%}
+  </div>
+  <div class="pdp-title d--flex">
+    <h1 class="h3 lg-up--mb-20 lg-down--mb-10">{{ product.title }}</h1>
+    <div class="yotpo-widget-instance lg-up--ml-10 mt-10 lg-down--mb-20" data-yotpo-instance-id="712127" data-yotpo-product-id="{{product.id}}" data-yotpo-cart-product-id="{{item.product.id}}" data-yotpo-section-id="{{template.name}}"></div>
+  </div>
+</div>
+<div class="mb-20">
+  {%- render 'component-variant-price', product: product, selected_variant: selected_variant, section: section -%}
+</div>
+<div class="text--lg">
+  {{ product.metafields.custom.subtitle }}
+</div>

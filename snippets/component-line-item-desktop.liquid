@@ -1,0 +1,129 @@
+{%- comment -%}
+  Accepts:
+    - line_item: {Object} line_item shopify object
+    - class: {String} list of classes
+    - final_price: {Int} an override for final line price
+    - adustable_quantity (Optional) {Boolean} an override to allow adjusting quantity/remove from cart
+    - line_index: {Int} (Optional) forloop.index
+    - variant_ids: {String} (Optional) variant ids for reorder button
+    - quantities: {String} (Optional) quantities for reorder button
+    - properties: {String} (Optional) properties for the reorder button
+    - keys: {String} (Optional) keys to remove multiple lines the from cart
+    - reorder: {Boolean} determines if the item is coming from an order or the cart
+{%- endcomment -%}
+{%- assign itemImage = line_item.image -%}
+<tr class="{{class}}" role="row">
+  <td
+    headers="ColumnProduct"
+    role="row"
+    scope="row"
+  >
+    <div class="ratio ratio--4-3 round round--md line-item--image">
+      <img
+        class="ratio__content ratio__content--cover width--100"
+        srcset="{{ itemImage | image_url: width: 130 }} 130w, {{ itemImage | image_url: width: 260 }} 260w"
+        sizes="(min-width: 1024px) and (max-width: 1349px) 100px, 130px"
+        loading="lazy"
+        alt="{{ itemImage.alt | escape }}"
+      >
+    </div>
+  </td>
+  <td
+    id="Row{{ line_item.key }}"
+    headers="ColumnProduct"
+    role="row"
+    scope="row"
+    data-label="{{ 'customer.order.product' | t }}"
+  >
+    <div class="d--flex">
+      <div class="order-item__info">
+        <h5 class="mb-16">
+          {%- if line_item.url != blank -%}
+            <a href="{{ line_item.url }}">{{ line_item.product.title }}</a>
+          {%- else -%}
+            {{- line_item.product.title }}
+          {%- endif -%}
+        </h5>
+        {%- if line_item.product.has_only_default_variant == false or line_item.selling_plan_allocation != null -%}
+          <p class="mb-16 color--gray-text">
+            {%- if line_item.product.has_only_default_variant == false -%}
+              <small class="d--block">{{ line_item.variant.title }}</small>
+            {%- endif -%}
+            {%- render 'component-line-item-properties' properties: properties, line_item: line_item -%}
+            {%- if line_item.selling_plan_allocation != null -%}
+              <small class="d--block">{{ line_item.selling_plan_allocation.selling_plan.name }}</small>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+  </td>
+  <td
+    class="text--center"
+    headers="Row{{ line_item.key }} ColumnPrice"
+    role="cell"
+    data-label="{{ 'customer.order.price' | t }}"
+  >
+    <div class="d--inline-block text--bold text--lg text--right">
+      {%- if line_item.final_price != line_item.original_price or line_item.variant.price < line_item.variant.compare_at_price -%}
+        {%- if line_item.message != blank -%}
+          <button type="button" class="tooltip">
+            {%- render 'icons-sprite-icon', id: 'icon-info', size: 16 -%}
+            <div class="tooltiptext">
+              {{- line_item.message -}}
+            </div>
+          </button>
+        {%- endif -%}
+        <s class="color--gray-text">
+          {%- liquid if line_item.final_price != line_item.original_price
+            echo line_item.original_price | money
+          else
+            echo line_item.variant.compare_at_price | money
+          endif -%}
+        </s>
+        <br>
+      {%- endif -%}
+      {{- line_item.final_price | money -}}
+    </div>
+  </td>
+  <td
+    class="text--center"
+    headers="Row{{ line_item.key }} ColumnQuantity"
+    role="cell"
+    data-label="{{ 'customer.order.quantity' | t }}"
+  >
+    {%- if adjustable_quantity -%}
+      {%- render 'component-cart-quantity', line_item: line_item, line_index: line_index -%}
+    {%- else -%}
+      <div class="text--lg">{{ line_item.quantity }}</div>
+    {%- endif -%}
+  </td>
+  <td
+    headers="Row{{ line_item.key }} ColumnTotal"
+    role="cell"
+    data-label="{{ 'customer.order.total' | t }}"
+  >
+    {%- if final_price == blank -%}
+      {%- assign final_price = line_item.final_line_price -%}
+    {%- endif -%}
+    <div class="d--flex flex-column gap-10">
+      <div class="text--bold text--lg">{{ final_price | money }}</div>
+      {%- render 'component-line-item-options',
+        adjustable_quantity: adjustable_quantity,
+        line_item: line_item,
+        line_index: line_index,
+        variant_ids: variant_ids,
+        quantities: quantities,
+        properties: properties,
+        keys: keys,
+        is_mobile: false,
+        reorder: reorder,
+      -%}
+      {%- if line_item.refunded_quantity > 0 -%}
+        <div class="text--sm color--gray-text text--italic">
+          {{- 'customer.account.order.refunded_copy' | t: count: line_item.refunded_quantity -}}
+        </div>
+      {%- endif -%}
+    </div>
+  </td>
+</tr>

@@ -1,0 +1,308 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    padding: {{ section.settings.padding_top_mobile }}px 0 {{ section.settings.padding_bottom_mobile }}px;
+    background-color: var(--color-{{ section.settings.background_color }});
+    color: var(--color-{{ section.settings.text_color }});
+    border-top-left-radius: {{ section.settings.border_radius_top }}px;
+    border-top-right-radius: {{ section.settings.border_radius_top }}px;
+    border-bottom-left-radius: {{ section.settings.border_radius_bottom }}px;
+    border-bottom-right-radius: {{ section.settings.border_radius_bottom }}px;
+  }
+  .swiper-scrollbar-{{ section.id }} {
+    left: var(--page-gutter) !important;
+    background: none;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+      padding: {{ section.settings.padding_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.padding_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      padding: {{ section.settings.padding_top_desktop }}px 0 {{ section.settings.padding_bottom_desktop }}px;
+    }
+    .swiper-scrollbar-{{ section.id }} {
+      display:none;
+    }
+  }
+{%- endstyle -%}
+<div class="d--flex flex-column page-width">
+  <h2 class="mb-40">{{ section.settings.title }}</h2>
+  <script src="{{ 'component-find-your-tub.js' | asset_url }}" defer></script>
+  {%- assign total_pages = 0 -%}
+  {%- paginate shop.metaobjects[section.settings.metaobject_type].values by 50 -%}
+    {%- assign total_pages = paginate.pages -%}
+  {%- endpaginate -%}
+  {%- assign type_name = 'tub' -%}
+  {%- if section.settings.metaobject_type contains "spa"-%}
+    {%- assign type_name = 'spa' -%}
+  {%- endif -%}
+  <tcg-find-your-tub-section
+    data-meta-type="{{ section.settings.metaobject_type }}"
+    data-pages="{{ total_pages }}"
+    class="d--flex sm--flex-column gap-20"
+  >
+    <label for="brands-{{ section.id }}" class="visually-hidden">{{ 'products.configurator.select-tub-brand' | t }}</label>
+    <select class="m-0 md-up--33 width-100" name="brands" id="brands-{{ section.id }}" data-select-text="{{ 'products.configurator.select-tub-brand' | t }}"></select>
+    <label for="models-{{ section.id }}" class="visually-hidden">{{ 'products.configurator.select-tub-model' | t }}</label>
+    <select class="m-0 md-up--33 width-100" name="models" id="models-{{ section.id }}" data-select-text="{{ 'products.configurator.select-tub-model' | t }}" disabled></select>
+    <div class="md-up--33 d--flex gap-20 align-items--center">
+      {%- if section.settings.button_text != blank -%}
+        <button
+          class="button button-{{ section.settings.button_style }}"
+          data-url="{{ section.settings.button_url }}"
+          disabled
+        >
+          {{ section.settings.button_text }}
+        </button>
+      {%- endif -%}
+      {%- if section.settings.button_text != blank and section.settings.link_text != blank -%}
+        <div>or</div>
+      {%- endif -%}
+      {%- if section.settings.link_text != blank -%}
+        <div>
+          <a href="{{ section.settings.link_url }}" class="link">{{ section.settings.link_text }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+  </tcg-find-your-tub-section>
+</div>
+{% schema %}
+{
+  "name": "Find Your Tub",
+  "tag": "section",
+  "class": "overflow-hidden",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_top_desktop",
+      "label": "Margin Top (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "label": "Margin Top (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_desktop",
+      "label": "Margin Bottom (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "label": "Margin Bottom (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top",
+      "label": "Border Radius Top",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom",
+      "label": "Border Radius Bottom",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color",
+      "options": [
+        {
+          "value": "black",
+          "label": "Black"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background Color",
+      "options": [
+        {
+          "value": "white",
+          "label": "White"
+        },
+        {
+          "value": "black-bg",
+          "label": "Black"
+        },
+        {
+          "value": "teal",
+          "label": "Teal"
+        },
+        {
+          "value": "teal-dark",
+          "label": "Dark Teal"
+        },
+        {
+          "value": "gray",
+          "label": "Gray"
+        },
+        {
+          "value": "gray-light",
+          "label": "Light Gray"
+        },
+        {
+          "value": "red",
+          "label": "Red"
+        },
+        {
+          "value": "yellow",
+          "label": "Yellow"
+        }
+      ],
+      "default": "black-bg"
+    },
+    {
+      "type": "text",
+      "id": "pretitle",
+      "label": "Pre-Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "select",
+      "id": "metaobject_type",
+      "label": "Metaobject Type",
+      "options": [
+        {
+          "value": "hot_tub",
+          "label": "Hot Tub"
+        },
+        {
+          "value": "swim_spa",
+          "label": "Swim Spa"
+        },
+        {
+          "value": "cold_tub",
+          "label": "Cold Tub"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button Url"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "value": "button--primary",
+          "label": "Primary"
+        },
+        {
+          "value": "button--secondary",
+          "label": "Secondary"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "link_url"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Find Your Tub"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+.accordion-item__title {
+  font-size: 2rem;
+  font-weight: 700;
+  padding: 3rem 0;
+  border-bottom: 1px solid #000;
+}
+
+.accordion-item[open] .accordion-item__title {
+  border-width: 2px;
+}
+
+.accordion-item__content {
+  padding-top: 3rem;
+}
+
+.plus-minus-icon {
+  transition: all 0.3s linear;
+  transform: rotate(0deg);
+  width: 18px;
+  height: 18px;
+}
+
+[open] .plus-minus-icon {
+  transform: rotate(90deg);
+}
+
+.plus-minus-icon:before,
+.plus-minus-icon:after {
+  position: absolute;
+  content: ' ';
+  width: 18px;
+  transform-origin: left;
+  height: 2px;
+  background: var(--color-black-text);
+  top: 8px;
+  left: 0;
+}
+
+.plus-minus-icon:after {
+  left: 8px;
+  top: 0;
+  height: 18px;
+  width: 2px;
+}
+
+[open] .plus-minus-icon:before {
+  display: none;
+}

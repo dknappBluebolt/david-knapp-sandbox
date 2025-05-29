@@ -1,0 +1,130 @@
+{%- liquid assign selected_variant = product.selected_or_first_available_variant
+  if product.selected_variant != blank
+    assign selected_variant = product.selected_variant
+  else
+    for variant in product.variants
+      if variant.metafields.custom.default_selected_variant == true
+        assign selected_variant = variant
+        break
+      endif
+    endfor
+  endif -%}
+
+{{- 'template-product.css' | asset_url | stylesheet_tag -}}
+<link
+  id="swiper-css"
+  href="{{ 'swiper.min.css' | asset_url }}"
+  onload="this.media='all'"
+  rel="stylesheet"
+>
+<script id="swiper-js" src="{{ 'swiper.min.js' | asset_url }}"></script>
+<script
+  type="text/javascript"
+>
+  window.swiperOptions["{{ section.id }}"] = {% render 'swiper-js', swiper_id: section.id %};
+  window.swiperOptions["{{ section.id }}-thumbs"] = {%- render 'swiper-thumb-js' -%};
+  window.initProductSwipers = function() {
+    this.thumbs = new Swiper(`#swiper-thumbs-{{ section.id }}`,  window.swiperOptions[`{{ section.id }}-thumbs`]);
+		window.swiperOptions[`{{ section.id }}`].thumbs = {
+		  swiper: this.thumbs
+		};
+		this.swiper = new Swiper(`#swiper-{{ section.id }}`, window.swiperOptions[`{{ section.id }}`]);
+  }
+  window.initProductSwipers();
+</script>
+<script src="{{ 'template-product.js' | asset_url }}" defer></script>
+<div class="d--flex flex-wrap--wrap justify--space-between">
+  <div id="swiper-section-{{ section.id }}" class="product-section">
+    {%- render 'product-images', product: product, selected_variant: selected_variant, section: section, checkLazy: false -%}
+    <div id="info-tabs-desktop-{{ section.id }}" class="sm--hide md--hide">
+      {%- render 'product-info-tabs', product: product, selected_variant: selected_variant, section: section, desktop_or_mobile: 'desktop' -%}
+    </div>
+  </div>
+  <div class="product-section">
+    <div class="section-sticky">
+      {%- render 'product-title-section', product: product, selected_variant: selected_variant, section: section -%}
+      {%- render 'product-form', product: product, selected_variant: selected_variant, version: 'desktop' -%}
+      {%- if localization.country.iso_code == 'US' -%}
+        <p
+          class="affirm-as-low-as mt-16"
+          data-amount="{{ selected_variant.price }}"
+          data-affirm-color="black"
+          data-learnmore-show="true"
+          data-page-type="product"
+        ></p>
+      {%- endif -%}
+    </div>
+    <div id="info-tabs-mobile-{{ section.id }}" class="lg-up--hide product-section product-section--tabs">
+      {%- render 'product-info-tabs', product: product, selected_variant: selected_variant, section: section, desktop_or_mobile: 'mobile' -%}
+    </div>
+  </div>
+  <mobile-view-add-to-cart class="mobile-continue-section hidden md-up--hide bg-color--white px-20 py-6">
+      {%- render 'product-form', product: product, selected_variant: selected_variant, version: 'mobile' -%}
+  </mobile-view-add-to-cart>
+</div>
+{%- liquid
+  if selected_variant.featured_media
+    assign seo_media = selected_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {% if seo_media -%}
+      "image": [
+        {{ seo_media | image_url: width: 1920 | prepend: "https:" | json }}
+      ],
+    {%- endif %}
+    "description": {{ product.description | strip_html | json }},
+    {% if selected_variant.sku != blank -%}
+      "sku": {{ selected_variant.sku | json }},
+    {%- endif %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    },
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type" : "Offer",
+          {%- if variant.sku != blank -%}
+            "sku": {{ variant.sku | json }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 12 -%}
+            "gtin12": {{ variant.barcode }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 13 -%}
+            "gtin13": {{ variant.barcode }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 14 -%}
+            "gtin14": {{ variant.barcode }},
+          {%- endif -%}
+          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price" : {{ variant.price | divided_by: 100.00 | json }},
+          "priceCurrency" : {{ cart.currency.iso_code | json }},
+          "url" : {{ request.origin | append: variant.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Page",
+  "tag": "section",
+  "class": "page-width page-top page-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

@@ -1,327 +1,180 @@
 
-{% stylesheet %}
-  .main-collection-grid {
-    grid-column: var(--grid-column--mobile);
-    @media screen and (width >= 750px) {
-      grid-column: var(--grid-column--desktop);
-    }
-  }
+{{- 'component-cards.css' | asset_url | stylesheet_tag -}}
 
-  .collection-wrapper {
-    @media screen and (width >= 750px) {
-      grid-template-columns:
-        1fr repeat(
-          var(--centered-column-number),
-          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
-        )
-        1fr;
-    }
-  }
+{%- liquid
+if collection.metafields.custom.desktop_image != blank
+	assign backgroundImageDesktop = collection.metafields.custom.desktop_image
+	if collection.metafields.custom.mobile_image != blank
+		assign backgroundImageMobile = collection.metafields.custom.mobile_image
+	else
+		assign backgroundImageMobile = backgroundImageDesktop
+	endif
+endif
+-%}
 
-  .collection-wrapper:has(.facets-block-wrapper--full-width),
-  .collection-wrapper:has(.collection-wrapper--full-width) {
-    @media screen and (width >= 750px) {
-      grid-column: 1 / -1;
-      grid-template-columns:
-        minmax(var(--page-margin), 1fr) repeat(
-          var(--centered-column-number),
-          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
-        )
-        minmax(var(--page-margin), 1fr);
-    }
-  }
+{%- style -%}
+#shopify-section-{{ section.id }} .collection-banner {
+	min-height: 36rem;
+	padding: 3rem 2.4rem;
+}
+#shopify-section-{{ section.id }} .collection-banner picture:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 1;
+	background: rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 399px) {
+	#shopify-section-{{ section.id }} h1 {
+		font-size: 3rem
+	}
+}
+@media (min-width: 400px) and (max-width: 479px) {
+	#shopify-section-{{ section.id }} h1 {
+		font-size: 3.5rem
+	}
+}
+@media (min-width: 640px) {
+	#shopify-section-{{ section.id }} .collection-banner {
+		padding-inline: 3.5rem;
+	}
+	#shopify-section-{{ section.id }} .collection-banner--content .rte {
+		width: 60%;
+		max-width: 50rem;
+	}
+}
+@media (min-width: 768px) {
+	#shopify-section-{{ section.id }} .collection-banner picture:after {
+		background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 1.18%, rgba(102, 102, 102, 0.00) 100%);
+	}
+}
+@media (min-width: 1024px) {
+	#shopify-section-{{ section.id }} .collection-banner {
+		min-height: 50rem;
+		padding-inline: 5rem;
+	}
+	#collection--banner-{{ section.id }} .collection-banner--content {
+		width: 75rem;
+	}
+}
+#shopify-section-{{ section.id }} .collection--description {
+	border-top: 1px solid #D9D9D9;
+	padding: 4rem 0;
+}
+{%- endstyle -%}
 
-  .collection-wrapper:has(.facets--vertical) .main-collection-grid {
-    @media screen and (width >= 750px) {
-      grid-column: var(--facets-vertical-col-width) / var(--full-width-column-number);
-    }
-  }
+{%- paginate collection.products by 20 -%}
+  {%- if collection.metafields.custom.desktop_image != blank or collection.metafields.custom.mobile_image != blank -%}
+		<div id="collection-banner--{{ section.id }}" class="d--flex collection-banner flex-between flex-column round relative color--white mb-20">
+			<picture class="height--100 width--100" style="position: absolute;left:0;top:0;z-index: 0;">
+				<source
+					media="(min-width: 1024px)"
+					srcset="{{ backgroundImageDesktop | image_url: width: 600 }} 600w, {{ backgroundImageDesktop | image_url: width: 1200 }} 1200w, {{ backgroundImageDesktop | image_url: width: 2000 }} 2000w"
+					>
+				<img
+					style="object-fit: cover;"
+					class="height--100 width--100 d--block"
+					srcset="{{ backgroundImageMobile | image_url: width: 600 }} 600w, {{ backgroundImageMobile | image_url: width: 1200 }} 1200w, {{ backgroundImageMobile | image_url: width: 2000 }} 2000w"
+					fetchpriority="high"
+				>
+			</picture>
+			<div class="height--100 width--100 relative z-index--1 d--flex flex-grow flex-wrap--wrap align-items--center">
+				<div class="collection-banner--content width--100">
+					<div class="section-header mt-20 mb-20">
+						<h1>{{ collection.title }}</h1>
+						{%- if collection.metafields.custom.subtitle != blank -%}
+							<div class="rte rte--lg links-underline text--semibold">
+								{{- collection.metafields.custom.subtitle | metafield_tag | replace: '<span','<p' | replace: '</span>','</p>' -}}
+							</div>
+						{%- endif -%}
+					</div>
+				</div>
+			</div>
+		</div>
+	{%- else -%}
+		<div class="section-header page-top mb-20">
+			<h1>{{ collection.title }}</h1>
+			{%- if collection.metafields.custom.subtitle != blank -%}
+				<div class="rte--lg links-underline">
+					{{- collection.metafields.custom.subtitle | metafield_tag | replace: 'metafield-rich_text_field','collection--subtitle' -}}
+				</div>
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+	<aside id="main-collection-filters"	data-id="{{ section.id }}">
+		{%- render 'component-facets',
+		results: collection,
+		enable_filtering: section.settings.enable_filtering,
+		enable_sorting: section.settings.enable_sorting,
+		filter_type: section.settings.filter_type,
+		paginate: paginate
+		-%}
+	</aside>
+	<div class="product-grid-container"	id="ProductGridContainer">
+	{%- if collection.products.size == 0 -%}
+		<div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+			<div class="loading-overlay gradient"></div>
+			<div class="title-wrapper center">
+				<h2 class="title title--primary">
+					{{- 'sections.collection_template.empty' | t -}}
+					<br>
+					{{- 'sections.collection_template.use_fewer_filters_html'	| t: link: collection.url, class: 'link' -}}
+				</h2>
+			</div>
+		</div>
+	{%- else -%}
+		<div class="collection{% if collection.description != blank %} page-section{% endif %}">
+			<div class="loading-overlay"></div>
+			<div id="product-grid" data-id="{{ section.id }}" class="grid product-grid">
+				{%- for product in collection.products -%}
+					<div class="grid__item sm--33 xs--50 md--33 lg-up--20 page-section--md">
+						{%- liquid if forloop.index > 6
+							assign lazyLoad = true
+						else
+							assign lazyLoad = false
+						endif
+						render 'component-card-product' product: product, lazyLoad: lazyLoad -%}
+					</div>
+				{%- endfor -%}
+			</div>
+			{%- if paginate.pages > 1 -%}
+				{%- render 'component-pagination' paginate: paginate, class: 'mt-30' -%}
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+{%- endpaginate -%}
 
-  .collection-wrapper:has(.facets-block-wrapper--vertical:not(#filters-drawer)):has(.collection-wrapper--full-width) {
-    @media screen and (width >= 750px) {
-      grid-column: 1 / -1;
-      grid-template-columns: 0fr repeat(var(--centered-column-number), minmax(0, 1fr)) 0fr;
-    }
-  }
+{%- if collection.description != blank -%}
+	<div class="collection--description d--flex gap-20 lg-down--flex-column lg-down--v-gap-20">
+		<div class="collection--title_bottom lg-up--50">
+			<h3>{{ collection.title }}</h3>
+		</div>
+		<div class="rte rte--md rte--list collection-description links-underline lg-up--50">
+			{{- collection.description -}}
+			{%- if collection.metafields.custom.more_description != blank -%}
+				<tcg-click-to-reveal class="js-click-to-reveal mt-20">
+					<button type="button" class="js-click-to-reveal-trigger link" data-more="{{ 'general.labels.more' | t }}" data-less="{{ 'general.labels.less' | t }}" aria-controls="collection-description-more">
+						{{- 'general.labels.more' | t -}}
+					</button>
+					<div id="collection-description-more" class="js-click-to-reveal-text mt-20">
+						{{- collection.metafields.custom.more_description | metafield_tag -}}
+					</div>
+				</tcg-click-to-reveal>
+			{%- endif -%}
+		</div>
+	</div>
+{%- endif -%}
 
-  :is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
-    [product-grid-view='default']
-    .product-grid__item
-    .group-block {
-    @media screen and (width < 750px) {
-      padding-inline-start: max(var(--padding-xs), var(--padding-inline-start));
-      padding-inline-end: max(var(--padding-xs), var(--padding-inline-end));
-    }
-  }
-
-  :is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
-    [product-grid-view='mobile-single']
-    .product-grid__item
-    .group-block {
-    @media screen and (width < 750px) {
-      padding-inline-start: max(var(--padding-xs), var(--padding-inline-start));
-      padding-inline-end: max(var(--padding-xs), var(--padding-inline-end));
-    }
-  }
-{% endstylesheet %}
-{% liquid
-  # Onboarding: When no products are available, we show placeholder items
-  assign products = ''
-  if request.design_mode and shop.products_count == 0
-    for i in (1..16)
-      assign products = products | append: ' ,'
-    endfor
-    assign products = products | split: ','
-  endif
-%}
-
-<script
-  src="{{ 'results-list.js' | asset_url }}"
-  type="module"
-></script>
-
-{% javascript %}
-  const url = new URL(window.location.href);
-  if (url.hash) {
-    document.addEventListener(
-      'DOMContentLoaded',
-      () => {
-        const card = document.getElementById(url.hash.slice(1));
-        if (card) {
-          card.scrollIntoView({ behavior: 'instant' });
-        }
-      },
-      { once: true }
-    );
-  }
-{% endjavascript %}
-
-{% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<results-list
-  class="section product-grid-container color-{{ section.settings.color_scheme }}"
-  style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
-  section-id="{{ section.id }}"
->
-  {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
-
-  <div
-    class="collection-wrapper grid gap-style"
-  >
-    {% content_for 'block',
-      type: 'filters',
-      id: 'filters',
-      results: collection,
-      results_size: collection.products_count
-    %}
-
-    {% if request.design_mode and shop.products_count == 0 %}
-      {% paginate products by 24 %}
-        {% capture children %}
-          {% for product in products %}
-            <li
-              class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-              data-page="{{ paginate.current_page }}"
-              data-product-id="{{ product.id }}"
-              data-view-transition-id="{{ product.id }}"
-              ref="cards[]"
-            >
-              {% content_for 'block', type: 'product-card', id: 'product-card', closest.product: product %}
-            </li>
-          {% endfor %}
-        {% endcapture %}
-        {% render 'product-grid', section: section, children: children, products: products, paginate: paginate %}
-      {% endpaginate %}
-    {% else %}
-      {% paginate collection.products by 24 %}
-        {% capture children %}
-          {% for product in collection.products %}
-          <li
-            id="{{ section.id }}-{{ product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-            data-page="{{ paginate.current_page }}"
-            data-product-id="{{ product.id }}"
-            ref="cards[]"
-          >
-            {% # theme-check-disable %}
-            {% content_for 'block', type: 'product-card', id: 'product-card', closest.product: product %}
-            {% # theme-check-enable %}
-          </li>
-        {% endfor %}
-        {% endcapture %}
-        {% render 'product-grid',
-          section: section,
-          children: children,
-          products: collection.products,
-          paginate: paginate
-        %}
-      {% endpaginate %}
-    {% endif %}
-  </div>
-</results-list>
 
 {% schema %}
 {
-  "name": "t:names.collection_container",
-  "enabled_on": {
-    "templates": ["collection"]
-  },
-  "settings": [
-    {
-      "type": "select",
-      "id": "layout_type",
-      "label": "t:settings.type",
-      "options": [
-        {
-          "value": "grid",
-          "label": "t:options.grid"
-        },
-        {
-          "value": "organic",
-          "label": "t:options.editorial"
-        }
-      ],
-      "default": "grid"
-    },
-    {
-      "type": "select",
-      "id": "product_card_size",
-      "label": "t:settings.card_size",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:options.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:options.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:options.large"
-        },
-        {
-          "value": "extra-large",
-          "label": "t:options.extra_large"
-        }
-      ],
-      "default": "medium",
-      "visible_if": "{{ section.settings.layout_type == 'grid' }}"
-    },
-    {
-      "type": "select",
-      "id": "mobile_product_card_size",
-      "label": "t:settings.mobile_card_size",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:options.small"
-        },
-        {
-          "value": "large",
-          "label": "t:options.large"
-        }
-      ],
-      "default": "small"
-    },
-    {
-      "type": "header",
-      "content": "t:content.layout"
-    },
-    {
-      "type": "select",
-      "id": "product_grid_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "centered",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "centered"
-    },
-    {
-      "type": "checkbox",
-      "id": "full_width_on_mobile",
-      "label": "t:settings.full_width_on_mobile",
-      "default": true,
-      "visible_if": "{{ section.settings.product_grid_width != 'full-width' }}"
-    },
-    {
-      "type": "range",
-      "id": "columns_gap_horizontal",
-      "label": "t:settings.horizontal_gap",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "columns_gap_vertical",
-      "label": "t:settings.vertical_gap",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "padding-inline-start",
-      "label": "t:settings.left_padding",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding-inline-end",
-      "label": "t:settings.right_padding",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "t:content.section_layout"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
-    },
-    {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top_padding",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 8
-    },
-    {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom_padding",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 8
-    }
-  ],
-  "presets": []
+	"name": "Main Collection",
+	"class": "page-section page-width",
+	"settings": [
+
+	]
 }
 {% endschema %}

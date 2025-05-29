@@ -1,0 +1,83 @@
+{{- 'component-cards.css' | asset_url | stylesheet_tag -}}
+
+{%- liquid if section.index == 1
+  assign titleTag = 'h1'
+else
+  assign titleTag = 'h2'
+endif -%}
+
+{%- if section.settings.title != blank -%}
+  <div class="section-header page-section--md">
+    {%- if section.settings.pretitle != blank -%}
+    <div class="section-pretitle">
+      {{- section.settings.pretitle -}}
+    </div>
+    {%- endif -%}
+    <{{ titleTag }} class="section-title">
+      {{- section.settings.title -}}
+    </{{ titleTag }}>
+  </div>
+{%- endif -%}
+
+<div class="grid">
+  {%- for block in section.blocks -%}
+    {%- if block.settings.collection != blank -%}
+      {%- assign collTitle = block.settings.title | default: block.settings.collection.title -%}
+      <div class="grid__item sm--50 md--33 lg-up--20 page-section--md">
+        {%- render 'component-card-content' image: block.settings.image, title: collTitle, image_url: block.settings.collection.url -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+{% schema %}
+  {
+    "name": "Featured Content",
+    "tag": "section",
+    "class": "page-width page-top page-section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "content",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "collection"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Featured Collections"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,207 @@
+body.login, body.register, body.register #MainContent, body.reset_password, body.reset_password #MainContent, body.activate_account, body.activate_account #MainContent {
+    background: var(--color-gray-off-white);
+}
+
+.customer-form-box {
+    max-width: 770px;
+}
+
+.title {
+    line-height: 120%;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.title::after {
+    display: block;
+    width: 90px;
+    height: 2px;
+    background-color: currentColor;
+    content: "";
+    margin-left: 20px;
+}
+
+@media (min-width: 1200px) {
+    body.login .grid {
+        --grid-desktop-x: 4rem;
+    }
+}
+
+.customer .login-block {
+    padding: 60px 40px;
+    border: 1px solid var(--color-border);
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .customer .login-block {
+        padding-inline: 2.4rem;
+    }
+}
+
+.customer .rte ul {
+	padding-left: 0;
+}
+
+
+.support-text {
+    font-size: 20px;
+}
+
+#customer_login {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.customer div#rc_login p {
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+}
+
+.customer div#rc_login p a {
+    display: inline-block;
+}
+
+.customer label.rte p {
+    margin-bottom: 0;
+}
+
+.border-b--gray {
+    border-bottom: 2px solid var(--color-gray-border);
+}
+
+.line-item--image {
+    width: 100px;
+}
+
+@media (min-width: 640px) and (max-width: 1023px), (min-width: 1350px) {
+    .line-item--image {
+        width: 130px;
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .lg-up--border-b--gray {
+        border-bottom: 2px solid var(--color-gray-border);
+    }
+
+    .lg-up--border-b--none {
+        border-bottom: none;
+    }
+
+    .lg-up--pb-0 {
+        padding-bottom: 0;
+    }
+}
+
+.account--main {
+    padding-bottom: var(--spacing-sections-desktop);
+}
+
+table.order-history tr td {
+    font-family: "DM Sans";
+    font-size: 18px;
+    font-style: normal;
+    line-height: 180%; /* 32.4px */
+    letter-spacing: 0.2px;
+    text-transform: capitalize;
+}
+
+.account-gray-box {
+    border: 1px solid var(--color-border);
+    border-top: 0;
+}
+
+.account-gray-box p {
+    line-height: 2;
+}
+
+@media (max-width: 1023px) {
+    .order-sidebar h5, .order-sidebar .h5 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .order-sidebar h5, .order-sidebar .h5, .account-gray-box p {
+        font-size: 2rem;
+    }
+    .account-gray-box .link, .order-sidebar__value {
+        font-size: 1.8rem;
+    }
+}
+
+table.order-history tr th {
+    padding: 3rem;
+    color: var(--color-white);
+    background-color: var(--color-black-bg);
+}
+
+@media (min-width: 1024px) and (max-width: 1349px) {
+    table.order-history tr th.h4 {
+        font-size: 2rem;
+        padding-inline: 1.6rem;
+    }
+}
+
+table.order-history tr:first-child th:first-child {
+    border-top-left-radius: var(--corner-radius-lg);
+}
+
+table.order-history tr:first-child th:last-child {
+    border-top-right-radius: var(--corner-radius-lg);
+}
+
+table.order-history tr td {
+    text-align: center;
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--color-gray-light);
+}
+
+body.order table.order-details th {
+    padding-top: 0;
+}
+
+.badge {
+    float: right;
+    background-color: var(--color-white);
+    color: var(--color-black-text);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    margin: -10px -12px;
+    padding: 10px 12px;
+}
+
+.account fieldset {
+    border-color: var(--color-black-text);
+    border-width: 1px;
+}
+
+.account legend {
+    padding: 10px 18px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: -24px;
+    margin-right: 8px;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--color-black-text);
+    color: var(--color-white);
+    text-align: center;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

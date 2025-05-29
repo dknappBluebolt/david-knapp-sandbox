@@ -1,0 +1,346 @@
+{%- liquid
+  assign columns_desktop = section.settings.columns_num
+  assign columns_tablet = section.settings.columns_num_tablet
+  assign columns_mobile = section.settings.columns_num_mobile
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    background-color: var(--color-{{ section.settings.background_color }});
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  #shopify-section-{{ section.id }} .logo-list {
+    grid-template-columns: repeat({{ columns_mobile }},1fr);
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .logo-list {
+      grid-template-columns: repeat({{ columns_tablet }},1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+    #shopify-section-{{ section.id }} .logo-list {
+      grid-template-columns: repeat({{ columns_desktop }},1fr);
+    }
+  }
+{%- endstyle -%}
+
+<div class="page-width color--{{ section.settings.text_color }}">
+  <div class="section-header mt-30 mb-30 width--100 {{ section.settings.mobile_text_alignment }} {{ section.settings.desktop_text_alignment }}">
+    {%- if section.settings.pretitle != blank -%}
+      <div class="section-pretitle flex-items">
+        {{- section.settings.pretitle -}}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2 class="section-title">
+        {{- section.settings.title -}}
+      </h2>
+    {%- endif -%}
+  </div>
+  <div class="logo-list d--grid gap-16 align-items--center justify-items--center mt-10 mb-20">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'logo' -%}
+          {%- if block.settings.logo_url != blank -%}
+            <a href="{{ block.settings.logo_url }}">
+          {%- endif -%}
+            <img srcset="{{ block.settings.logo | image_url: width: 200 }} 200w, {{ block.settings.logo | image_url: width: 400 }} 400w, {{ block.settings.logo | image_url: width: 600 }} 600w"
+              sizes="(max-width: 767px) calc(100vw / {{ columns_mobile }}),(min-width: 768px) and (max-width: 1023px) calc(100vw / {{ columns_tablet }}), (min-width: 1024px) and (max-width: 1730px) calc(100vw / {{ columns_desktop }}), calc(1730px / {{ columns_desktop }})"
+              alt="{{ block.settings.logo.alt | escape }}" width="{{ block.settings.logo.width }}" height="{{ block.settings.logo.height }}"
+              {% if section.index > 2 %}loading="lazy"{% endif %} />
+          {%- if block.settings.logo_url != blank -%}
+            </a>
+          {%- endif -%}
+        {%- when 'text_link' -%}
+          {%- if block.settings.text_link != blank -%}
+            <div class="text--center">
+              <a href="{{ block.settings.url }}" class="link color--{{ section.settings.text_color }}">
+                {{- block.settings.text_link -}}
+              </a>
+            </div>
+          {%- endif -%}
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Logo List",
+    "tag": "section",
+    "class": "logo-list__section width--100",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "padding_top_desktop",
+        "label": "Padding Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 75
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "label": "Padding Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_desktop",
+        "label": "Padding Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 75
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "label": "Padding Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text Color",
+        "options": [
+          {
+            "value": "black",
+            "label": "Black"
+          },
+          {
+            "value": "white",
+            "label": "White"
+          }
+        ],
+        "default": "white"
+      },
+      {
+        "type": "select",
+        "id": "desktop_text_alignment",
+        "label": "Desktop Text Alignment",
+        "options": [
+            {
+              "value": "lg-up--text-left",
+              "label": "Left"
+            },
+            {
+              "value": "lg-up--text-center",
+              "label": "Center"
+            },
+            {
+              "value": "lg-up--text-right",
+              "label": "Right"
+            }
+          ],
+        "default": "lg-up--text-left"
+      },
+      {
+        "type": "select",
+        "id": "mobile_text_alignment",
+        "label": "Mobile Text Alignment",
+        "options": [
+          {
+            "value": "lg-down--text-left",
+            "label": "Left"
+          },
+          {
+            "value": "lg-down--text-center",
+            "label": "Center"
+          },
+          {
+            "value": "lg-down--text-right",
+            "label": "Right"
+          }
+        ],
+        "default": "lg-down--text-left"
+      },
+      {
+        "type": "range",
+        "id": "columns_num",
+        "label": "Number of Columns (desktop)",
+        "min": 4,
+        "max": 8,
+        "step": 1,
+        "default": 4
+      },
+      {
+        "type": "range",
+        "id": "columns_num_tablet",
+        "label": "Number of Columns (tablet)",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "default": 4
+      },
+      {
+        "type": "range",
+        "id": "columns_num_mobile",
+        "label": "Number of Columns (mobile)",
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "default": 2
+      },
+      {
+        "type": "select",
+        "id": "background_color",
+        "label": "Background Color",
+        "options": [
+          {
+            "value": "white",
+            "label": "White"
+          },
+          {
+            "value": "black-bg",
+            "label": "Black"
+          },
+          {
+            "value": "teal",
+            "label": "Teal"
+          },
+          {
+            "value": "teal-dark",
+            "label": "Dark Teal"
+          },
+          {
+            "value": "gray",
+            "label": "Gray"
+          },
+          {
+            "value": "gray-light",
+            "label": "Light Gray"
+          },
+          {
+            "value": "red",
+            "label": "Red"
+          },
+          {
+            "value": "yellow",
+            "label": "Yellow"
+          }
+        ],
+        "default": "black-bg"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "logo",
+        "name": "Logo",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Desktop image"
+          },
+          {
+            "type": "url",
+            "id": "logo_url",
+            "label": "Button Link"
+          }
+        ]
+      },
+      {
+        "type": "text_link",
+        "name": "Text Link",
+        "settings": [
+          {
+            "type": "url",
+            "id": "url",
+            "label": "Link URL"
+          },
+          {
+            "type": "text",
+            "id": "text_link",
+            "label": "Link Text",
+            "default": "120+ more"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Logo List",
+        "blocks": [
+          {
+            "type": "logo"
+          },
+          {
+            "type": "text_link"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

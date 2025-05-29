@@ -1,0 +1,36 @@
+{%- layout none -%}
+{%- paginate shop.metaobjects.hot_tub.values by 50 -%}
+{
+    "page_param": "{{ paginate.page_param }}",
+    "models": [
+        {%- assign brands_string = '' -%}
+        {%- for object in shop.metaobjects.hot_tub.values -%}
+            {
+                "_brand": {{ object.make | json }},
+                "_model": {{ object.model | json }},
+                "_handle": {{ object.model | handleize | json  }},
+                "_shape": {{ object.shape | json }},
+                "_dimension_a": {{ object.dimension_a | json }},
+                "_dimension_b": {{ object.dimension_b | json }},
+                "_dimension_c": {{ object.dimension_c | json }},
+                "_fold_location": {{ object.fold_location | json}},
+                "_skirt_length": {{ object.skirt_length | json }},
+                "_strap_location": {{ object.strap_location | json }}
+                {% comment %} "option": `<option value="{{ object.model }}" data-brand="{{ object.make }}" data-handle="{{ object.model | handle }}">{{ object.model }}</option>` {% endcomment %}
+            }{% unless forloop.last %},{% endunless %}
+            {%- assign sanitized_brand = '|' | append: object.make | append: "|" -%}
+            {%- unless brands_string contains sanitized_brand -%}
+                {%- assign brands_string = brands_string | append: ',' | append: sanitized_brand -%}
+            {%- endunless -%}
+        {%- endfor -%}
+    ],
+    {%- assign brands = brands_string | remove_first: ',' | split: ',' -%}
+    "brands": [
+        {%- for brand in brands -%}
+            {%- assign unsanitized_brand = brand | remove_first: "|" | remove_last: "|" -%}
+            "{{ unsanitized_brand }}"{% unless forloop.last %},{% endunless %}
+            {% comment %} "option": "<option value="{{ unsanitized_brand }}">{{ unsanitized_brand }}</option>" {% endcomment %}
+        {%- endfor -%}
+    ]
+}
+{%- endpaginate -%}

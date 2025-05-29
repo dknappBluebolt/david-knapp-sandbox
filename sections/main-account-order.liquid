@@ -1,0 +1,136 @@
+{{- 'template-account.css' | asset_url | stylesheet_tag -}}
+{%- render 'component-account-breadcrumb' -%}
+
+<div class="customer account account--main order">
+  {%- assign title = 'customer.order.title' | t: name: order.name -%}
+  {%- render 'component-account-header', title: title, order: order, class: 'page-section--md border-b--gray flex-wrap--wrap' -%}
+
+  <div class="grid grid--xl">
+    <div class="grid__item lg-up--67 page-section">
+      <table role="table" class="order-details sm--hide md--hide">
+        <caption class="visually-hidden">
+          {{- 'customer.order.title' | t: name: order.name -}}
+        </caption>
+        <thead role="rowgroup">
+          <tr role="row">
+            <th id="ColumnProduct" colspan="2" scope="col" role="columnheader">{{ 'customer.order.product' | t }}</th>
+            <th id="ColumnPrice" scope="col" role="columnheader">{{ 'customer.order.price' | t }}</th>
+            <th id="ColumnQuantity" scope="col" role="columnheader">{{ 'customer.order.quantity' | t }}</th>
+            <th id="ColumnTotal" scope="col" role="columnheader">{{ 'customer.order.total' | t }}</th>
+          </tr>
+        </thead>
+        <tbody role="rowgroup">
+          {%- for line_item in order.line_items -%}
+            {%- if line_item.properties._cover_id == blank -%}
+              {%- render 'component-line-item-desktop', line_item: line_item, class: 'order-item', reorder: true -%}
+            {%- elsif line_item.product.type == 'Cover Component'
+              and line_item.product.metafields.custom.cover_configurator != blank
+            -%}
+              {%- render 'component-line-item-bundle', line_item: line_item, line_items: order.line_items, is_mobile: false, reorder: true -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+      <div class="d--flex flex-column gap-20 width--100 lg-up--hide">
+        {%- for line_item in order.line_items -%}
+          {%- if line_item.properties._cover_id == blank -%}
+            {%- render 'component-line-item-mobile', line_item: line_item, class: 'py-30 border-b--gray', reorder: true -%}
+          {%- elsif line_item.product.type == 'Cover Component'
+            and line_item.product.metafields.custom.cover_configurator != blank
+          -%}
+            {%- render 'component-line-item-bundle', line_item: line_item, line_items: order.line_items, is_mobile: true, reorder: true -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <aside class="grid__item lg-up--33">
+      <div class="order-sidebar">
+        <div class="width--100 mb-40">
+          <h5 class="bg-color--black color--white round--top px-30 py-20 m-0">
+            {{- 'customer.account.order.title' | t -}}
+          </h5>
+          <div class="round--bottom p-30 bg-color--gray-off-white gap-20 d--flex flex-column account-gray-box">
+            <div class="order-summary d--flex justify--space-between">
+              <div class="h5 text--no-wrap m-0">
+                {{- 'customer.account.order.subtotal' | t -}}
+              </div>
+              <div class="order-sidebar__value color--gray-text text--center">
+                {{- order.item_count }} Item{% if order.item_count > 1 %}s{% endif -%}
+              </div>
+              <div class="order-sidebar__value">{{ order.subtotal_price | money }}</div>
+            </div>
+            {%- if order.total_discounts > 0 -%}
+              <div class="d--flex justify--space-between">
+                <div class="h5 text--no-wrap m-0">
+                  {{- 'customer.account.order.discount' | t -}}
+                </div>
+                <div class="order-sidebar__value text--right">{{ order.total_discounts | money }}</div>
+              </div>
+            {%- endif -%}
+            <div class="d--flex justify--space-between">
+              <div class="h5 text--no-wrap m-0">
+                {{- 'customer.account.order.shipping' | t -}}
+              </div>
+              {%- if order.shipping_price > 0 -%}
+                <div class="order-sidebar__value text--right">{{ order.shipping_price | money }}</div>
+              {%- else -%}
+                <div class="order-sidebar__value text--right">FREE*</div>
+              {%- endif -%}
+            </div>
+            <div class="d--flex justify--space-between">
+              <div class="h5 text--no-wrap m-0">
+                {{- 'customer.account.order.taxes' | t -}}
+              </div>
+              <div class="order-sidebar__value text--right">{{ order.tax_price | money }}</div>
+            </div>
+            {%- if order.total_refunded_amount > 0 -%}
+              <div class="d--flex justify--space-between">
+                <div class="h5 text--no-wrap m-0">
+                  {{- 'customer.account.order.refund' | t -}}
+                </div>
+                <div class="order-sidebar__value text--right">{{ order.total_refunded_amount | money }}</div>
+              </div>
+            {%- endif -%}
+            <div class="d--flex justify--space-between">
+              <div class="h5 text--no-wrap m-0">
+                {{- 'customer.account.order.total' | t -}}
+              </div>
+              <div class="order-sidebar__value text--right text--bold">{{ order.total_price | money }}</div>
+            </div>
+            {%- unless order.name contains 'CG19-' -%}
+              <a class="d--flex button button--primary button--lg width--100" style="--btn-pad-x: 2rem;" href="{{ order.order_status_url }}">
+                {{- 'customer.account.order.track' | t -}}
+              </a>
+            {%- endunless -%}
+          </div>
+        </div>
+        <div class="width--100 mb-30">
+          <h5 class="bg-color--black color--white round--top px-30 py-20 m-0">
+            {{- 'customer.account.order.billing_address' | t -}}
+          </h5>
+          <div class="round--bottom p-30 bg-color--gray-off-white account-gray-box">
+            {{- order.billing_address | format_address -}}
+          </div>
+        </div>
+        <div class="width--100">
+          <h5 class="bg-color--black color--white round--top px-30 py-20 m-0">
+            {{- 'customer.account.order.shipping_address' | t -}}
+          </h5>
+          <div class="round--bottom p-30 bg-color--gray-off-white account-gray-box">
+            {{- order.shipping_address | format_address -}}
+          </div>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Order Page",
+  "tag": "section",
+  "class": "page-width page-section page-top",
+  "settings": []
+}
+{% endschema %}

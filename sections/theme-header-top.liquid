@@ -1,0 +1,85 @@
+<div class="theme-header-top page-width flex-center width--100 text--semibold">
+  <details class="header-top-drop localization-selector relative lg-down--hide">
+    {%- assign current_market = shop.metaobjects.language_and_currency_option.values | where: 'subfolder',request.locale.root_url | first -%}
+    <summary class="d--flex gap-10 align-items--center">
+      {%- render 'icons-sprite-icon' id: 'icon-globe', size: 22 -%}
+      <span class="hover-underline">{{ current_market.link_text.value }}</span>
+      {%- render 'icons-sprite-icon', id: 'icon-caret', size: 9, class: 'rotate--90' -%}
+    </summary>
+    <div class="header-top-drop__menu bg-color--white color--black text--md round round--md absolute">
+      {%- for market in shop.metaobjects.language_and_currency_option.values -%}
+        {%- assign subfolder = market.subfolder.value | append: '/' -%}
+        <a class="d--flex align-items--center width--100 gap-10" href="{{ request.path | replace_first: request.locale.root_url, subfolder  | replace: '///','/' | replace: '//','/' }}">
+          {%- if market.icon -%}
+            <img class="flex-shrink-0" srcset="{{ market.icon | image_url: width: 22 }} 22w, {{ market.icon | image_url: width: 44 }} 44w" sizes="22px" width="22" alt="{{ market.link_text.value | escape }}" loading="lazy">
+          {%- else -%}
+            {%- render 'icons-sprite-icon' id: 'icon-globe', size: 22, class: 'flex-shrink-0' -%}
+          {%- endif -%}
+          <span class="hover-underline">
+            {{- market.link_text.value -}}
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </details>
+  <div class="center-column text--center width--100 links-underline">
+    {{- section.settings.message -}}
+  </div>
+  <nav class="right-column d--flex gap-10 lg-down--hide">
+    {%- for link in section.settings.menu.links -%}
+      {%- if link.url contains 'account' -%}
+        {%- if customer -%}
+          <a class="hover-underline text--no-wrap" href="{{ routes.account_url }}">
+            {{- 'layout.header.account.title' | t -}}
+          </a>
+        {%- else -%}
+          <a class="hover-underline text--no-wrap" href="{{ routes.account_login_url }}">
+            {{- 'layout.header.account.login' | t -}}
+          </a>
+        {%- endif -%}
+      {%- else -%}
+        <a class="hover-underline text--no-wrap" href="{{ link.url }}">
+          {{- link.title -}}
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+</div>
+
+{%- comment -%}
+<details class="header-top-drop relative">
+  <summary class="hover-underline">
+    {{- 'layout.header.account.title' | t -}}
+  </summary>
+  <div class="account-menu header-top-drop__menu round round--md bg-color--white color--black text--md absolute">
+    {%- for sublink in link.links -%}
+      <a class="d--block hover-underline" href="{{ sublink.url }}">
+        {{- sublink.title -}}
+      </a>
+    {%- endfor -%}
+    <a class="d--block bg-color--gray-lightest hover-underline text--semibold{% if link.links.size > 0 %} mt-10{% endif %}" href="{{ routes.account_logout_url }}">
+      {{- 'layout.header.account.logout' | t -}}
+    </a>
+  </div>
+</details>
+
+{%- endcomment -%}
+
+{% schema %}
+{
+  "name": "Header Top Bar",
+  "class": "bg-color--black color--white",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "message",
+      "label": "Promotion Message"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Top Navigation"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,154 @@
+
+{{- 'component-faq-section.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px auto {{ section.settings.margin_bottom_mobile }}px;
+  }
+  #shopify-section-{{ section.id }} .section-header {margin-bottom: {{ section.settings.margin_bottom_mobile }}px;}
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px auto {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .section-header {margin-bottom: {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;}
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px auto {{ section.settings.margin_bottom_desktop }}px;
+    }
+    #shopify-section-{{ section.id }} .section-header {margin-bottom: {{ section.settings.margin_bottom_desktop }}px;}
+  }
+{%- endstyle -%}
+
+{%- liquid if section.index == 1
+  assign titleTag = 'h1'
+else
+  assign titleTag = 'h2'
+endif -%}
+
+<div class="section-header{% if section.index == 1 %} page-top{% endif %}">
+  {%- if section.settings.pretitle != blank -%}
+    <div class="section-pretitle flex-items">
+      {{- section.settings.pretitle -}}
+    </div>
+  {%- endif -%}
+  {%- if section.settings.title != blank -%}
+    <{{ titleTag }} class="section-title">
+      {{- section.settings.title -}}
+    </{{ titleTag }}>
+  {%- endif -%}
+</div>
+<div class="grid grid--lg">
+  {%- liquid assign col1FAQs = section.blocks | where: 'type','faq_1'
+  assign col2FAQs = section.blocks | where: 'type','faq_2' -%}
+  <div class="grid__item md-up--50">
+    {%- for block in col1FAQs -%}
+      {%- render 'component-faq', block: block -%}
+    {%- endfor -%}
+  </div>
+  <div class="grid__item md-up--50">
+    {%- for block in col2FAQs -%}
+      {%- render 'component-faq', block: block -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "FAQ Blocks",
+    "class": "page-width faq-section",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "faq_1",
+        "name": "Column 1 FAQ",
+        "settings": [
+          {
+            "type": "text",
+            "id": "faq_handle",
+            "label": "FAQ Handle"
+          }
+        ]
+      },
+      {
+        "type": "faq_2",
+        "name": "Column 2 FAQ",
+        "settings": [
+          {
+            "type": "text",
+            "id": "faq_handle",
+            "label": "FAQ Handle"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "FAQ blocks",
+        "blocks": [
+          {
+            "type": "faq_1"
+          },
+          {
+            "type": "faq_2"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

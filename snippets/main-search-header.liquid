@@ -1,0 +1,18 @@
+<div class="mb-20 search-results--header d--flex lg-up--justify-space-between lg-down--flex-column lg-down--v-gap-10">
+  <h2 class="h4 mb-0">
+    {{- 'templates.search.results_for' | t }} "{{ search.terms }}"
+  </h2>
+  <div class="product-count" role="status">
+    <p class="product-count__text" id="ProductCount">
+      Showing {{ search.results.size }}
+      {%- liquid echo ' '
+      if search.types contains 'product'
+        echo 'Product'
+      else
+        echo 'templates.search.content' | t
+      endif
+      echo ' ' -%}
+      Results Of {{ search.results_count }} Total
+    </p>
+  </div>
+</div>

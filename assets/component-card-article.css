@@ -1,0 +1,57 @@
+.thumb {
+    aspect-ratio: 4/3;
+}
+
+.thumb--container {
+    max-width: 33%;
+}
+
+.border--gray {
+    border: 1px solid var(--color-gray);
+}
+
+.border--gray:hover {
+    border: 1px solid var(--color-black-text);
+    box-shadow: 0 0 0 1px var(--color-black-text);
+}
+
+.border--gray:hover .h4 { 
+    text-decoration: underline;
+}
+
+.ellipsis {
+    display: -webkit-box;
+    max-width: 100%;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+    .ellipsis {    
+        -webkit-line-clamp: 2;
+    }
+}
+
+.description-text {
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+}
+
+.gap-5p {
+    gap: 5%;
+}
+
+.card-article__title {
+    font-weight: 500;
+    line-height: 120%;
+}
+
+@media (min-width: 1024px) {
+    .lg-up--50-gap {
+        width: calc(50% - 15px);
+    }
+}

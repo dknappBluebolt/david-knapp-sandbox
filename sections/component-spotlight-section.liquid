@@ -1,0 +1,496 @@
+{%- liquid assign listColor = section.settings.text_color
+if listColor == 'red'
+  assign listColor = '#E55454'
+endif -%}
+
+{%- style -%}
+  .gap--custom-{{ section.id }} {
+    gap: {{ section.settings.gap_mobile }}px;
+  }
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    color: var(--color-{{ section.settings.text_color }});
+    background-color: var(--color-{{ section.settings.background_color }});
+    {%- if section.settings.round_top -%}
+      border-top-left-radius: 2rem; border-top-right-radius: 2rem;
+    {%- endif -%}
+    {%- if section.settings.round_bottom -%}
+      border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem;
+    {%- endif -%}
+  }
+  #shopify-section-{{ section.id }} .rte--list ul li {background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='25' height='25' viewBox='0 0 25 25' fill='none'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M12.667 23.333C18.7414 23.333 23.667 18.4086 23.667 12.333C23.667 6.25863 18.7414 1.33301 12.667 1.33301C6.59261 1.33301 1.66699 6.25863 1.66699 12.333C1.66699 18.4086 6.59261 23.333 12.667 23.333Z' stroke='{{ listColor }}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M10.9517 16.4609L15.0972 12.3333L10.9517 8.20559' stroke='{{ listColor }}' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat left 2px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+      padding-top: {{ section.settings.padding_top_desktop | times: 0.7 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .spotlight-section {min-height: 500px;}
+    {%- if section.settings.image_position == 'right' -%}
+      {%- if section.settings.page_width == 'full' -%}
+        #shopify-section-{{ section.id }} .page-width {padding-right: 0;}
+      {%- endif -%}
+      #shopify-section-{{ section.id }} .spotlight-section---image {order: 1;}
+    {%- else -%}
+      {%- if section.settings.page_width == 'full' -%}
+        #shopify-section-{{ section.id }} .page-width {padding-left: 0;}
+      {%- endif -%}
+    {%- endif -%}
+  }
+  @media (min-width: 1024px) {
+    .gap--custom-{{ section.id }} {
+      gap: {{ section.settings.gap_desktop }}px;
+    }
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+      {%- if section.settings.round_top -%}
+        border-top-left-radius: var(--corner-radius-lg); border-top-right-radius: var(--corner-radius-lg);
+      {%- endif -%}
+      {%- if section.settings.round_bottom -%}
+        border-bottom-left-radius: var(--corner-radius-lg); border-bottom-right-radius: var(--corner-radius-lg);
+      {%- endif -%}
+    }
+    #shopify-section-{{ section.id }} .spotlight-section {min-height: 650px;}
+  }
+{%- endstyle -%}
+
+<div class="d--flex sm--flex-column page-width{% if section.settings.page_width == 'full' %} page-width--full{% endif %} gap--custom-{{ section.id }} align-items--center spotlight-section">
+  {%- if section.settings.image_desktop != blank -%}
+    <div class="spotlight-section---image md--40 lg-up--50 xl--60 width--100">
+      {%- liquid
+        assign ImageDesktop = section.settings.image_desktop
+        if section.settings.image_mobile != blank
+          assign ImageMobile = section.settings.image_mobile
+        else
+          assign ImageMobile = ImageDesktop
+        endif
+        -%}
+      <picture class="d--block width--100">
+        <source
+          media="(min-width: 768px)"
+          srcset="{{ ImageDesktop | image_url: width: 300 }} 300w, {{ ImageDesktop | image_url: width: 600 }} 600w, {{ ImageDesktop | image_url: width: 900 }} 900w, {{ ImageDesktop | image_url: width: 1200 }} 1200w "
+          sizes="(min-width: 768px) and (max-width: 1023px) 33vw, 50vw"
+        >
+        <img
+          srcset="{{ ImageMobile | image_url: width: 300 }} 300w, {{ ImageMobile | image_url: width: 600 }} 600w, {{ ImageMobile | image_url: width: 900 }} 900w, {{ ImageMobile | image_url: width: 1200 }} 1200w"
+          sizes="100vw"
+          class="d--block width--100"
+          alt="{{ ImageDesktop.alt | escape }}"
+          width="{{ ImageMobile.width }}"
+          height="{{ ImageMobile.height }}"
+          {%- if section.index > 2 -%}
+            loading="lazy"
+          {%- else -%}
+            fetchpriority="high"
+          {%- endif -%}
+        >
+      </picture>
+    </div>
+  {%- endif -%}
+  <div class="spotlight-section---content py-20 md--60 lg-up--50 xl--40 width--100">
+    {%- liquid assign textAlignDesktop = 'md-up--text-' | append: section.settings.desktop_text_alignment
+    assign textAlignMobile = 'sm--text-' | append: section.settings.mobile_text_alignment -%}
+    <div class="section-header {{ textAlignDesktop }} {{ textAlignMobile }}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'pretitle' -%}
+            <div class="section-pretitle flex-items color--{{ section.settings.text_color }} ">
+              {{- block.settings.pretitle -}}
+            </div>
+          {%- when 'heading' -%}
+            <h2 class="section-title color--{{ section.settings.text_color }}">
+              {{- block.settings.title -}}
+            </h2>
+          {%- when 'content' -%}
+            <div class="rte rte--lg rte--list links-underline color--{{ section.settings.text_color }}">
+              {{- block.settings.content -}}
+              {%- if block.settings.content_more != blank -%}
+                <tcg-click-to-reveal class="js-click-to-reveal mt-20">
+                  <button type="button" class="js-click-to-reveal-trigger link" data-more="{{ 'general.labels.more' | t }}" data-less="{{ 'general.labels.less' | t }}" aria-controls="content-more-{{ section.id }}">
+                    {{- 'general.labels.more' | t -}}
+                  </button>
+                  <div id="content-more-{{ section.id }}" class="js-click-to-reveal-text mt-20">
+                    {{- block.settings.content_more -}}
+                  </div>
+                </tcg-click-to-reveal>
+              {%- endif -%}
+            </div>
+          {%- when 'cta' -%}
+            {%- if block.settings.cta_text != blank and block.settings.cta_url != blank -%}
+              <div class="rte--lg width--100">
+                {%- liquid if block.settings.cta_style == 'link'
+                  assign ctaClasses = 'link'
+                else
+                  assign ctaClasses = 'button button--lg button--' | append: block.settings.cta_style
+                endif -%}
+                <a href="{{ block.settings.cta_url }}" class="{{ ctaClasses }}">
+                  {{- block.settings.cta_text -}}
+                </a>
+              </div>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Spotlight Section",
+    /**"class": "overflow-hidden",**/
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "padding_top_desktop",
+        "label": "Padding Top (desktop)",
+        "min": 0,
+        "max": 180,
+        "step": 5,
+        "default": 75
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "label": "Padding Top (mobile)",
+        "min": 0,
+        "max": 180,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_desktop",
+        "label": "Padding Bottom (desktop)",
+        "min": 0,
+        "max": 180,
+        "step": 5,
+        "default": 75
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "label": "Padding Bottom (mobile)",
+        "min": 0,
+        "max": 180,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "gap_desktop",
+        "label": "Column Gap Desktop",
+        "min": 0,
+        "max": 100,
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "gap_mobile",
+        "label": "Column Gap Mobile",
+        "min": 0,
+        "max": 100,
+        "default": 24
+      },
+      {
+        "type": "select",
+        "id": "page_width",
+        "label": "Page Width",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full"
+          },
+          {
+            "value": "standard",
+            "label": "Standard"
+          }
+        ],
+        "default": "full"
+      },
+      {
+        "type": "select",
+        "id": "image_position",
+        "label": "Desktop Image Position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "id": "image_desktop",
+        "label": "Desktop image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_mobile",
+        "label": "Mobile image"
+      },
+      {
+        "type": "checkbox",
+        "id": "round_top",
+        "label": "Round top corners?",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "round_bottom",
+        "label": "Round bottom corners?",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "background_color",
+        "label": "Background Color",
+        "options": [
+          {
+            "value": "white",
+            "label": "White"
+          },
+          {
+            "value": "black-bg",
+            "label": "Black"
+          },
+          {
+            "value": "teal",
+            "label": "Teal"
+          },
+          {
+            "value": "teal-dark",
+            "label": "Dark Teal"
+          },
+          {
+            "value": "gray",
+            "label": "Gray"
+          },
+          {
+            "value": "gray-light",
+            "label": "Light Gray"
+          },
+          {
+            "value": "red",
+            "label": "Red"
+          },
+          {
+            "value": "yellow",
+            "label": "Yellow"
+          }
+        ],
+        "default": "black-bg"
+      },
+      {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text Color",
+        "options": [
+          {
+            "value": "black",
+            "label": "Ink"
+          },
+          {
+            "value": "red",
+            "label": "Red"
+          },
+          {
+            "value": "white",
+            "label": "White"
+          }
+        ],
+        "default": "white"
+      },
+      {
+        "type": "select",
+        "id": "desktop_text_alignment",
+        "label": "Desktop Text Alignment",
+        "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+        "default": "left"
+      },
+      {
+        "type": "select",
+        "id": "mobile_text_alignment",
+        "label": "Mobile Text Alignment",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "left"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading Text",
+            "default": "Your Heading Here"
+          }
+        ]
+      },
+      {
+        "type": "pretitle",
+        "name": "Pretitle",
+        "settings": [
+          {
+            "type": "text",
+            "id": "pretitle",
+            "label": "Pre-Title",
+            "default": "Pre-Title Here"
+          }
+        ]
+      },
+      {
+        "type": "cta",
+        "name": "CTA",
+        "settings": [
+          {
+            "type": "select",
+            "id": "cta_style",
+            "label": "CTA Style",
+            "options": [
+              {
+                "value": "primary",
+                "label": "Primary Button"
+              },
+              {
+                "value": "black",
+                "label": "Black Button"
+              },
+              {
+                "value": "link",
+                "label": "Underline Text"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "cta_text",
+            "label": "CTA Text"
+          },
+          {
+            "type": "url",
+            "id": "cta_url",
+            "label": "CTA Link"
+          }
+        ]
+      },
+      {
+        "type": "content",
+        "name": "Content",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Rich Text Content",
+            "default": "<p>Content here</p>"
+          },
+          {
+            "type": "richtext",
+            "id": "content_more",
+            "label": "More Text",
+            "info": "The text hidden behind a more button, revealed when clicked. More button does not appear unless this field is filled in.",
+            "default": "<p>Content here</p>"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Component Spotlight",
+        "blocks": [
+          {
+            "type": "pretitle"
+          },
+          {
+            "type": "heading"
+          },
+          {
+            "type": "content"
+          },
+          {
+            "type": "cta"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

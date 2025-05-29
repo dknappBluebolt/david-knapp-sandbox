@@ -1,0 +1,20 @@
+{%- comment -%}
+  Accepts:
+    - title: {String} title of the section
+    - order: {Object} (Optional) order shopify object, only send if you want to display the order status
+    - class: {String} list of css classes
+{%- endcomment -%}
+<div class="d--flex align-items--center gap-16 pb-20 {{ class }}">
+  <h1 class="h3--desktop m-0">{{ title }}</h1>
+  {%- if order -%}
+    {%- render 'component-order-fulfillment-status', order: order -%}
+    {%- assign order_date = order.created_at | time_tag: format: 'date_at_time' -%}
+    <p class="width--100">
+      {{- 'customer.order.date_html' | t: date: order_date -}}
+    </p>
+  {%- elsif customer -%}
+    <a href="{{ routes.account_logout_url }}" class="link text--md">
+      {{- 'customer.log_out' | t -}}
+    </a>
+  {%- endif -%}
+</div>

@@ -1,0 +1,133 @@
+{{- 'component-cards.css' | asset_url | stylesheet_tag -}}
+{{- 'component-card-article.css' | asset_url | stylesheet_tag -}}
+{{- 'main-search.css' | asset_url | stylesheet_tag -}}
+
+{%- liquid
+  assign sort_by = search.sort_by | default: search.default_sort_by
+  assign terms = search.terms | escape
+  assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+-%}
+<h1 class="visually-hidden">{{ 'templates.search.title' | t }}</h1>
+<div class="search-results">
+  {%- if search.results_count > 0 -%}
+    {%- paginate search.results by 20 -%}
+      <div class="template-search{% unless search.performed and search.results_count > 0 %} template-search--empty{% endunless %} section-{{ section.id }}-padding" id="product-results">
+        {%- if search.filters != empty -%}
+          <aside
+            aria-labelledby="verticalTitle"
+            class="facets-wrapper mt-20"
+            id="main-search-filters"
+            data-id="{{ section.id }}"
+          >
+            {%- render 'component-facets',
+              results: search,
+              paginate: paginate
+            -%}
+          </aside>
+        {%- else -%}
+          {%- render 'main-search-header' -%}
+        {%- endif -%}
+
+        <div class="search-results-tabs">
+          <a href="{{ routes.search_url }}{{ search_url }}&type=product" class="tab-link{% if search.types contains 'product' %} active{% endif %}">
+            {{- 'templates.search.products' | t -}}
+          </a>
+          <a href="{{ routes.search_url }}{{ search_url }}&type=page,article" class="tab-link{% unless search.types contains 'product' %} active{% endunless %}">
+            {{- 'templates.search.content' | t -}}
+          </a>
+        </div>
+        {%- if search.types contains 'product' -%}
+          <div class="product-grid-container" id="ProductGridContainer">
+            <div
+              class="template-search__results collection"
+              id="product-grid"
+              data-id="{{ section.id }}"
+            >
+              <div class="loading-overlay gradient"></div>
+              {%- assign lazy_load = false -%}
+              <div class="grid product-grid" role="list">
+                {%- for item in search.results -%}
+                  {%- if forloop.index > 5 -%}
+                    {%- assign lazy_load = true -%}
+                  {%- endif -%}
+
+                  <div
+                    class="grid__item sm--33 xs--50 md--33 lg-up--20 page-section--md"
+                    data-object-type="{{ item.object_type }}"
+                  >
+                  {%- render 'component-card-product', product: item, lazy_load: lazy_load -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+              {%- render 'component-pagination', paginate: paginate, class: 'mt-30' -%}
+            </div>
+          </div>
+        </div>
+      {%- elsif search.types contains 'page' or search.types contains 'article' -%}
+        <div class="template-search{% unless search.performed and search.results_count > 0 %} template-search--empty{% endunless %} " id="content-results">
+          {%- if search.performed -%}
+            <div class="content-grid-container">
+              {%- if search.results.size == 0 and search.filters != empty -%}
+                <div
+                  class="template-search__results collection collection--empty"
+                  id="content-grid"
+                  data-id="{{ section.id }}"
+                >
+                  <div class="loading-overlay gradient"></div>
+                  <div class="title-wrapper center">
+                    <h2 class="title title--primary">
+                      {{- 'sections.collection_template.empty' | t -}}
+                      <br>
+                      {{-
+                        'sections.collection_template.use_fewer_filters_html'
+                        | t: link: search_url, class: 'link'
+                      -}}
+                    </h2>
+                  </div>
+                </div>
+              {%- else -%}
+                <div
+                  class="template-search__results collection"
+                  id="content-grid"
+                  data-id="{{ section.id }}"
+                >
+                  <div class="loading-overlay gradient"></div>
+                  <div class="grid content-grid gap-20 mt-40" role="list">
+                    {%- for item in search.results -%}
+                      {%- case item.object_type -%}
+                        {%- when 'article' -%}
+                          {%- render 'component-card-article', article: item, lazy_load: true -%}
+                        {%- when 'page' -%}
+                          <a href="{{ item.url }}" class="d--flex bg-color--white lg-up--p-40 lg-down--p-16 align-items--center justify--space-between width--100 gap-5p border--gray round lg-up--50-gap">
+                            <h4 class="title mb-0">
+                              {{- item.title -}}
+                            </h4>
+                          </a>
+                      {%- endcase -%}
+                    {%- endfor -%}
+                  </div>
+                  {%- render 'component-pagination', paginate: paginate, class: 'mt-30' -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+      {%- endif -%}
+    </div>
+    {%- endpaginate -%}
+  {%- else -%}
+    <div class="form-msg form-msg--error critical-hidden">
+      {{- 'templates.search.no_results' | t -}}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-search.name",
+  "tag": "section",
+  "class": "page-width page-section page-top",
+  "settings": [
+
+  ]
+}
+{% endschema %}

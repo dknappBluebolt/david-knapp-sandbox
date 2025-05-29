@@ -1,0 +1,13 @@
+{% assign configurator = product.metafields.custom.cover_configurator.value %}
+
+<div class="configurator-display">
+	<div class="configurator-display__layer configurator-display__material">
+	</div>
+	<div class="configurator-display__layer configurator-display__shape">
+		<img src="{{ configurator.placeholder_image | file_url }}" loading="lazy" alt="Shape Placeholder Image. Please select a shape.">
+	</div>
+	<div class="configurator-display__layer configurator-display__fold-direction">
+	</div>
+	<div class="configurator-display__layer configurator-display__strap-location">
+	</div>
+</div>

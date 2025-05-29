@@ -1,0 +1,54 @@
+{%- comment -%}
+  Accepts:
+    - how_to_measure: {Object} a how to measure metaobject https://admin.shopify.com/store/973929-be/settings/custom_data/metaobjects/how_to_measure
+    - section: {Object} section that the snippet is rendered in
+{%- endcomment -%}
+
+<div class="d--flex flex-column gap-20">
+  {%- render 'component-video-with-poster', video: how_to_measure.value.video.value, section: section, sizes: "(max-width: 1349px) 100vw, (min-width: 1350px) and (max-width: 1730px) 50vw, 758px" -%}
+  {{- how_to_measure.value.rich_text | metafield_tag | replace: 'metafield-rich_text_field','rte rte--lg' -}}
+
+  {%- assign upsell = how_to_measure.value.upsell.value -%}
+
+  {% if upsell != blank %}
+    <quick-add-to-cart
+      class="d--flex p-20 round round--md width--100 border--gray flex-center justify--start gap-20 relative"
+    >
+      <div class="absolute upsell">
+        {%- render 'icons-sprite-icon' id: 'icon-upsell', size: 40 -%}
+      </div>
+      <img
+        src="{{ upsell.featured_image | image_url: width: 100 }}"
+        width="100"
+        height="{{ 100 | times: upsell.featured_image.aspect_ratio }}"
+        alt="{{ upsell.alt | escape }}"
+        loading="lazy"
+      >
+      <div>
+        <div class="text--lg text--bold">
+          {{- upsell.product.title -}}
+        </div>
+        {%- unless upsell.product.has_only_default_variant -%}
+          <div>
+            {{- upsell.title -}}
+          </div>
+        {%- endunless -%}
+      </div>
+      <div class="ml-auto">
+        <button
+          class="js-quick-add-to-cart button"
+          data-variant-ids="{{ upsell.id }}"
+          data-quantities="1"
+        >
+          <span class="js-start-text">
+          {{- 'products.product.quick_add' | t -}}
+          </span>
+          <span class="loader hidden"></span>
+          <span class="js-finished-text hidden">
+            Added
+          </span>
+        </button>
+      </div>
+    </quick-add-to-cart>
+  {% endif %}
+</div>

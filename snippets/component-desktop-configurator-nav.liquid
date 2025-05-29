@@ -1,0 +1,46 @@
+<div class="configurator-steps__step is-step-1 is-complete">
+	<div class="configurator-steps__step--inner">
+		<span class="configurator-steps__count">
+			<span>01</span>
+		</span>
+		<span class="configurator-steps__title">{{ section.settings.label_step_durability_taper }}</span>
+		<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+		<button class="configurator-steps__toggle" aria-controls="nav-step-1-desktop" aria-label="{{ section.settings.label_view_step_details | escape }}">
+			{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+		</button>
+	</div>
+	<div id="nav-step-1-desktop" class="configurator-steps__reveal is-step-1"></div>
+</div>
+<div class="configurator-steps__step is-step-2 is-active">
+	<div class="configurator-steps__step--inner">
+		<span class="configurator-steps__count">02</span>
+		<span class="configurator-steps__title">{{ section.settings.label_step_dimensions }}</span>
+		<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+		<button class="configurator-steps__toggle" aria-controls="nav-step-2-desktop" aria-label="{{ section.settings.label_view_step_details | escape }}">
+			{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+		</button>
+	</div>
+	<div id="nav-step-2-desktop" class="configurator-steps__reveal is-step-2"></div>
+</div>
+<div class="configurator-steps__step is-step-3">
+	<div class="configurator-steps__step--inner">
+		<span class="configurator-steps__count">03</span>
+		<span class="configurator-steps__title">{{ section.settings.label_step_color_style }}</span>
+		<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+		<button class="configurator-steps__toggle" aria-controls="nav-step-3-desktop" aria-label="{{ section.settings.label_view_step_details | escape }}">
+			{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+		</button>
+	</div>
+	<div id="nav-step-3-desktop" class="configurator-steps__reveal is-step-3"></div>
+</div>
+<div class="configurator-steps__step is-step-4">
+	<div class="configurator-steps__step--inner">
+		<span class="configurator-steps__count">04</span>
+		<span class="configurator-steps__title">{{ section.settings.label_step_upgrades_accessories }}</span>
+		<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+		<button class="configurator-steps__toggle" aria-controls="nav-step-4-desktop" aria-label="{{ section.settings.label_view_step_details | escape }}">
+			{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+		</button>
+	</div>
+	<div id="nav-step-4-desktop" class="configurator-steps__reveal is-step-4"></div>
+</div>

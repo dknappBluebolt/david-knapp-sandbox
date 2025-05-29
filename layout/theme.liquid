@@ -1,67 +1,124 @@
 <!doctype html>
-<html
-  class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
-  lang="{{ request.locale.iso_code }}"
->
+<html class="no-js" lang="{{ request.locale.iso_code }}">
   <head>
-    {{ 'base.css' | asset_url | stylesheet_tag }}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#9EEAE5">
+    <meta name="facebook-domain-verification" content="j8bfv9xxxgud5wgjbhlkszfikqcocl" />
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    <title>
+      {{- page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
 
-    {%- if settings.favicon != blank -%}
-      <link
-        rel="icon"
-        type="image/png"
-        href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
-      >
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
     {%- endif -%}
 
-    {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
-    <link
-      rel="expect"
-      href="#MainContent"
-      blocking="render"
-      id="view-transition-render-blocker"
-    >
+    {%- liquid
+      assign fontLight = settings.type_body_font | font_modify: 'weight', '-100'
+      assign fontSemibold = settings.type_body_font | font_modify: 'weight', '+100'
+      assign fontBold = settings.type_body_font | font_modify: 'weight', 'bold'
+      assign fontItalic = settings.type_body_font | font_modify: 'style', 'italic'
+      assign fontBoldItalic = fontBold | font_modify: 'style', 'italic'
+    -%}
 
-    {%- render 'meta-tags' -%}
-    {%- render 'fonts' -%}
-    {%- render 'scripts' -%}
-    {%- render 'theme-styles-variables' -%}
-    {%- render 'color-schemes' -%}
+    {%- style -%}
+      {{- settings.type_body_font | font_face: font_display: 'swap' -}}
+      {{- fontSemibold | font_face: font_display: 'swap' -}}
+      {{- fontBold | font_face: font_display: 'swap' -}}
+      {{- fontItalic | font_face: font_display: 'swap' -}}
+      {{- fontBoldItalic | font_face: font_display: 'swap' -}}
 
-    {% if request.design_mode %}
-      {%- render 'theme-editor' -%}
-    {% endif %}
+      :root {
+        --font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        --font-weight: {{ settings.type_body_font.weight }};
+        --font-weight-semibold: {{ fontSemibold.weight }};
+        --font-weight-bold: {{ fontBold.weight }};
+      }
+    {%- endstyle -%}
+
+    <link href="{{ 'theme-critical.css' | asset_url }}" rel="stylesheet" media="all">
+    <link href="{{ 'theme-noncritical.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      window.swiperOptions = {};
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
 
     {{ content_for_header }}
+    {%- render 'meta-tags' -%}
+    <script type="text/javascript">
+    (function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/8S2iPDGymLpG0IgL0aBeAMJoK67snLJWWbWCEKO5/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
+    </script>
   </head>
+  <body class="{{ template.name }}">
+    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+      {{- 'accessibility.skip_to_text' | t -}}
+    </a>
+    {%- render 'icons-sprite' -%}
+    <div class="relative">
+      {%- section 'theme-header-top' -%}
+      {%- section 'theme-header' -%}
 
-  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
-    {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
-    <div id="header-group">
-      {% sections 'header-group' %}
+      <main id="MainContent" role="main" tabindex="-1">
+        {{ content_for_layout }}
+      </main>
+
+      <footer class="theme-footer critical-hidden">
+        {%- section 'theme-footer-top' -%}
+        {%- section 'theme-footer' -%}
+      </footer>
     </div>
 
-    <main
-      id="MainContent"
-      class="content-for-layout"
-      role="main"
-      data-page-transition-enabled="{{ settings.page_transition_enabled }}"
-      data-product-transition="{{ settings.transition_to_main_product }}"
-      data-template="{{ template }}"
-    >
-      {{ content_for_layout }}
-    </main>
+    <script>
+      window.shopUrl = '{{ request.origin }}';
+      window.routes = {
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_url: '{{ routes.cart_url }}'
+      };
+      window.theme = {
+        assets: {
+          swiperCSS: "{{ 'swiper.min.css' | asset_url }}",
+          swiperJS: "{{ 'swiper.min.js' | asset_url }}"
+        },
+        strings: {
+          atc_button: {
+            add_to_cart: {{ 'products.product.add_to_cart' | t | json }},
+            unavailable: {{ 'products.product.unavailable' | t | json }}
+          }
+        }
+      }
+    </script>
+    {%- if request.design_mode -%}
+      <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
+    {%- if request.page_type == 'index' -%}
+      <script type="application/ld+json">
+        {
+          "@context": "http://schema.org",
+          "@type": "WebSite",
+          "name": {{ shop.name | json }},
+          {%- assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" -%}
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {{ potential_action_target | json }},
+            "query-input": "required name=search_term_string"
+          },
+          "url": {{ request.origin | append: page.url | json }}
+        }
+      </script>
+    {%- endif -%}
 
-    {% sections 'footer-group' %}
 
-    {% render 'search-modal' %}
+    <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
 
-    {% # theme-check-disable ParserBlockingScript %}
-    <script src="{{ 'critical.js' | asset_url }}"></script>
-    {% # theme-check-enable ParserBlockingScript %}
-
-    {% if settings.quick_add or settings.mobile_quick_add %}
-      {% render 'quick-add-modal' %}
-    {% endif %}
   </body>
 </html>

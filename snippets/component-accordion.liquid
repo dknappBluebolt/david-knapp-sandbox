@@ -1,0 +1,8 @@
+<details class="accordion py-16"{% if open %} open{% endif %}>
+  <summary class="accordion__summary d--flex justify--space-between align-items--center">
+    {{- title }} <span class="fa fa-chevron-down" aria-hidden="true"></span>
+  </summary>
+  <div class="accordion__content pt-16 rte">
+    {{- content -}}
+  </div>
+</details>

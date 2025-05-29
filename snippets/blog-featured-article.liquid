@@ -1,0 +1,30 @@
+{%- comment -%}
+  Accepts:
+    - article: {Object} featured article to display.
+    - filters: {Array[String]} a list of strings to prioritize the displayed tags
+    - section: {Object} section object.
+{%- endcomment -%}
+
+<div class="d--flex align-items--center flex-column md-up--flex-row">
+  <div class="p-20 md-up--p-50 bg-transparent round mx-20 md-up--mx-0 md-up--45 height--100 z-index--1 featured-article--neg-mt">
+    {%- render 'blog-tags', filters: filters, section: section, article: article, limit: 2 -%}
+    <a href="{{ article.url }}">
+      <p class="h3 mt-20 mb-20">
+        {{- article.title -}}
+      </p>
+      <span class="text--lg link">
+        {{- 'templates.blog.read_article' | t -}}
+      </span>
+    </a>
+  </div>
+  <div class="width--100 md-up--60  featured-article--neg-ml line-height-0">
+    <a href="{{ article.url }}" class="d--block ratio ratio--16-9 round" aria-hidden="true" tabindex="-1">
+      <img
+        class="ratio__content ratio__content--cover"
+        srcset="{{ article.image | image_url: width: 300 }} 300w, {{ article.image | image_url: width: 500 }} 500w, {{ article.image | image_url: width: 700 }} 700w, {{ article.image | image_url: width: 900 }} 900w, {{ article.image | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 767px) 100vw, (min-width: 768px) and (max-width: 1730px) 60vw, 948px"
+        fetchpriority="high" tabindex="-1"
+      >
+    </a>
+  </div>
+</div>

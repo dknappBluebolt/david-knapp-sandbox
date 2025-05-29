@@ -1,0 +1,35 @@
+
+{%- comment -%}
+  Accepts:
+    - order: {Object} order object who's status you want to display
+{%- endcomment -%}
+{%- assign bg_color = 'gray-light' -%}
+{%- assign dot_color = 'color--gray-dark' -%}
+{%- assign text = 'Unknown' -%}
+{%- assign fulfillment_status = order.fulfillment_status | downcase -%}
+
+{%- if order.total_refunded_amount == order.total_price and order.total_price != 0 -%}
+    {%- assign text = 'Refunded' -%}
+{%- elsif order.total_refunded_amount < order.total_price and order.total_refunded_amount > 0 -%}
+    {%- assign text = 'Partially Refunded' -%}
+{%- elsif order.cancelled -%}
+    {%- assign bg_color = 'red-light' -%}
+    {%- assign dot_color = "color--red-dark" -%}
+    {%- assign text = 'Cancelled' -%}
+{%- elsif fulfillment_status == 'unfulfilled' -%}
+    {%- assign bg_color = 'orange-light' -%}
+    {%- assign dot_color = "color--orange-dark" -%}
+    {%- assign text = 'Unfulfilled' -%}
+{%- elsif fulfillment_status == 'partial' -%}
+    {%- assign bg_color = 'yellow-bg' -%}
+    {%- assign dot_color = "color--yellow-text" -%}
+    {%- assign text = 'Partially Fulfilled' -%}
+{%- elsif fulfillment_status == 'fulfilled' -%}
+    {%- assign bg_color = 'green-light' -%}
+    {%- assign dot_color = "color--green-dark" -%}
+    {%- assign text = 'Fulfilled' -%}
+{%- endif -%}
+<div class="d--inline-flex align-items--center px-12 py-2 gap-8 round bg-color--{{ bg_color }}">
+    {%- render 'icon-status-dot', size: 12, class: dot_color -%}
+    {{- text -}}
+</div>

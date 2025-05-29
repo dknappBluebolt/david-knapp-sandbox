@@ -1,0 +1,51 @@
+{%- capture block_image -%}
+  <img  src="{{ image | image_url }}" alt="{{ image.alt | escape }}" />
+{%- endcapture -%}
+
+{%- if image != blank -%}
+  {%- if image_url != blank -%}
+    <a href="{{ image_url }}" class="mb-20" aria-hidden="true" tabindex="-1">
+      {{- block_image -}}
+    </a>
+  {% else %}
+    <div class="mb-20" style="--ratio-percent: 120%;" aria-hidden="true" tabindex="-1">
+      {{- block_image -}}
+    </div>
+  {% endif %}
+{% endif %}
+{%- if title != blank -%}
+  <h4 class="mb-10">{{ title }}</h4>
+{%- endif -%}
+{%- if rich_text != blank -%}
+  <div class="text--lg mb-16">
+    {{- rich_text -}}
+  </div>
+{%- endif -%}
+{%- if link_text_1 != blank and link_url_1 != null -%}
+  <div>
+    <a class="card-content__link link mb-10" href="{{ link_url_1 }}">
+      {{- link_text_1 -}}
+    </a>
+  </div>
+{%- endif -%}
+{%- if link_text_2 != blank and link_url_2 != null -%}
+  <div>
+    <a class="card-content__link link mb-10" href="{{ link_url_2 }}">
+      {{- link_text_2 -}}
+    </a>
+  </div>
+{%- endif -%}
+{% if link_text_3 != blank and link_url_3 != null %}
+  <div>
+    <a class="card-content__link link mb-10" href="{{ link_url_3 }}">
+      {{- link_text_3 -}}
+    </a>
+  </div>
+{%- endif -%}
+{%- if link_text_4 != blank and link_url_4 != null -%}
+  <div>
+    <a class="card-content__link link mb-10" href="{{ link_url_4 }}">
+      {{- link_text_4 -}}
+    </a>
+  </div>
+{%- endif -%}

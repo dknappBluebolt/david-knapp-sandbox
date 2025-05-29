@@ -1,0 +1,526 @@
+{%- liquid
+    assign shortSectionId = section.id | split: "_" | last
+    if shortSectionId == blank
+        assign shortSectionId = section.id
+    endif
+    assign hasImage = false
+    if section.settings.image != null
+        assign hasImage = true
+    endif
+    if section.index == 1
+        assign titleTag = 'h1'
+    else
+        assign titleTag = 'h2'
+    endif
+-%}
+{%- capture section_header -%}
+    <div id="{{ shortSectionId | prepend: "warranty-claim-sectionheader-" }}" class="section-header mt-20 mb-20">
+        {%- if section.settings.pretitle != blank -%}
+            <div class="section-pretitle flex-items">
+                {{- section.settings.pretitle -}}
+            </div>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+            <{{ titleTag }} class="section-title">
+                {{- section.settings.title -}}
+            </{{ titleTag }}>
+        {%- endif -%}
+    </div>
+    <div id="{{ shortSectionId | prepend: "warranty-claim-sectionheader-confirm-" }}" class="section-header mt-20 mb-20 hide">
+        <div class="section-pretitle flex-items">Form Submitted</div>
+        <h2 class="section-title">Thank You!</h2>
+    </div>
+{%- endcapture -%}
+{%- style -%}
+    #shopify-section-{{ section.id }} {
+        margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+        #shopify-section-{{ section.id }} {
+            margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+        }
+    }
+    @media (min-width: 1024px) {
+        #shopify-section-{{ section.id }} {
+            margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+        }
+    }
+
+    #shopify-section-{{ section.id }} .form {--grid-desktop-x:2rem; --spacing-inline:2rem;}
+    #shopify-section-{{ section.id }} button, #shopify-section-{{ section.id }} {{ shortSectionId | prepend: "#warranty-claim-confirmation-" }} .button--primary {min-width:26.6rem;}
+    #shopify-section-{{ section.id }} .imageupload-wrap {--inputs-border-color:var(--color-gray-off-white);}
+    #shopify-section-{{ section.id }} .imageupload-wrap.input--error {--inputs-border-color:var(--color-error);}
+    {%- if hasImage -%}
+    #shopify-section-{{ section.id }} .custom-page-width {max-width:calc((var(--page-width) - var(--grid-desktop-x)) / 2 + var(--page-gutter) );}
+
+    @media (min-width: 1024px) {
+        #shopify-section-{{ section.id }} .section-bg {background-size:cover; background-position:center; background-image:url("{{ section.settings.image | image_url: width: 968 }}"); min-height:77.6rem;}
+    }
+    {%- endif -%}
+{%- endstyle -%}
+
+<div class="page-section{% if section.index == 1 %} page-top{% endif %}">
+    {%- unless hasImage -%}
+        <div class="page-width">
+            {{- section_header -}}
+        </div>
+    {%- endunless -%}
+    <div class="{% unless hasImage %}page-width{% endunless %}">
+        {%- liquid assign custom_grid_class = 'grid'
+        assign custom_griditeminner_class = 'lg-up--pr-pgutter'
+        if hasImage
+            assign custom_grid_class = custom_grid_class | append: ' align-items--center'
+            assign custom_griditeminner_class = custom_griditeminner_class | append: ' page-width custom-page-width ml-lg-up-auto mr-lg-up-0'
+        endif %}
+        <div class="{{ custom_grid_class }}">
+            <div class="grid__item lg-up--50 mb-30">
+                <div class="{{ custom_griditeminner_class }}">
+                    {%- if hasImage -%}
+                        {{- section_header -}}
+                    {%- endif -%}
+                    <form id="{{ shortSectionId | prepend: "warranty-claim-" }}" class="form">
+                        <div class="grid">
+                            <div class="grid__item md--50 xl--50 mb-20">
+                                <div class="field">
+                                    <input id="Field-{{ shortSectionId }}-First-Name" class="field__input required" type="text" placeholder="First Name" name="firstname" aria-required="true" />
+                                    <label for="Field-{{ shortSectionId }}-First-Name" class="field__label">First Name <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-First-Name-Error" class="text--xs text--semibold color--red mt-5 hide">First Name is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item md--50 xl--50 mb-20">
+                                <div class="field">
+                                    <input id="Field-{{ shortSectionId }}-Last-Name" type="text" class="field__input required"  placeholder="Last Name" name="lastname" aria-required="true" />
+                                    <label for="Field-{{ shortSectionId }}-Last-Name" class="field__label">Last Name <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-Last-Name-Error" class="text--xs text--semibold color--red mt-5 hide">Last Name is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item md--50 xl--50 mb-20">
+                                <div class="field">
+                                    <input id="Field-{{ shortSectionId }}-Email" type="email" class="field__input required" placeholder="Email" name="email" aria-required="true" />
+                                    <label for="Field-{{ shortSectionId }}-Email" class="field__label">Email <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-Email-Error" class="text--xs text--semibold color--red mt-5 hide">Email is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item md--50 xl--50 mb-20">
+                                <div class="field">
+                                    <input id="Field-{{ shortSectionId }}-Phone" type="tel" class="field__input required" placeholder="Phone Number" name="phone" aria-required="true" />
+                                    <label for="Field-{{ shortSectionId }}-Phone" class="field__label">Phone <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-Phone-Error" class="text--xs text--semibold color--red mt-5 hide">Phone is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item md--50 xl--50 mb-20">
+                                <div class="field">
+                                    <input id="Field-{{ shortSectionId }}-Purchase-Date" type="date" class="field__input required type-datetime" placeholder="" name="purchasedate" aria-required="true" onfocus="'showPicker' in this && this.showPicker()" />
+                                    <label for="Field-{{ shortSectionId }}-Purchase-Date" class="field__label">Purchase Date <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-Purchase-Date-Error" class="text--xs text--semibold color--red mt-5 hide">Purchase Date is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item md--50 xl--50 mb-20">
+                                <div class="field">
+                                    <input id="Field-{{ shortSectionId }}-Order-Number" type="text" class="field__input required" placeholder="Order Number" name="ordernumber" aria-required="true" />
+                                    <label for="Field-{{ shortSectionId }}-Order-Number" class="field__label">Order Number <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-Order-Number-Error" class="text--xs text--semibold color--red mt-5 hide">Order Number is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item w--100 mb-20">
+                                <div class="field">
+                                    <textarea id="Field-{{ shortSectionId }}-Description" type="text" class="field__input required" placeholder="Description of the Problem" name="description" aria-required="true"></textarea>
+                                    <label for="Field-{{ shortSectionId }}-Description" class="field__label">Description of the Problem <span class="color--red" aria-label="Required">*</span></label>
+                                </div>
+                                <div role="alert">
+                                    <div id="Field-{{ shortSectionId }}-Description-Error" class="text--xs text--semibold color--red mt-5 hide">Description is required.</div>
+                                </div>
+                            </div>
+                            <div class="grid__item w--100 mb-30">
+                                <label for="{{ shortSectionId | prepend: "warranty-claim-imageupload-" }}" class="text--lg text--bold">Photo of Problem</label>
+                                <p>Please provide photos showing the exact issue</p>
+                                <div class="grid justify--center bg-color--gray-off-white round mb-10 imageupload-wrap" style="border:1px solid var(--inputs-border-color);" id="{{ shortSectionId | prepend: "warranty-claim-imageupload-wrap-" }}">
+                                    <div class="grid__item width--auto">
+                                        <input type="file" multiple class="required width--auto mb-0" id="{{ shortSectionId | prepend: "warranty-claim-imageupload-" }}"  accept="image/png,.png,image/jpeg,.jpg,.jpeg,application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx" data-wraptarget="{{ shortSectionId | prepend: "warranty-claim-imageupload-wrap-" }}" data-errortarget="{{ shortSectionId | prepend: "warranty-claim-imageupload-error-" }}" aria-required="true" />
+                                    </div>
+                                </div>
+                                <div role="alert">
+                                    <div class="text--xs text--semibold color--red mt-5 mt-10 mb-10 hide" id="{{ shortSectionId | prepend: "warranty-claim-imageupload-error-" }}"></div>
+                                </div>
+                                <p class="text--sm"><em>Accepted file types: png, jpg, jpeg, pdf, doc, docx, Max. file size: 20 MB, Max. files: 5.</em></p>
+                            </div>
+                            <input type="hidden" name="filetokensjson" value="[]" />
+                            <div class="grid__item w--100">
+                                <button type="submit" form="{{ shortSectionId | prepend: "warranty-claim-" }}" class="button button--primary button--lg">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div role="alert" aria-live="assertive">
+                        <div id="{{ shortSectionId | prepend: "warranty-claim-confirmation-" }}" class="hide">
+                            {{- section.settings.formconfirmation -}}
+                            <a href="{{ routes.root_url }}" class="button--primary button--lg mt-40">Back Home</a>
+                        </div>
+                        <div id="{{ shortSectionId | prepend: "warranty-claim-error-" }}" class="hide form-msg form-msg--error mt-20"></div>
+                    </div>
+                </div>
+            </div>
+            {%- liquid assign custom_griditem_class = 'grid__item lg-up--50 mb-30'
+            if hasImage
+                assign custom_griditem_class = custom_griditem_class | append: ' section-bg round-lg-up--xxl round-lg-up--left--xxl overflow-hidden'
+            else
+                assign custom_griditem_class = custom_griditem_class | append: ' lg-down--pull-top'
+            endif -%}
+            <div class="{{ custom_griditem_class }}">
+                {%- if hasImage -%}
+                    <div class="page-width custom-page-width lg-up--hide">
+                        <img srcset="{{ section.settings.image | image_url: width: 500 }} 500w, {{ section.settings.image | image_url: width: 750 }} 750w, {{ section.settings.image | image_url: width: 1000 }} 1000w, {{ section.settings.image | image_url: width: 1500 }} 1500w" class="round--lg overflow-hidden mt-20 mb-20 width--100" loading="lazy" sizes="(max-width: 826px) calc(100vw - (var(--page-gutter) * 2)),(min-width: 827px) and (max-width: 1023px) 743px, (min-width: 1024px) 50vw" />
+                    </div>
+                {%- else -%}
+                    <div class="rte rte--md rte--list rte--list-sm">
+                        {{- section.settings.bodytext -}}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+    {%- if hasImage and section.settings.bodytext != null -%}
+        <div class="page-width mb-30 rte rte--md rte--list rte--list-sm">
+            {{- section.settings.bodytext -}}
+        </div>
+    {%- endif -%}
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded',() => {
+  var {{ shortSectionId | prepend: 'form' }} = (function () {
+    var _section = document.getElementById('{{ section.id | prepend: "shopify-section-" }}');
+    var _form = document.getElementById('{{ shortSectionId | prepend: "warranty-claim-" }}');
+    var _formConfirmation = document.getElementById('{{ shortSectionId | prepend: "warranty-claim-confirmation-" }}');
+    var _formError = document.getElementById('{{ shortSectionId | prepend: "warranty-claim-error-" }}');
+    var _sectionHeader = document.getElementById('{{ shortSectionId | prepend: "warranty-claim-sectionheader-" }}');
+    var _sectionHeaderConfirm = document.getElementById('{{ shortSectionId | prepend: "warranty-claim-sectionheader-confirm-" }}');
+
+    var select_el = _form.getElementsByClassName('triggersDynamicInput');
+    if (select_el) {
+      for (var i = 0; i < select_el.length; i++) {
+        select_el[i].addEventListener('change', function() {
+          var _this = this;
+          var select_targets = _this.dataset.dynamicviewids.split(',');
+          var ds_target = _this.options[_this.selectedIndex].dataset.dynamicviewid;
+          if (select_targets) {
+            for (var j = 0; j < select_targets.length; j++) {
+              document.getElementById(select_targets[j]).classList.add('hide');
+            }
+          }
+          if (ds_target && ds_target != "") {
+            var el_target = document.getElementById(ds_target);
+            el_target.classList.remove('hide');
+          }
+        });
+      }
+    }
+
+    var _inputs = _form.querySelectorAll('input, textarea, .required');
+    var reqPattern = new RegExp(/([\S]+)/g);
+    var telPattern = new RegExp(/^([0-9()+-\.\s]*)$/);
+    var emailPattern = new RegExp(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/);
+    var datePattern_mmddyyyy = new RegExp(/^(1[0-2]|0?[1-9])(\/|-)(3[01]|[12][0-9]|0?[1-9])(\/|-)(19|20)?[0-9]{2}$/);
+    var datePattern_yyyymmdd = new RegExp(/^(19|20)?[0-9]{2}(\/|-)(1[0-2]|0?[1-9])(\/|-)(3[01]|[12][0-9]|0?[1-9])$/);
+    var datePattern_any = new RegExp(/^((((1[0-2]|0?[1-9])(\/|-)(3[01]|[12][0-9]|0?[1-9]))|((3[01]|[12][0-9]|0?[1-9])(\/|-)(1[0-2]|0?[1-9])))(\/|-)(19|20)?[0-9]{2})|((19|20)?[0-9]{2}(\/|-)(1[0-2]|0?[1-9])(\/|-)(3[01]|[12][0-9]|0?[1-9]))$/);
+    var fileExtPattern = new RegExp(/^(.*)(\.png|jpg|jpeg|pdf|doc|docx)$/);
+
+    for (var i = 0; i < _inputs.length; i++) {
+      var inType = _inputs[i].getAttribute('type');
+      var inTag = _inputs[i].nodeName;
+      if (inTag == 'SELECT' && _inputs[i].classList.contains('required')) {
+        _inputs[i].addEventListener('change', (event) => {
+          ValidateSelect(event.target);
+        });
+        continue;
+      } else if ((inTag == 'INPUT' || inTag == 'TEXTAREA') && inType && inType != 'file') {
+        _inputs[i].addEventListener('blur', (event) => {
+          ValidateInput(event.target);
+        });
+      }
+    }
+
+    function ValidateSelect (el) {
+      if (el.selectedIndex < 1) {
+        ShowError(el);
+        return 1;
+      } else {
+        HideError(el);
+      }
+      return 0;
+    }
+
+    function ShowError (el) {
+      el.classList.add('input--error');
+      const errEl = document.getElementById(`${el.getAttribute('id')}-Error`);
+      if(errEl){
+        errEl.classList.remove('hide');
+      }
+    }
+
+    function HideError (el) {
+      el.classList.remove('input--error');
+      const errEl = document.getElementById(`${el.getAttribute('id')}-Error`);
+      if(errEl){
+        errEl.classList.add('hide');
+      }
+    }
+
+    function HideFormError () {
+      _formError.textContent = "";
+      _formError.classList.add('hide');
+    }
+
+    function ShowFormError (msg) {
+      _formError.textContent = msg;
+      _formError.classList.remove('hide');
+    }
+
+    function ValidateInput (el) {
+      HideError(el);
+      var inType = el.getAttribute('type');
+      var matchPattern = null;
+      switch(inType) {
+        case 'text':
+          matchPattern = null;
+          break;
+        case 'email':
+          matchPattern = emailPattern;
+          break;
+        case 'tel':
+          matchPattern = telPattern;
+          break;
+        case 'date':
+          matchPattern = datePattern_any;
+          break;
+      }
+      if (el.classList.contains('required') && inType == 'file') {
+        var _files = Array.from(el.files).filter(file => fileExtPattern.test(file.name)).map(file => file);
+        var targetwrap = document.getElementById(el.dataset.wraptarget);
+        targetwrap.classList.remove('input--error');
+
+        var targeterror = document.getElementById(el.dataset.errortarget);
+        targeterror.classList.add('hide');
+        targeterror.innerHTML = "";
+
+        if (!_files.length || _files.length > 5) {
+          if(!_files.length) {
+            targeterror.innerHTML = "Photos are required.";
+          }
+          if (_files.length > 5) {
+            targeterror.innerHTML = "Maximum number of files reached.";
+          }
+          targeterror.classList.remove('hide');
+          setTimeout(function(){ targeterror.classList.add('hide'); }, 6000);
+          el.classList.add('input--error');
+          targetwrap.classList.add('input--error');
+          return 1;
+        }
+        return 0;
+      }
+      if (el.classList.contains('required') && el.value.trim() == '') {
+        ShowError(el);
+        return 1;
+      }
+      if (el.classList.contains('type-datetime') && inType && (!datePattern_any.test(el.value.trim()) || new Date(el.value).getTime() > Date.now())) {
+        ShowError(el);
+        return 1;
+      }
+      if (inType && matchPattern && !matchPattern.test(el.value.trim())) {
+        ShowError(el);
+        return 1;
+      }
+      return 0;
+    }
+
+    var _submit = _form.querySelector('button[type="submit"]');
+    _submit.addEventListener('click', (event) => {
+      event.preventDefault();
+      ValidateForm();
+      window.scroll({top: (_section.getBoundingClientRect().top + window.scrollY - 100), left: 0, behavior: 'smooth'});
+    });
+
+    function ValidateForm () {
+      var errorCount = 0;
+      for (var i = 0; i < _inputs.length; i++) {
+        var inType = _inputs[i].getAttribute('type');
+        var inTag = _inputs[i].nodeName;
+        if (inTag == 'SELECT') {
+          errorCount += ValidateSelect(_inputs[i]);
+          continue;
+        } else if (inTag == 'INPUT' || inTag == 'TEXTAREA') {
+          errorCount += ValidateInput(_inputs[i]);
+        }
+      }
+      if (errorCount == 0) {
+        const inputs = Object.fromEntries([..._inputs].map(input => ([input.name, input.value])));
+
+        fetch('https://thecoverguy.zendesk.com/api/v2/requests.json', {
+          method: 'POST',
+          headers: { 'Content-type': 'application/json' },
+          body: JSON.stringify({
+            request: {
+              requester: { name: `${inputs.firstname} ${inputs.lastname}`, email: inputs.email },
+              comment: {
+                body: `${inputs.description}\n\nPhone number: ${inputs.phone}`,
+                uploads: JSON.parse(inputs.filetokensjson)
+              },
+              subject: `Warranty Claim: ${inputs.ordernumber}`,
+              custom_fields: [
+                {
+                  "id": 25766646152596, value: 'warranty_cx'
+                },
+                {
+                  "id": 24955386902548, value: inputs.ordernumber
+                },
+                {
+                  "id": 25028773172756, value: inputs.purchasedate
+                },
+              ]
+            }
+          })
+        })
+        .then(res => {
+          if(res.ok){
+            _sectionHeader.classList.add('hide');
+            _sectionHeaderConfirm.classList.remove('hide');
+            _form.classList.add('hide');
+            _formConfirmation.classList.remove('hide');
+          } else {
+            HideFormError();
+            ShowFormError(`${res.status}: ${res.statusText}`);
+          }
+        })
+        .catch(err => {
+          HideFormError();
+          ShowFormError(err);
+        })
+      }
+    }
+
+    _form.querySelector('{{ shortSectionId | prepend: "#warranty-claim-imageupload-" }}').addEventListener('change', event => {
+      ValidateInput(event.target);
+      const file = event.target.files[0];
+      var _files = Array.from(event.target.files).filter(file => fileExtPattern.test(file.name)).map(file => file);
+      if (_files.length) {
+        _form.querySelector('[type=submit]').disabled = true;
+
+        Promise.all(
+          Array.from(_files)
+            .map(file => fetch(`https://thecoverguy.zendesk.com/api/v2/uploads?filename=${encodeURIComponent(file.name)}`, {
+              method: 'POST',
+              body: file
+            })
+            .then(res => res.json()))
+        )
+        .then(fileResults => {
+          _form.querySelector('[name=filetokensjson]').value = JSON.stringify(fileResults.map(result => result.upload.token));
+        })
+        .catch(err => {
+        })
+        .finally(() => {
+          _form.querySelector('[type=submit]').disabled = false;
+        });
+      }
+    });
+  })();
+});
+</script>
+
+{% schema %}
+  {
+    "name": "Form - Warranty Claim",
+    "tag": "section",
+    "class": "overflow-hidden",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title",
+        "default": "7 Year Pro-Rated"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Warranty Claims"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "richtext",
+        "id": "bodytext",
+        "label": "Body Text"
+      },
+      {
+        "type": "richtext",
+        "id": "formconfirmation",
+        "label": "Form Confirmation Text",
+        "default": "<p>Thank you for your submission! We have received your information and will get back to you shortly.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      }
+    ],
+    "presets": [
+      {
+        "name": "Form - Warranty Claim"
+      }
+    ]
+  }
+{% endschema %}

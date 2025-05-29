@@ -1,0 +1,37 @@
+{%- comment -%}
+  Accepts:
+    - filters: {Array[String]} array of strings that represent valid tags
+    - article: {Object} article object
+    - section: {Object} section that the snippet is rendered in
+{%- endcomment -%}
+
+<a
+  class="card-article d--flex bg-color--white lg-up--p-40 lg-down--p-16 align-items--center justify--space-between width--100 gap-5p border--gray round lg-up--50-gap"
+  href="{{ article.url }}"
+>
+  <div class="d--flex flex-column gap-10 width--67">
+    {%- render 'blog-tags', filters: filters, section: section, article: article, limit: 2 -%}
+    <div class="card-article__title h4 mb-0 ellipsis">
+      {{- article.title -}}
+    </div>
+    <div class="rte text--sm color--gray-text ellipsis sm--hide">
+      {{- article.excerpt | strip_html -}}
+    </div>
+  </div>
+  <div class="thumb--container width--33 min-width--140">
+    {%- assign image = article.image | default: settings.article_placeholder -%}
+    <img
+      class="thumb width--100 round ratio__content--cover"
+      srcset="{{ image | image_url: width: 150}} 150w,{{  image | image_url: width: 220 }} 220w"
+      sizes="(max-width: 767px) 150px, (min-width: 768px) and (max-width: 1023px) 220px, (min-width: 1024px) and (max-width: 1349px) 150px, 220px"
+      alt="{% liquid if article.image
+        echo article.image.alt | escape
+      else
+        echo article.title | escape
+      endif %}"
+      loading="lazy"
+      width="220px"
+      height="{{ 220 | divided_by: image.aspect_ratio }}px"
+    >
+  </div>
+</a>

@@ -1,0 +1,56 @@
+<div class="comparison-card v-stack flex-grow relative gap-16 color--white round--bottom--lg round--top--lg overflow-hidden {% if variant.metafields.custom.bestseller == true -%}bestseller{%- endif -%}">
+  {%- if variant.metafields.custom.comparison_taper_image != blank -%}
+    {%- assign bgImage = variant.metafields.custom.comparison_taper_image -%}
+    <picture class="text--right width--100 d--block" style="position: absolute;right:0;top:0;z-index: 0;">
+      <img class="d--block width--100" srcset="{{ bgImage | image_url: width: 300 }} 300w, {{ bgImage | image_url: width: 400 }} 400w, {{ bgImage | image_url: width: 600 }} 600w, {{ bgImage | image_url: width: 800 }} 800w, {{ bgImage | image_url: width: 1000 }} 1000w" loading="lazy" role="presentation" sizes="(max-width: 767px) 52vw, (min-width: 768px) and (max-width: 1023px) 28vw, (min-width: 1024px) and (max-width: 1580px) 22vw, 352px">
+    </picture>
+  {%- endif -%}
+
+  <div class="flex-between relative z--index-1 flex-column flex-grow gap-10">
+    <div class="variant--title {% if variant.metafields.custom.bestseller == true %}variant--bestseller{% endif %}">
+      <span class="color--teal">{{ variant.title }}</span>
+      {% if variant.metafields.custom.bestseller == true -%}
+        <span class="d--flex align-items--center best--label text--uppercase">{{ bestseller }}</span>
+      {%- endif -%}
+    </div>
+    <span class="price d--flex align-items--center mt-10 mb-10">
+      <h3 class="text--bold mb-0 mr-10 variant--price">{{ variant.price | money }}</h3>
+      {%- if variant.compare_at_price > variant.price -%}
+        <s class="text--bold price--compare">
+          {{- variant.compare_at_price | money -}}
+        </s>
+      {%- endif -%}
+    </span>
+    <b class="h5 color--teal mb-10">{{ variant.metafields.custom.blurb }}</b>
+    <div class="features rte--sm">
+      {%- assign features = variant.metafields.custom.feature_list.value -%}
+      {%- assign features_strikeout = variant.metafields.custom.strikethrough_feature_list.value -%}
+      {%- if features != blank -%}
+        <ul class="list-unstyled m-0 p-0">
+          {%- for feature in features -%}
+            <li>
+              {%- render 'icons-sprite-icon', id: "icon-arrow-right-circle", size: 30 -%}
+              <span>
+                {{- feature -}}
+              </span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if features_strikeout != blank -%}
+        <ul class="features--strikethrough color--gray-text list-unstyled m-0 p-0">
+          {%- for feature in features_strikeout -%}
+            <li>
+              {%- render 'icons-sprite-icon', id: "icon-arrow-right-circle", size: 30 -%}
+              <s>{{ feature }}</s>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+    <a class="d--block button button--primary align-self--start mt-1" href="{{ variant.url }}">
+      {{- button_text -}}
+    </a>
+    <div></div>
+  </div>
+</div>

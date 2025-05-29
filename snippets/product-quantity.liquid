@@ -1,0 +1,39 @@
+{%- comment -%}
+  Accepts:
+    - line_item: {Object} line_item shopify object
+    - class: {String} list of classes
+    - final_price: {Int} an override for final line price
+    - adustable_quantity {Boolean} an override to allow adjusting quantity/remove from cart
+    - version: {String} mobile/desktop
+{%- endcomment -%}
+<quantity-input class="quantity critical-hidden d--flex align-items--center">
+  <button class="quantity-button no-js-hidden" name="minus" type="button">
+    <span class="visually-hidden">
+      {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+    </span>
+    -
+  </button>
+  <label for="quantity-{{ section.id }}-{{ version }}" class="visually-hidden">Quantity</label>
+  <input
+    class="js-quantity quantity-input"
+    type="number"
+    name="quantity"
+    id="quantity-{{ section.id }}-{{ version }}"
+    data-cart-quantity="{{ cart_qty }}"
+    data-min="{{ selected_variant.quantity_rule.min }}"
+    min="{{ selected_variant.quantity_rule.min }}"
+    {% if selected_variant.inventory_management == "shopify" and selected_variant.inventory_policy == "deny" %}
+      data-max="{{ selected_variant.inventory_quantity }}"
+      max="{{ selected_variant.inventory_quantity }}"
+    {% endif %}
+    step="{{ selected_variant.quantity_rule.increment }}"
+    value="{{ selected_variant.quantity_rule.min }}"
+    form="{{ product_form_id }}"
+  >
+  <button class="quantity-button no-js-hidden" name="plus" type="button">
+    <span class="visually-hidden">
+      {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+    </span>
+    +
+  </button>
+</quantity-input>

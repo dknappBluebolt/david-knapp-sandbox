@@ -1,0 +1,291 @@
+{{- 'template-account.css' | asset_url | stylesheet_tag -}}
+
+{%- assign recover_success = false -%}
+{%- capture modal_html -%}
+  {%- form 'recover_customer_password', class: "py-30" -%}
+    {%- if form.posted_successfully? -%}
+      {%- assign recover_success = true -%}
+    {%- elsif form.errors -%}
+      {%- assign recover_errors = form.errors.messages.form -%}
+    {%- endif -%}
+    <h2 class="h4 title">{{ 'customer.recover_password.title' | t }}</h3>
+    <p>{{ 'customer.recover_password.subtext' | t }}</p>
+    <div class="d--flex xs--flex-column gap-16">
+      <div class="field">
+        <input
+          class="field__input flex-grow{% if form.errors contains 'form' %} input--error{% endif %}"
+          type="email"
+          value=""
+          name="email"
+          id="RecoverEmail"
+          autocorrect="off"
+          autocapitalize="off"
+          autocomplete="email"
+          required
+          aria-required="true"
+          {% if form.errors contains 'form' %}
+            aria-invalid="true"
+            aria-describedby="RecoverEmail-email-error"
+            autofocus
+          {% endif %}
+          placeholder="{{ 'customer.login_page.reset_password_email' | t }}"
+        >
+        <label for="RecoverEmail" class="field__label">
+          {{- 'customer.login_page.reset_password_email' | t }}
+          <span class="color--red" aria-label="Required">*</span>
+        </label>
+      </div>
+      <button class="button button--black text--no-wrap">
+        {{- 'customer.login_page.reset_password_submit' | t -}}
+      </button>
+    </div>
+  {%- endform -%}
+{%- endcapture -%}
+<div class="customer page-width account--main">
+  <h1 class="h3 text--semibold my-60">{{ 'customer.login_page.title' | t }}</h1>
+  {%- if recover_success -%}
+    <div class="section-header form-msg form-msg--success page-section--md" autofocus aria-live="polite" role="alert">
+      <div class="h4 title m-0">
+        {{- 'customer.login_page.reset_password_success_pretitle' | t -}}
+      </div>
+      <h2 class="h3 m-0">
+        {{- 'customer.login_page.reset_password_success_title' | t -}}
+      </h2>
+      <div class="rte rte--md">
+        <p>{{ 'customer.recover_password.success_text' | t }}</p>
+      </div>
+    </div>
+  {%- elsif recover_errors != blank -%}
+  <div id="RecoverEmail-email-error" class="form-msg form-msg--error mb-30 critical-hidden" role="alert" aria-live="assertive">
+    {{- recover_errors -}}
+  </div>
+  {%- endif -%}
+  <div class="grid lg-down--v-gap-20">
+    <div class="grid__item md--50 lg-up--33 d--flex">
+      <div class="login-block bg-color--white round width--100 d--flex flex-column justify-content--space-between">
+        <h2 class="h4 title">{{ section.settings.create_account_title }}</h2>
+        <div class="rte rte--md rte--list rte--list-sm mb-30">
+          {{- section.settings.create_account_content -}}
+        </div>
+        <a href="{{ routes.account_register_url }}" class="button button--primary button--lg width--100 mt-auto">
+          {{- 'customer.login_page.create_account' | t -}}
+        </a>
+      </div>
+    </div>
+    <div class="grid__item md--50 lg-up--33 d--flex">
+      {%- form 'customer_login', novalidate: 'novalidate', class: 'login-block bg-color--white round width--100' -%}
+        <h2 class="h4 title">{{ section.settings.customer_title }}</h2>
+        <div class="rte rte--md rte--list rte--list-sm">
+          {{- section.settings.customer_content -}}
+          <p>{{ 'customer.login_page.form_title' | t }}</p>
+        </div>
+        <div class="field">
+          <input
+            class="field__input"
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            {% if form.errors contains 'form' %}
+              aria-invalid="true"
+            {% endif %}
+            placeholder="{{ 'customer.login_page.email' | t }}"
+          >
+          <label for="CustomerEmail" class="field__label">
+            {{- 'customer.login_page.email' | t }}
+            <span class="color--red" aria-label="Required">*</span>
+          </label>
+        </div>
+
+        {%- if form.password_needed -%}
+          <div class="field mt-20">
+            <input
+              class="field__input"
+              type="password"
+              value=""
+              name="customer[password]"
+              id="CustomerPassword"
+              autocomplete="current-password"
+              {% if form.errors contains 'form' %}
+                aria-invalid="true"
+              {% endif %}
+              placeholder="{{ 'customer.login_page.password' | t }}"
+            >
+            <label for="CustomerPassword" class="field__label">
+              {{- 'customer.login_page.password' | t }}
+              <span class="color--red" aria-label="Required">*</span>
+            </label>
+          </div>
+        {%- endif -%}
+        <div class="d--flex mt-5 justify--end">
+          {%- assign passwordModalId = "reset-password" | append: section.id -%}
+          <tcg-modal-button class="link modal-button" data-modal-id="{{ passwordModalId }}">
+            {{- 'customer.login_page.forgot_password' | t -}}
+          </tcg-modal-button>
+        </div>
+        {%- if form.errors -%}
+          <div class="form-msg form-msg--error mt-20 critical-hidden" tabindex="-1" autofocus>
+            {{- form.errors | default_errors -}}
+          </div>
+        {%- endif -%}
+        <div class="d--flex justify--end mt-auto">
+          <button class="button button--primary button--lg width--100 mt-20" type="submit">{{ 'customer.log_in' | t }}</button>
+        </div>
+      {%- endform -%}
+    </div>
+    <div class="grid__item lg-up--33 d--flex">
+      <div class="login-block width--100 bg-color--white round">
+        <h2 class="h4 title">{{ section.settings.support_title }}</h2>
+        <div class="rte rte--md rte--list rte--list-sm mb-30">
+          {{- section.settings.support_content -}}
+        </div>
+        <div class="d--flex flex-column gap-30">
+          {%- if section.settings.support_telephone_url != blank -%}
+            <a class="d--flex align-items--center gap-20" href="{{ section.settings.support_telephone_url }}">
+              <div class="round bg-color--teal line-height-0 p-10">
+                {%- render 'icon-smart-phone', size: 27 -%}
+              </div>
+              <div class="support-text d--flex flex-column justify-content--space-between">
+                <div class="text--bold">
+                  {{- section.settings.support_telephone_text -}}
+                </div>
+                <div>
+                  {{- section.settings.support_telephone_subtext -}}
+                </div>
+              </div>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.support_chat_url != blank -%}
+            <a class="d--flex align-items--center gap-20" href="{{ section.settings.support_chat_url }}">
+              <div class="round bg-color--teal line-height-0 p-10">
+                {%- render 'icon-chat-bubbles', size: 27 -%}
+              </div>
+              <div class="support-text link">
+                {{- section.settings.support_chat_text -}}
+              </div>
+            </a>
+          {%- endif -%}
+          {%- if section.settings.support_email_url != blank -%}
+            <a class="d--flex align-items--center gap-20" href="{{ section.settings.support_email_url }}">
+              <div class="round bg-color--teal line-height-0 p-5">
+                {%- render 'icon-mail', size: 36 -%}
+              </div>
+              <div class="support-text link">
+                {{- section.settings.support_email_text -}}
+              </div>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- render 'component-modal', modalId: passwordModalId, html: modal_html -%}
+
+{% schema %}
+{
+  "name": "Login Page",
+  "tag": "section",
+  "class": "bg-color--gray-off-white page-section page-top--pad",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Existing Customer"
+    },
+    {
+      "type": "text",
+      "id": "customer_title",
+      "label": "Add Customer Title"
+    },
+    {
+      "type": "richtext",
+      "id": "customer_content",
+      "label": "Add Customer Content"
+    },
+    {
+      "type": "text",
+      "id": "create_account_title",
+      "label": "Add Create Account Title"
+    },
+    {
+      "type": "richtext",
+      "id": "create_account_content",
+      "label": "Add Create Account Content"
+    },
+    {
+      "type": "header",
+      "content": "Reset Password"
+    },
+    {
+      "type": "text",
+      "id": "recover_success_title",
+      "label": "Reset Password Success Heading",
+      "default": "Request to Reset Your Password Received"
+    },
+    {
+      "type": "richtext",
+      "id": "recover_success_content",
+      "label": "Reset Password Success Text",
+      "default": "<p>Thanks for submitting your email address. We've sent you an email with the information needed to reset your password. The email might take a couple of minutes to reach your account. Please check your junk mail to ensure you receive it.<\/p>"
+    },
+    {
+      "type": "text",
+      "id": "recover_success_button_label",
+      "label": "Home Page Button Label",
+      "default": "Go to the Home Page"
+    },
+    {
+      "type": "header",
+      "content": "Support"
+    },
+    {
+      "type": "text",
+      "id": "support_title",
+      "label": "Support Section Title"
+    },
+    {
+      "type": "richtext",
+      "id": "support_content",
+      "label": "Support Content"
+    },
+    {
+      "type": "text",
+      "id": "support_chat_text",
+      "label": "Chat Text"
+    },
+    {
+      "type": "url",
+      "id": "support_chat_url",
+      "label": "Chat Url"
+    },
+    {
+      "type": "text",
+      "id": "support_telephone_text",
+      "label": "Phone Text"
+    },
+    {
+      "type": "text",
+      "id": "support_telephone_subtext",
+      "label": "Phone Sub Text"
+    },
+    {
+      "type": "url",
+      "id": "support_telephone_url",
+      "label": "Phone Url"
+    },
+    {
+      "type": "text",
+      "id": "support_email_text",
+      "label": "Email Text"
+    },
+    {
+      "type": "url",
+      "id": "support_email_url",
+      "label": "Email Url"
+    }
+  ]
+}
+{% endschema %}

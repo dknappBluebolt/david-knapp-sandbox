@@ -1,991 +1,601 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */{
+{
   "sections": {
-    "hero_iLBwPd": {
-      "type": "hero",
+    "component_banner_UQfcHQ": {
+      "type": "component-banner",
       "blocks": {
-        "group_mATTUY": {
-          "type": "group",
-          "name": "t:names.group",
+        "features_eFmdCH": {
+          "type": "features",
           "settings": {
-            "open_in_new_tab": false,
-            "content_direction": "row",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "group_U86Qji": {
-              "type": "group",
-              "name": "t:names.group",
-              "settings": {
-                "open_in_new_tab": false,
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 0,
-                "width": "custom",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {
-                "text_nptTQe": {
-                  "type": "text",
-                  "name": "Heading",
-                  "settings": {
-                    "text": "<h2><em>Introducing</em></h2>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "custom",
-                    "font": "var(--font-accent--family)",
-                    "font_size": "1.5rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "text_m9AcWC": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<h1>Our Newest Arrivals </h1>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "h2",
-                    "font": "var(--font-primary--family)",
-                    "font_size": "",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_nptTQe",
-                "text_m9AcWC"
-              ]
-            },
-            "text_ebNxhf": {
-              "type": "text",
-              "name": "Text",
-              "settings": {
-                "text": "<p>Bring order to the chaos. When all your tech essentials have a dedicated spot on your desk, you don’t have to waste any time searching for them. </p>",
-                "width": "fit-content",
-                "max_width": "none",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "group_U86Qji",
-            "text_ebNxhf"
-          ]
+            "feature_name": "3-year Hassle Free Warranty",
+            "feature_image_y_adjust": 0
+          }
+        },
+        "features_Nr9F9y": {
+          "type": "features",
+          "settings": {
+            "feature_name": "Made in North America",
+            "feature_image_y_adjust": 0
+          }
+        },
+        "features_FeKg3Q": {
+          "type": "features",
+          "settings": {
+            "feature_name": "Free Standard Shipping*",
+            "feature_image_y_adjust": 0
+          }
+        },
+        "features_NPrDR9": {
+          "type": "features",
+          "settings": {
+            "feature_name": "Made to fit ANY tub",
+            "feature_image_y_adjust": 0
+          }
+        },
+        "features_66TpVK": {
+          "type": "features",
+          "disabled": true,
+          "settings": {
+            "feature_name": "Pay over time with",
+            "feature_image": "shopify:\/\/shop_images\/Affirm-Logo.svg",
+            "feature_image_y_adjust": -3
+          }
         }
       },
       "block_order": [
-        "group_mATTUY"
+        "features_eFmdCH",
+        "features_Nr9F9y",
+        "features_FeKg3Q",
+        "features_NPrDR9",
+        "features_66TpVK"
       ],
-      "name": "t:names.hero",
       "settings": {
-        "open_in_new_tab": false,
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 16,
-        "section_width": "page-width",
-        "section_height": "large",
-        "section_height_custom": 50,
-        "color_scheme": "scheme-5",
-        "toggle_overlay": true,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 0,
-        "padding-block-end": 31
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 80,
+        "margin_bottom_mobile": 30,
+        "banner_size": "large",
+        "pretitle": "Hot Tub Covers",
+        "title": "We Got You Covered.",
+        "title_size": "h2",
+        "banner_content": "<p>Our 25+ years of experience works for over 40,000+ customers annually, it will work for you.<\/p>",
+        "text_color": "white",
+        "desktop_text_alignment": "lg-up--text-left",
+        "mobile_text_alignment": "lg-down--text-left",
+        "banner_content_size": "small",
+        "desktop_content_position": "lg-up--justify-start lg-up--align-items-center",
+        "background_image_desktop": "shopify:\/\/shop_images\/hero_background_desktop.png",
+        "image_overlay_opacity": 55,
+        "banner_height": "small",
+        "button_1_type": "primary",
+        "button_1_label": "Configure Your Cover",
+        "button_1_url": "shopify:\/\/products\/hot-tub-cover",
+        "button_2_type": "primary",
+        "button_2_label": "Shop Cover Lifters",
+        "button_2_url": "shopify:\/\/collections\/hot-tub-cover-lifters"
       }
     },
-    "product_list_EDUBdR": {
-      "type": "product-list",
+    "component_featured_content_AE6KPq": {
+      "type": "component-featured-content",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "static": true,
+        "content_CkCfXK": {
+          "type": "content",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_qK4EWG": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>Make Your Workspace Yours</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_qK4EWG"
-          ]
+            "image": "shopify:\/\/shop_images\/Covers.png",
+            "image_url": "shopify:\/\/products\/hot-tub-cover",
+            "title": "",
+            "rich_text": "",
+            "link_text_1": "Hot Tub Covers",
+            "link_url_1": "shopify:\/\/products\/hot-tub-cover",
+            "link_text_2": "",
+            "link_url_2": "",
+            "link_text_3": "",
+            "link_url_3": "",
+            "link_text_4": "",
+            "link_url_4": ""
+          }
         },
-        "static-product-card": {
-          "type": "product-card",
-          "name": "t:names.product_card",
-          "static": true,
+        "content_txH4tL": {
+          "type": "content",
           "settings": {
-            "product": "{{ closest.product }}",
-            "product_card_gap": 0,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-2",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 10,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_hpki3q": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "product": "{{ closest.product }}",
-                "image_ratio": "square",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "group_jHUdWN": {
-              "type": "group",
-              "name": "t:names.group",
-              "settings": {
-                "open_in_new_tab": false,
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 4,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "padding-block-start": 24,
-                "padding-block-end": 24,
-                "padding-inline-start": 24,
-                "padding-inline-end": 24
-              },
-              "blocks": {
-                "product_title_gH3cpy": {
-                  "type": "product-title",
-                  "name": "t:names.product_title",
-                  "settings": {
-                    "product": "{{ closest.product }}",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "paragraph",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "price_anAima": {
-                  "type": "price",
-                  "name": "t:names.product_price",
-                  "settings": {
-                    "product": "{{ closest.product }}",
-                    "show_sale_price_first": true,
-                    "show_installments": false,
-                    "show_tax_info": false,
-                    "type_preset": "paragraph",
-                    "width": "100%",
-                    "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "color": "var(--color-foreground)",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "swatches_eYcKAz": {
-                  "type": "swatches",
-                  "name": "t:names.swatches",
-                  "settings": {
-                    "product": "{{ closest.product }}",
-                    "product_swatches_alignment": "flex-start",
-                    "product_swatches_alignment_mobile": "flex-start",
-                    "hide_padding": false,
-                    "product_swatches_padding_top": 4,
-                    "product_swatches_padding_bottom": 0,
-                    "product_swatches_padding_left": 0,
-                    "product_swatches_padding_right": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "product_title_gH3cpy",
-                "price_anAima",
-                "swatches_eYcKAz"
-              ]
-            }
-          },
-          "block_order": [
-            "product_card_gallery_hpki3q",
-            "group_jHUdWN"
-          ]
+            "image": "shopify:\/\/shop_images\/Cover-lifters.png",
+            "image_url": "shopify:\/\/products\/hot-tub-cover",
+            "title": "",
+            "rich_text": "",
+            "link_text_1": "Cover Lifters",
+            "link_url_1": "shopify:\/\/collections\/hot-tub-cover-lifters",
+            "link_text_2": "",
+            "link_url_2": "",
+            "link_text_3": "",
+            "link_url_3": "",
+            "link_text_4": "",
+            "link_url_4": ""
+          }
+        },
+        "content_3TGa9W": {
+          "type": "content",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Filters.png",
+            "image_url": "shopify:\/\/collections\/hot-tub-chemicals",
+            "title": "",
+            "rich_text": "",
+            "link_text_1": "Filters",
+            "link_url_1": "shopify:\/\/collections\/hot-tub-spa-filters",
+            "link_text_2": "",
+            "link_url_2": "",
+            "link_text_3": "",
+            "link_url_3": "",
+            "link_text_4": "",
+            "link_url_4": ""
+          }
+        },
+        "content_GWYirV": {
+          "type": "content",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Filters.png",
+            "image_url": "shopify:\/\/collections\/hot-tub-chemicals",
+            "title": "",
+            "rich_text": "",
+            "link_text_1": "Chemicals",
+            "link_url_1": "shopify:\/\/collections\/hot-tub-chemicals",
+            "link_text_2": "",
+            "link_url_2": "",
+            "link_text_3": "",
+            "link_url_3": "",
+            "link_text_4": "",
+            "link_url_4": ""
+          }
+        },
+        "content_4DqqnM": {
+          "type": "content",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Accesories_and_wellness.png",
+            "image_url": "shopify:\/\/collections\/test-collection",
+            "title": "",
+            "rich_text": "",
+            "link_text_1": "Accessories & Wellness",
+            "link_url_1": "shopify:\/\/collections\/hot-tub-spa-accessories",
+            "link_text_2": "",
+            "link_url_2": "",
+            "link_text_3": "",
+            "link_url_3": "",
+            "link_text_4": "",
+            "link_url_4": ""
+          }
         }
       },
-      "name": "t:names.products_grid",
+      "block_order": [
+        "content_CkCfXK",
+        "content_txH4tL",
+        "content_3TGa9W",
+        "content_GWYirV",
+        "content_4DqqnM"
+      ],
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "columns_gap": 12,
-        "rows_gap": 12,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 64
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 135,
+        "margin_bottom_mobile": 50,
+        "pretitle": "",
+        "title": "Shop Everything Hot Tubs",
+        "header_link_text": "",
+        "header_link_url": ""
       }
     },
-    "product_list_iMHf73": {
-      "type": "product-list",
+    "component_media_blocks_mwNJFA": {
+      "type": "component-media-blocks",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "static": true,
+        "media_blocks_WwQiJb": {
+          "type": "media_blocks",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_ggkaeC": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_ggkaeC"
-          ]
+            "title": "Find your make + model",
+            "background_image_desktop": "shopify:\/\/shop_images\/make_model_bg.jpg",
+            "content": "<p>Or Customize your cover with your unique dimensions<\/p>",
+            "link_text": "Get Started",
+            "link_url": "shopify:\/\/pages\/contact-us"
+          }
         },
-        "static-product-card": {
-          "type": "product-card",
-          "name": "t:names.product_card",
-          "static": true,
+        "media_blocks_BwRPzj": {
+          "type": "media_blocks",
           "settings": {
-            "product": "{{ closest.product }}",
-            "product_card_gap": 0,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-e1e09ff5-6396-47cd-ad7a-c05470cf2a2e",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 10,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_Q3MRD7": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "product": "{{ closest.product }}",
-                "image_ratio": "square",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "group_LEEAPh": {
-              "type": "group",
-              "name": "t:names.group",
-              "settings": {
-                "open_in_new_tab": false,
-                "content_direction": "column",
-                "vertical_on_mobile": true,
-                "horizontal_alignment": "flex-start",
-                "vertical_alignment": "center",
-                "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
-                "vertical_alignment_flex_direction_column": "center",
-                "gap": 4,
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "custom_height": 100,
-                "inherit_color_scheme": true,
-                "color_scheme": "",
-                "background_media": "none",
-                "video_position": "cover",
-                "background_image_position": "cover",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "padding-block-start": 24,
-                "padding-block-end": 24,
-                "padding-inline-start": 24,
-                "padding-inline-end": 24
-              },
-              "blocks": {
-                "product_title_GLKF7R": {
-                  "type": "product-title",
-                  "name": "t:names.product_title",
-                  "settings": {
-                    "product": "{{ closest.product }}",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "paragraph",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "price_LJ7W4K": {
-                  "type": "price",
-                  "name": "t:names.product_price",
-                  "settings": {
-                    "product": "{{ closest.product }}",
-                    "show_sale_price_first": true,
-                    "show_installments": false,
-                    "show_tax_info": false,
-                    "type_preset": "paragraph",
-                    "width": "100%",
-                    "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "color": "var(--color-foreground)",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "swatches_HV9t4D": {
-                  "type": "swatches",
-                  "name": "t:names.swatches",
-                  "settings": {
-                    "product": "{{ closest.product }}",
-                    "product_swatches_alignment": "flex-start",
-                    "product_swatches_alignment_mobile": "flex-start",
-                    "hide_padding": false,
-                    "product_swatches_padding_top": 4,
-                    "product_swatches_padding_bottom": 0,
-                    "product_swatches_padding_left": 0,
-                    "product_swatches_padding_right": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "product_title_GLKF7R",
-                "price_LJ7W4K",
-                "swatches_HV9t4D"
-              ]
-            }
-          },
-          "block_order": [
-            "product_card_gallery_Q3MRD7",
-            "group_LEEAPh"
-          ]
+            "title": "Select your material + color",
+            "background_image_desktop": "shopify:\/\/shop_images\/material_color_bg.jpg",
+            "content": "<p>Tailor your cover by choosing material, color and strap locations<\/p>",
+            "link_text": "Get Started",
+            "link_url": "shopify:\/\/blogs\/news"
+          }
+        },
+        "media_blocks_JnbKx9": {
+          "type": "media_blocks",
+          "settings": {
+            "title": "Enhance with upgrades",
+            "background_image_desktop": "shopify:\/\/shop_images\/enhance_upgrades_bg.jpg",
+            "content": "<p>Make the most out of your cover with convenient, optional add-ons<\/p>",
+            "link_text": "Get Started",
+            "link_url": "shopify:\/\/blogs\/news"
+          }
+        },
+        "media_blocks_AWCimj": {
+          "type": "media_blocks",
+          "settings": {
+            "title": "Shipped right to your door",
+            "background_image_desktop": "shopify:\/\/shop_images\/shipped_bg.jpg",
+            "content": "<p>Covers are made to order and arrive in as little as 4 weeks<\/p>",
+            "link_text": "Get Started",
+            "link_url": "shopify:\/\/collections"
+          }
         }
       },
+      "block_order": [
+        "media_blocks_WwQiJb",
+        "media_blocks_BwRPzj",
+        "media_blocks_JnbKx9",
+        "media_blocks_AWCimj"
+      ],
+      "settings": {
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 5,
+        "margin_bottom_mobile": 35,
+        "pretitle": "Simple Steps",
+        "title": "Get Covered, Faster",
+        "list_type": "numbers",
+        "cta_type": "links"
+      }
+    },
+    "component_comparison_section_PAhqJi": {
+      "type": "component-comparison-section",
+      "settings": {
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": -40,
+        "margin_bottom_mobile": -40,
+        "padding_top_desktop": 75,
+        "padding_top_mobile": 50,
+        "padding_bottom_desktop": 75,
+        "padding_bottom_mobile": 50,
+        "pretitle": "Hot Tub Covers",
+        "title": "Covering Every Climate",
+        "custom_message": "<p>Do you have a  <a href=\"#\" title=\"#\">Swim Spa Cover<\/a>  or  <a href=\"#\" title=\"#\">Custom Sizes and Cutouts<\/a>?<\/p>",
+        "product": "hot-tub-cover",
+        "button_text": "Configure",
+        "bestseller_label": "Bestseller"
+      }
+    },
+    "component_logo_list_hFEVRE": {
+      "type": "component-logo-list",
+      "blocks": {
+        "logo_zyEac4": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/jacuzzi_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/jacuzzi-hot-tub-covers\/"
+          }
+        },
+        "logo_43LVb9": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/hot_spring_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/hot-springs-hot-tub-covers\/"
+          }
+        },
+        "logo_F7LThH": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/dimension_one_spa_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/dimension-one-hot-tub-covers\/"
+          }
+        },
+        "logo_HMG8V4": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/arctic_spas_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/arctic-spas-hot-tub-covers\/"
+          }
+        },
+        "logo_KTDjEw": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/sundance_spas_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/sundance-hot-tub-covers\/"
+          }
+        },
+        "logo_hm8m8Y": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/hot_spring_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/hot-springs-hot-tub-covers\/"
+          }
+        },
+        "logo_jJjkjL": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify:\/\/shop_images\/sundance_spas_logo.png",
+            "logo_url": "https:\/\/www.thecoverguy.com\/hot-tub-manufacturers\/sundance-hot-tub-covers\/"
+          }
+        },
+        "text_link_k7y3Hx": {
+          "type": "text_link",
+          "settings": {
+            "url": "shopify:\/\/pages\/shop-by-hot-tub-brand",
+            "text_link": "120+ more"
+          }
+        }
+      },
+      "block_order": [
+        "logo_zyEac4",
+        "logo_43LVb9",
+        "logo_F7LThH",
+        "logo_HMG8V4",
+        "logo_KTDjEw",
+        "logo_hm8m8Y",
+        "logo_jJjkjL",
+        "text_link_k7y3Hx"
+      ],
+      "settings": {
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": -5,
+        "padding_top_desktop": 75,
+        "padding_top_mobile": 45,
+        "padding_bottom_desktop": 75,
+        "padding_bottom_mobile": 30,
+        "pretitle": "",
+        "title": "Covering All Brands",
+        "text_color": "white",
+        "desktop_text_alignment": "lg-up--text-center",
+        "mobile_text_alignment": "lg-down--text-center",
+        "columns_num": 8,
+        "columns_num_tablet": 4,
+        "columns_num_mobile": 2,
+        "background_color": "black-bg"
+      }
+    },
+    "component_spotlight_section_PKUPkL": {
+      "type": "component-spotlight-section",
+      "blocks": {
+        "pretitle_7MmniQ": {
+          "type": "pretitle",
+          "settings": {
+            "pretitle": "Who We Are"
+          }
+        },
+        "heading_dDgra8": {
+          "type": "heading",
+          "settings": {
+            "title": "The Cover Guy Story"
+          }
+        },
+        "content_GYjPBU": {
+          "type": "content",
+          "settings": {
+            "content": "<p>Since 2004, The Cover Guy has been a premier online destination for top-quality Hot Tub Covers and Lifters in North America. Our commitment to excellence ensures durable covers that outperform all others, backed by exceptional service and unbeatable prices.<\/p>",
+            "content_more": "<p>Additional content will be displayed here...<\/p><p>Since 2004, The Cover Guy has been a premier online destination for top-quality Hot Tub Covers and Lifters in North America. Our commitment to excellence ensures durable covers that outperform all others, backed by exceptional service and unbeatable prices.<\/p><p>Since 2004, The Cover Guy has been a premier online destination for top-quality Hot Tub Covers and Lifters in North America. Our commitment to excellence ensures durable covers that outperform all others, backed by exceptional service and unbeatable prices.<\/p><p>Since 2004, The Cover Guy has been a premier online destination for top-quality Hot Tub Covers and Lifters in North America. Our commitment to excellence ensures durable covers that outperform all others, backed by exceptional service and unbeatable prices.<\/p><p>Since 2004, The Cover Guy has been a premier online destination for top-quality Hot Tub Covers and Lifters in North America. Our commitment to excellence ensures durable covers that outperform all others, backed by exceptional service and unbeatable prices.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "pretitle_7MmniQ",
+        "heading_dDgra8",
+        "content_GYjPBU"
+      ],
+      "settings": {
+        "margin_top_desktop": -60,
+        "margin_top_mobile": 5,
+        "margin_bottom_desktop": 105,
+        "margin_bottom_mobile": 45,
+        "padding_top_desktop": 80,
+        "padding_top_mobile": 15,
+        "padding_bottom_desktop": 85,
+        "padding_bottom_mobile": 55,
+        "gap_desktop": 40,
+        "gap_mobile": 24,
+        "image_position": "right",
+        "image_desktop": "shopify:\/\/shop_images\/home-about-desktop.png",
+        "image_mobile": "shopify:\/\/shop_images\/Home_About-mobile.png",
+        "round_top": false,
+        "round_bottom": true,
+        "background_color": "black-bg",
+        "text_color": "white",
+        "desktop_text_alignment": "left",
+        "mobile_text_alignment": "left"
+      }
+    },
+    "component_media_blocks_2_THB4EE": {
+      "type": "component-media-blocks-2",
+      "blocks": {
+        "media_blocks_PNDqkY": {
+          "type": "media_blocks",
+          "settings": {
+            "title": "<a href=\"\/pages\/test\" title=\"TEST Page\">7 Year Warranty<\/a>",
+            "content": "<p>Our pro-rated 7-year warranty protects against manufacture defects. Take comfort in knowing our covers are built to last.<\/p>",
+            "link_text": "Learn More",
+            "link_url": "shopify:\/\/pages\/contact-us"
+          }
+        },
+        "media_blocks_DJyAbE": {
+          "type": "media_blocks",
+          "settings": {
+            "title": "Personal Support",
+            "content": "<p>Our specialists thoroughly review each and every hot tub cover order to guarantee the perfect fit.<\/p>",
+            "link_text": "",
+            "link_url": ""
+          }
+        },
+        "media_blocks_bfRHiz": {
+          "type": "media_blocks",
+          "settings": {
+            "title": "Covering all Major Brands",
+            "content": "<p>The Cover Guy covers any make and model, including custom shapes and sizes, guaranteed to fit your tub.<\/p>",
+            "link_text": "",
+            "link_url": ""
+          }
+        },
+        "media_blocks_G7Axp4": {
+          "type": "media_blocks",
+          "settings": {
+            "title": "Best Price Guaranteed",
+            "content": "<p>We manufacture 40,000+ covers annually allowing us to purchase top quality materials and pass the savings on to you.<\/p>",
+            "link_text": "",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "media_blocks_PNDqkY",
+        "media_blocks_DJyAbE",
+        "media_blocks_bfRHiz",
+        "media_blocks_G7Axp4"
+      ],
       "disabled": true,
-      "name": "t:names.products_grid",
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 4,
-        "columns": 4,
-        "mobile_columns": "2",
-        "columns_gap": 12,
-        "rows_gap": 12,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 78
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": 40,
+        "pretitle": "Simple Steps",
+        "title": "Get Covered, Faster",
+        "text_color": "white",
+        "desktop_text_alignment": "lg-up--text-left",
+        "mobile_text_alignment": "lg-down--text-left",
+        "background_image_desktop": "shopify:\/\/shop_images\/hero_background_desktop.png",
+        "background_position": "center",
+        "overlay_top_opacity": 0,
+        "overlay_bottom_opacity": 100
       }
     },
-    "media_with_content_LfPdEJ": {
-      "type": "media-with-content",
-      "blocks": {
-        "media": {
-          "type": "_media-without-appearance",
-          "static": true,
-          "settings": {
-            "media_type": "video",
-            "video_loop": true,
-            "video_autoplay": true,
-            "image_position": "cover",
-            "video_position": "cover"
-          },
-          "blocks": {}
-        },
-        "content": {
-          "type": "_content-without-appearance",
-          "static": true,
-          "settings": {
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 24
-          },
-          "blocks": {
-            "image_y4ApqF": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "image_ratio": "adapt",
-                "width": "fill",
-                "custom_width": 100,
-                "width_mobile": "fill",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_Hf79zK": {
-              "type": "text",
-              "name": "t:names.heading",
-              "settings": {
-                "text": "<h2>Productivity Essentials</h2>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h3",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "text_jxGhdJ": {
-              "type": "text",
-              "settings": {
-                "text": "<p>Objects that partner with your digital tools so you can focus on your most important work.</p>",
-                "width": "fit-content",
-                "max_width": "narrow",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_zg4nUF": {
-              "type": "button",
-              "settings": {
-                "label": "Shop Now",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "image_y4ApqF",
-            "text_Hf79zK",
-            "text_jxGhdJ",
-            "button_zg4nUF"
-          ]
-        }
-      },
-      "name": "t:names.media_with_text",
+    "featured_products": {
+      "type": "component-featured-products",
       "settings": {
-        "media_position": "left",
-        "media_width": "medium",
-        "media_height": "50svh",
-        "section_width": "page-width",
-        "extend_media": true,
-        "color_scheme": "scheme-41dbb9c3-0866-4036-9494-aa0e1c1cedda",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 70,
+        "margin_bottom_mobile": 40,
+        "pretitle": "",
+        "title": "Popular Products",
+        "title_size": "h1",
+        "products": [
+          "covermate-freestyle-cover-lifter",
+          "cover-valet-rock-it-cover-lifter",
+          "hot-tub-filter-tcg-ch19",
+          "modular-spa-steps",
+          "spa-brominating-granules-700g",
+          "microfibre-towel",
+          "spa-no-phos-phosphate-remover",
+          "test-hot-tub-draining-pump",
+          "test-the-cover-guy-outdoor-umbrella",
+          "test-the-cover-guy-scum-ball"
+        ]
       }
     },
-    "collection_list_xpBxCm": {
-      "type": "collection-list",
+    "component_rich_content_Me3EEn": {
+      "type": "component-rich-content",
       "blocks": {
-        "group_mfTd9p": {
-          "type": "group",
-          "name": "t:names.header",
+        "header_ETUixz": {
+          "type": "header",
           "settings": {
-            "open_in_new_tab": false,
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 16,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "padding-block-start": 0,
-            "padding-block-end": 16,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "text_AYrwfM": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<h2>Shop by Collection</h2>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_AYrwfM"
-          ]
+            "pretitle": "Pre-Title Here",
+            "title": "Your Heading Here"
+          }
         },
-        "static-collection-card": {
-          "type": "collection-card",
-          "name": "t:names.collection_card",
-          "static": true,
+        "content_EQixNy": {
+          "type": "content",
           "settings": {
-            "collection": "{{ closest.collection }}",
-            "placement": "on_image",
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "flex-start",
-            "collection_card_gap": 8,
-            "inherit_color_scheme": false,
-            "color_scheme": "scheme-6",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 10
-          },
-          "blocks": {
-            "collection_title_zyBdAJ": {
-              "type": "collection-title",
-              "name": "t:names.collection_title",
-              "settings": {
-                "collection": "{{ closest.collection }}",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h5",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "collection-card-image": {
-              "type": "_collection-card-image",
-              "static": true,
-              "settings": {
-                "collection": "{{ closest.collection }}",
-                "image_ratio": "portrait",
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "collection_title_zyBdAJ"
-          ]
+            "content": "<h3><strong>Content here<\/strong><\/h3><p><em>Lorem ipsum dolor sit amet<\/em>, consectetur adipiscing elit. Morbi pretium nibh pretium sapien sodales, eu pharetra erat pharetra. <a href=\"http:\/\/google.com\" target=\"_blank\" title=\"http:\/\/google.com\">Link<\/a> Suspendisse ante orci, pharetra a nisi vitae, dapibus convallis risus. Etiam euismod metus vel enim lobortis volutpat. Sed non mi nec metus varius eleifend ut et arcu. <\/p><ul><li>Aliquam eget consectetur est, sed ornare nisi. <\/li><li>Nullam semper metus lorem, sed viverra mauris commodo ut. Sed dictum leo massa, nec sagittis enim dictum ac. Suspendisse facilisis imperdiet metus placerat pulvinar. <\/li><li>Aenean dapibus sagittis sapien sed vulputate. Integer pretium, lacus eu commodo dapibus, lorem diam imperdiet elit, sed ornare magna felis at massa. <\/li><\/ul><p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam vulputate rutrum nisl, ac auctor augue iaculis quis.<\/p>",
+            "text_size": "lg"
+          }
+        },
+        "buttons_EhFaqK": {
+          "type": "buttons",
+          "settings": {
+            "button_1_type": "primary",
+            "button_1_text": "Just and Example",
+            "button_1_url": "shopify:\/\/collections\/all",
+            "button_2_type": "primary",
+            "button_2_text": "Another Link",
+            "button_2_url": "shopify:\/\/pages\/contact-us"
+          }
+        },
+        "video_MjiLpN": {
+          "type": "video",
+          "settings": {
+            "video_upload": "shopify:\/\/files\/videos\/Product Feature Weathershield for Hot Tubs The Cover Guy.mp4",
+            "video_size": "50",
+            "round": true
+          }
+        },
+        "content_PhAQGU": {
+          "type": "content",
+          "settings": {
+            "content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pretium nibh pretium sapien sodales, eu pharetra erat pharetra. Suspendisse ante orci, pharetra a nisi vitae, dapibus convallis risus. Etiam euismod metus vel enim lobortis volutpat. Sed non mi nec metus varius eleifend ut et arcu. Aliquam eget consectetur est, sed ornare nisi. Nullam semper metus lorem, sed viverra mauris commodo ut. Sed dictum leo massa, nec sagittis enim dictum ac.<\/p>",
+            "text_size": "lg"
+          }
+        },
+        "image_3XJaG3": {
+          "type": "image",
+          "settings": {
+            "image_desktop": "shopify:\/\/shop_images\/ar-06.webp",
+            "mobile_desktop": "shopify:\/\/shop_images\/istockphoto-529363169-612x612.jpg",
+            "image_size": "50",
+            "round": true
+          }
         }
       },
       "block_order": [
-        "group_mfTd9p"
+        "header_ETUixz",
+        "content_EQixNy",
+        "buttons_EhFaqK",
+        "video_MjiLpN",
+        "content_PhAQGU",
+        "image_3XJaG3"
       ],
-      "name": "t:names.collections_bento",
+      "disabled": true,
       "settings": {
-        "layout_type": "bento",
-        "carousel_on_mobile": true,
-        "columns": 4,
-        "mobile_columns": "2",
-        "columns_gap": 16,
-        "bento_gap": 12,
-        "rows_gap": 16,
-        "max_collections": 4,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "gap": 12,
-        "color_scheme": "",
-        "padding-block-start": 48,
-        "padding-block-end": 64
+        "width_desktop": 100,
+        "width_mobile": 100,
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": 40,
+        "padding_top_desktop": 50,
+        "padding_top_mobile": 50,
+        "padding_bottom_desktop": 50,
+        "padding_bottom_mobile": 50,
+        "round_top": true,
+        "round_bottom": true,
+        "background_color": "gray",
+        "background_gray_mobile": false,
+        "text_color": "black",
+        "desktop_text_alignment": "left",
+        "mobile_text_alignment": "center"
+      }
+    },
+    "component_featured_products_piLRDY": {
+      "type": "component-featured-products",
+      "settings": {
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": 40,
+        "pretitle": "",
+        "title": "",
+        "title_size": "h1",
+        "products": [
+
+        ]
       }
     }
   },
   "order": [
-    "hero_iLBwPd",
-    "product_list_EDUBdR",
-    "product_list_iMHf73",
-    "media_with_content_LfPdEJ",
-    "collection_list_xpBxCm"
+    "component_banner_UQfcHQ",
+    "component_featured_content_AE6KPq",
+    "component_media_blocks_mwNJFA",
+    "component_comparison_section_PAhqJi",
+    "component_logo_list_hFEVRE",
+    "component_spotlight_section_PKUPkL",
+    "component_media_blocks_2_THB4EE",
+    "featured_products",
+    "component_rich_content_Me3EEn",
+    "component_featured_products_piLRDY"
   ]
 }

@@ -1,0 +1,60 @@
+{% comment %}
+  Accepts:
+    - product: {Object} product object.
+    - section: {Object} section the form is being rendered in
+    - version: {String} desktop/mobile
+{% endcomment %}
+
+{%- assign product_form_id = 'product-form-' | append: section.id | append: '-' | append: version -%}
+{%- assign appBlocks = section.blocks | where: 'type','@app' -%}
+
+<product-form data-section-id="{{ section.id }}">
+  {%- form 'product', product, id: product_form_id -%}
+    <input type="hidden" name="attributes[createdInStorefront]" value="true" />
+    {%- if version == 'desktop' -%}
+      {%- if product.options_with_values[0].values.size > 1 -%}
+        {%- render 'product-options', product: product, selected_variant: selected_variant, section: section, product_form_id: product_form_id -%}
+      {%- endif -%}
+    {%- endif -%}
+    <input
+      type="hidden"
+      name="id"
+      id="id-{{ selected_variant.id }}-{{ section.id }}-{{ version }}"
+      class="js-variant-id"
+      value="{{ selected_variant.id }}"
+    >
+    {%- if version == 'desktop' -%}
+      {%- for block in appBlocks -%}
+        <div class="mt-16">
+          {%- render block -%}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+    {%- assign group_classes = '' -%}
+    {%- assign button_classes = '' -%}
+    {%- if version == 'desktop' -%}
+      {%- assign group_classes = ' mt-30' -%}
+    {%- else -%}
+      {%- assign button_classes = ' p-10 text--sm' -%}
+    {%- endif -%}
+    <div class="d--flex gap-20{{ group_classes }}">
+      {%- render 'product-quantity', product: product, selected_variant: selected_variant, section: section, product_form_id: product_form_id, version: version -%}
+      <div id="submit-{{ section.id }}-{{ version }}" class="width--100 d--flex">
+        <button
+          type="submit"
+          name="add"
+          class="add-btn button button--primary width--100{{ button_classes }}"
+          {% if selected_variant.available == false %}
+            disabled
+          {%- endif -%}
+        >
+          {%- if selected_variant.available == false -%}
+            {{- 'products.product.out_of_stock' | t -}}
+          {%- else -%}
+            {{- 'products.product.add_to_cart' | t -}}
+          {%- endif -%}
+        </button>
+      </div>
+    </div>
+  {%- endform -%}
+</product-form>

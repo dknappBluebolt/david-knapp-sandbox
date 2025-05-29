@@ -1,0 +1,41 @@
+{%- if [request.page_type].metafields.custom.disable_breadcrumbs == blank
+  or [request.page_type].metafields.custom.disable_breadcrumbs == false
+-%}
+  <nav class="breadcrumbs {{ class }}">
+    <a class="breadcrumbs__link" href="{{ routes.root_url }}">
+      {{- 'general.breadcrumbs.home' | t -}}
+    </a>
+
+    {%- if request.page_type == 'collection' and collection.metafields.custom.parent_collection != blank -%}
+      {%- comment %} Collections {% endcomment -%}
+      {%- assign parentCollection = collection.metafields.custom.parent_collection.value -%}
+      <a class="breadcrumbs__link" href="{{ parentCollection.url }}">
+        {{- parentCollection.title -}}
+      </a>
+
+    {%- elsif request.page_type == 'product' -%}
+      {%- comment %} Products {% endcomment -%}
+      
+
+    {%- elsif request.page_type == 'article' -%}
+      <a class="breadcrumbs__link" href="{{ blog.url }}">
+        {{- blog.title -}}
+      </a>
+
+    {%- elsif template contains 'customers/' -%}
+      <a class="breadcrumbs__link" href="{{ routes.account_url }}">
+        {{- 'customer.account.title' | t -}}
+      </a>
+    {%- endif -%}
+
+    {%- if request.page_type == 'search' -%}
+      <span>
+        {{ 'templates.search.title' | t }}
+      </span>
+    {%- else -%}
+      <span>
+        {{- [request.page_type].title -}}
+      </span>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

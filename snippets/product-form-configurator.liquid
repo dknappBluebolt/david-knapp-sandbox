@@ -1,0 +1,30 @@
+{%- comment -%}
+  Accepts:
+    - product: {Object} product object.
+    - section: {Object} section the form is being rendered in
+{%- endcomment -%}
+
+{%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+<product-form data-section-id="{{ section.id }}" class="cover-configurator">
+  {%- form 'product', product, id: product_form_id -%}
+    {%- render 'product-options-configurator', product: product, section: section, product_form_id: product_form_id, selected_variant: selected_variant -%}
+    <input
+      type="hidden"
+      name="id"
+      class="js-variant-id"
+      value="{{ selected_variant.id }}"
+    >
+    <div class="cover-configurator__buttons">
+      <button type="button" disabled class="open-configurator-view button button--primary">
+        {{- 'products.configurator.config-my-cover' | t -}}
+      </button>
+      <div class="d--flex sm--justify-center lg--justify-center or-offset">
+        <span class="or-divider">or</span>
+        <button type="button" class="open-configurator-view link color--black">
+          {{- 'products.configurator.enter-dimensions' | t -}}
+        </button>
+      </div>
+    </div>
+  {%- endform -%}
+</product-form>

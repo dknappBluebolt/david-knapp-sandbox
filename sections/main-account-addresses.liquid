@@ -1,0 +1,58 @@
+{{- 'template-account.css' | asset_url | stylesheet_tag -}}
+
+<script src="{{ 'template-addresses.js' | asset_url }}" defer></script>
+{%- render 'component-account-breadcrumb' -%}
+
+{%- paginate customer.addresses by 6 -%}
+  <div class="customer account account--main addresses" data-customer-addresses>
+    {%- assign title = 'customer.addresses.title' | t -%}
+    {%- render 'component-account-header', title: title, class: "page-section--md border-b--gray" -%}
+    <ul class="grid p-0 mb-0">
+      {%- liquid assign edit_modal_default_id = 'EditAddress_' | append: customer.default_address.id
+      render 'component-address-box', default_address: true, address: customer.default_address, edit_modal_form_id: edit_modal_default_id
+      assign defaultAddressOffset = 0
+      for address in customer.addresses
+        unless address == customer.default_address
+          assign edit_modal_form_id = 'EditAddress_' | append: address.id
+          assign addressNumber = forloop.index | plus: paginate.current_offset | minus: defaultAddressOffset
+          render 'component-address-box', default_address: false, address: address, addressNumber: addressNumber, edit_modal_form_id: edit_modal_form_id
+        else
+          assign defaultAddressOffset = 1
+        endunless
+      endfor -%}
+    </ul>
+
+    {%- for address in customer.addresses -%}
+      {%- assign edit_modal_form_id = 'EditAddress_' | append: address.id -%}
+      {%- capture modal_html -%}
+        {%- render 'component-address-edit-form', address: address -%}
+      {%- endcapture -%}
+      {%- render 'component-modal', modalId: edit_modal_form_id, html: modal_html -%}
+    {%- endfor -%}
+
+    {%- render 'component-pagination', paginate: paginate, class: 'mt-30' -%}
+
+    {%- assign add_modal_form_id = "add_modal_form" -%}
+    <tcg-modal-button class="button button--primary button--lg modal-button" data-modal-id="{{ add_modal_form_id }}" style="min-width: 270px;">
+      {{- 'customer.addresses.add' | t -}}
+    </tcg-modal-button>
+
+    {%- capture modal_html -%}
+      {%- render 'component-address-add-form' -%}
+    {%- endcapture -%}
+    {%- render 'component-modal', modalId: add_modal_form_id, html: modal_html -%}
+  </div>
+{%- endpaginate -%}
+<script>
+  window.onload = () => {
+    typeof CustomerAddresses !== 'undefined' && new CustomerAddresses();
+  };
+</script>
+
+{% schema %}
+{
+  "name": "Addresses Page",
+  "class": "page-width page-section page-top",
+  "settings": []
+}
+{% endschema %}

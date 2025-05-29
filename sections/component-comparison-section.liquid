@@ -1,0 +1,212 @@
+{{- 'component-comparison-section.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.index <= 2 or request.design_mode -%}
+  <link id="swiper-css" href="{{ 'swiper.min.css' | asset_url }}" media="all" rel="stylesheet">
+  <script id="swiper-js" src="{{ 'swiper.min.js' | asset_url }}"></script>
+{%- endif -%}
+
+<div class="comparison-section">
+  {%- if section.settings.title != blank -%}
+    <div class="section-header page-section--md page-width color--white">
+      {%- if section.settings.pretitle != blank -%}
+      <div class="section-pretitle">
+        {{- section.settings.pretitle -}}
+      </div>
+      {%- endif -%}
+      {%- if section.settings.custom_message != blank -%}
+        <div class="d--flex lg-up--align-items-center lg-down--flex-column gap-24 lg-down--v-gap-10">
+          <h2 class="section-title d--inline-block lg-up--50">
+            {{- section.settings.title -}}
+          </h2>
+          <div class="section-header__msg d--inline-block lg-up--50 links-underline lg-up--text-right">
+            {{- section.settings.custom_message -}}
+          </div>
+        </div>
+      {%- else -%}
+        <h2 class="section-title d--inline-block lg-up--50">
+          {{- section.settings.title -}}
+        </h2>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="page-width lg-down--page-width--no-padding">
+    <div id="swiper-{{ section.id }}" class="featured-products swiper"{% if section.index > 2 and request.design_mode == false %} data-swiper-init="{{ section.id }}"{% endif %}>
+      <div class="swiper-wrapper d--flex mb-40">
+        {%- for variant in section.settings.product.variants -%}
+          <div class="swiper-slide comparison-slide d--flex flex-column" style="height: auto;">
+            {%- render 'component-card-comparison', variant: variant, product: section.settings.product, bestseller: section.settings.bestseller_label, button_text: section.settings.button_text -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.swiperOptions["{{ section.id }}"] = {
+    keyboard: true,
+    slidesPerView: 1.25,
+    initialSlide: 1, centeredSlides: true, centeredSlidesBounds: true,
+    breakpoints: {
+      768: {slidesPerView: 2.25},
+      1024: {slidesPerView: 3,slidesPerGroup: 3, spaceBetween: 30}
+    }
+  };
+  {%- if section.index <= 2 or request.design_mode -%}
+    window.addEventListener('DOMContentLoaded',() => {
+      var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+    });
+    {% if request.design_mode %}
+      window.addEventListener('shopify:section:load',() => {
+        var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+      });
+    {%- endif -%}
+  {%- endif -%}
+</script>
+
+{% schema %}
+  {
+    "name": "Comparison Section",
+    "tag": "section",
+    "class": "overflow-hidden bg-color--black  round--lg",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "padding_top_desktop",
+        "label": "Padding Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 75
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "label": "Padding Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_desktop",
+        "label": "Padding Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 75
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "label": "Padding Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "richtext",
+        "id": "custom_message",
+        "label": "Custom message"
+      },
+      {
+        "type": "product",
+        "id": "product",
+        "label": "Select Product"
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "label": "Buttton Text",
+        "default": "Configure"
+      },
+      {
+        "type": "text",
+        "id": "bestseller_label",
+        "label": "Bestseller Label",
+        "default": "Bestseller"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Comparison Section"
+      }
+    ]
+  }
+{% endschema %}

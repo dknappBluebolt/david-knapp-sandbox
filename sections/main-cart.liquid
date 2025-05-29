@@ -1,202 +1,243 @@
+{{- 'template-cart.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'template-cart.js' | asset_url }}" defer></script>
 
+{%- assign cover_error = false -%}
+{%- assign cover_error_message = '' -%}
+{%- assign cover_error_lines = '' -%}
+{%- assign tub_number = 0 -%}
 
-{% stylesheet %}
-  .cart-page {
-    --cart-font-size--2xs: var(--font-size--2xs);
-    --cart-font-size--xs: var(--font-size--xs);
-    --cart-font-size--sm: var(--font-size--sm);
-    --cart-font-size--md: var(--font-size--md);
-    --cart-font-size--2xl: var(--font-size--2xl);
+{%- for item in cart.items -%}
+  {%- if item.product.metafields.custom.cover_configurator.value == null -%}
+    {%- continue -%}
+  {%- endif -%}
+  {%- assign tub_number = tub_number | plus: 1 -%}
+  {%- assign configurator = item.product.metafields.custom.cover_configurator.value -%}
+  {%- assign error_message = 'Cover #' | append: tub_number | append: ' - the following components are missing from your custom cover: ' -%}
+  {%- assign error = false -%}
+  {%- assign error_line = forloop.index -%}
 
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0 var(--padding-5xl);
-  }
+  {%- assign color_found = false -%}
+  {%- assign skirt_length_found = false -%}
+  {%- assign handles_found = false -%}
+  {%- for sub_item in cart.items -%}
+    {%- if sub_item.properties._cover_id != item.properties._cover_id -%}
+      {%- continue -%}
+    {%- endif -%}
 
-  .cart-page--empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+    {%- for color in configurator.color_options.value -%}
+      {%- if color.id == sub_item.id -%}
+        {%- assign color_found = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
 
-  .cart-page--empty .cart-page__title,
-  .cart-page--empty .cart-page__more-blocks {
-    margin-top: var(--margin-6xl);
-  }
+    {%- if color_found == false -%}
+      {%- for color in configurator.upsell_color_options.value -%}
+        {%- if color.id == sub_item.id -%}
+          {%- assign color_found = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
 
-  .cart-page__more-blocks {
-    width: 100%;
-  }
+    {%- for skirt_length in configurator.skirt_length_options.value -%}
+      {%- if skirt_length.id == sub_item.id -%}
+        {%- assign skirt_length_found = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
 
-  .cart-page--empty .cart-title {
-    text-align: center;
-  }
+    {%- for handle_option in configurator.handle_options.value -%}
+      {%- if handle_option.id == sub_item.id -%}
+        {%- assign handles_found = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+  {%- if handles_found == false -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Handles, ' -%}
+  {%- endif -%}
 
-  .cart-page__main {
-    grid-column: 1;
-  }
+  {%- if skirt_length_found == false -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Skirt Length, ' -%}
+  {%- endif -%}
 
-  .cart-page__summary {
-    padding-top: var(--padding-xl);
-  }
+  {%- if color_found == false -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Color, ' -%}
+  {%- endif -%}
 
-  @media screen and (width >= 750px) {
-    .cart-page {
-      grid-template-columns: 1fr min(50vw, var(--sidebar-width));
-      grid-template-rows: min-content min-content 1fr;
-    }
+  {%- if item.properties._shape == blank -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Shape, ' -%}
+  {%- endif -%}
 
-    .cart-page__summary {
-      display: grid;
-      height: 100%;
-      grid-column: 2;
-      grid-row: 1 / -1;
-      align-self: stretch;
-      grid-template-rows: subgrid;
-      padding-top: 0;
-      /* needed to support blurred effect from hero section */
-      position: relative;
-    }
+  {%- if item.properties._dimension_a == blank or item.properties._dimension_a == '0' -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Cover Dimensions, ' -%}
+  {%- endif -%}
 
-    .section--page-width .cart-page:has(.cart__container--extend) {
-      grid-column: 2 / 4;
-      grid-template-columns: 1fr minmax(
-          var(--sidebar-width),
-          calc((100vw - var(--page-width)) / 2 + var(--sidebar-width))
-        );
-    }
+  {%- if item.properties._fold_location == blank -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Fold Location, ' -%}
+  {%- endif -%}
 
-    .cart__container--extend {
-      height: 100%;
-    }
-  }
+  {%- if item.properties._strap_location == blank -%}
+    {%- assign error = true -%}
+    {%- assign error_message = error_message | append: 'Strap Location, ' -%}
+  {%- endif -%}
 
-  @media screen and (width >= 1400px) {
-    .cart-page {
-      grid-template-columns: 1fr var(--sidebar-width);
-    }
-  }
+  {%- if error == true -%}
+    {%- assign cover_error = true -%}
+    {%- assign error_message = error_message | remove_last: ',' -%}
+    {%- assign cover_error_message = cover_error_message | append: error_message | append: '|' -%}
+    {%- assign cover_error_lines = cover_error_lines | append: error_line | append: '|' -%}
+  {%- endif -%}
+{%- endfor -%}
 
-  .cart-items-component {
-    width: 100%;
-  }
-{% endstylesheet %}
-
-<cart-items-component
-  class="cart-items-component"
-  data-section-id="{{ section.id }}"
->
-  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-  <div
-    class="section color-{{ section.settings.color_scheme }} section--{{ section.settings.section_width }}"
-  >
-    <div
-      class="cart-page spacing-style{% if cart.empty? %} cart-page--empty{% endif %}"
-      style="{% render 'spacing-style', settings: section.settings %}"
-    >
-      <div class="cart-page__title">
-        {%- content_for 'block', id: 'cart-page-title', type: '_cart-title' %}
-      </div>
-
-      <div class="cart-page__items">
-        {%- content_for 'block', id: 'cart-page-items', type: '_cart-products' %}
-      </div>
-
-      {%- unless cart.empty? -%}
-        <div class="cart-page__summary">
-          {%- content_for 'block', id: 'cart-page-summary', type: '_cart-summary' -%}
+<div id="cart-section" class="" data-id="{{ section.id }}">
+  {%- if cart.item_count > 0 -%}
+    <form action="{{ routes.cart_url }}" class="js-content cart" method="post" id="cart">
+      <div class="grid grid--xl">
+        <div class="grid__item lg-up--67">
+          {%- if cover_error == true -%}
+            {%- assign cover_error_message_split = cover_error_message | split: '|' -%}
+            {%- assign cover_error_line_split = cover_error_lines | split: '|' -%}
+            <div class="form-msg form-msg--error mb-20">
+              <ul>
+                {%- for message in cover_error_message_split -%}
+                  {%- assign index = forloop.index0 -%}
+                  {%- assign line = cover_error_line_split[index] | minus: 1 -%}
+                  {%- assign error_line_item = cart.items[line] -%}
+                  <li class="d--flex">
+                    {{ message }}
+                    <div>
+                      <a
+                        href="{{ error_line_item.product.url }}?step=2&key={{ error_line_item.key }}"
+                        class="link text--sm ml-24"
+                      >
+                        {{- 'templates.cart.edit' | t -}}
+                      </a>
+                    </div>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+          <div class="d--flex justify--space-between align-items--baseline mb-20">
+            <h1 class="h2 m-0">{{ 'templates.cart.title' | t }}</h1>
+            <div class="h5 m-0">
+              {{- cart.item_count }} Item{% if cart.item_count > 1 %}s{% endif -%}
+            </div>
+          </div>
+          <table role="table" class="cart-details sm--hide md--hide">
+            <caption class="visually-hidden">
+              {{- 'templates.cart.caption' | t -}}
+            </caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th id="ColumnProduct" scope="col" role="columnheader" colspan="2">
+                  {{ 'customer.order.product' | t }}
+                </th>
+                <th id="ColumnPrice" class="text--center" scope="col" role="columnheader">
+                  {{ 'customer.order.price' | t }}
+                </th>
+                <th id="ColumnQuantity" class="text--center" scope="col" role="columnheader">
+                  {{ 'customer.order.quantity' | t }}
+                </th>
+                <th id="ColumnTotal" scope="col" role="columnheader">{{ 'customer.order.total' | t }}</th>
+              </tr>
+            </thead>
+            {%- assign compareDiscounts = 0 -%}
+            <tbody role="rowgroup" class="">
+              {%- for line_item in cart.items -%}
+                {%- liquid
+                  unless line_item.original_line_price != line_item.final_line_price
+                    if line_item.final_price < line_item.variant.compare_at_price
+                      assign comparePrice = line_item.variant.compare_at_price | times: line_item.quantity
+                      assign compareDiscount = comparePrice | minus: line_item.final_line_price
+                      assign compareDiscounts = compareDiscounts | plus: compareDiscount
+                    endif
+                  endunless
+                -%}
+                {%- if line_item.properties._cover_id == blank -%}
+                  {%- render 'component-line-item-desktop',
+                    line_item: line_item,
+                    class: 'order-item',
+                    adjustable_quantity: true,
+                    line_index: forloop.index,
+                    reorder: false
+                  -%}
+                {%- elsif line_item.product.metafields.custom.cover_configurator != blank -%}
+                  {%- render 'component-line-item-bundle',
+                    line_item: line_item,
+                    line_items: cart.items,
+                    is_mobile: false,
+                    line_index: forloop.index,
+                    reorder: false
+                  -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </tbody>
+          </table>
+          <div class="d--flex flex-column gap-20 width--100 lg-up--hide">
+            {%- for line_item in cart.items -%}
+              {%- if line_item.properties._cover_id == blank -%}
+                {%- render 'component-line-item-mobile',
+                  line_item: line_item,
+                  class: 'py-30 border-b--gray',
+                  adjustable_quantity: true,
+                  line_index: forloop.index,
+                  reorder: false
+                -%}
+              {%- elsif line_item.product.type == 'Cover Component'
+                and line_item.product.metafields.custom.cover_configurator != blank
+              -%}
+                {%- render 'component-line-item-bundle',
+                  line_item: line_item,
+                  line_items: cart.items,
+                  is_mobile: true,
+                  line_index: forloop.index,
+                  reorder: false
+                -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
         </div>
-      {%- endunless -%}
-
-      <div class="cart-page__more-blocks">
-        {%- content_for 'blocks' -%}
+        <aside class="grid__item lg-up--33">
+          {%- render 'component-cart-sidebar', compareDiscounts: compareDiscounts, cover_error: cover_error -%}
+          {%- if section.settings.fine_print != blank -%}
+            <div class="mt-10 rte links-underline text--sm">
+              {{- section.settings.fine_print -}}
+            </div>
+          {%- endif -%}
+        </aside>
       </div>
+    </form>
+  {%- else -%}
+    <div class="js-content rich-text cart">
+      {{- section.settings.empty_cart_text -}}
     </div>
-  </div>
-</cart-items-component>
+  {%- endif -%}
+</div>
 
 {% schema %}
 {
-  "name": "t:names.cart",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
-  "blocks": [
-    {
-      "type": "@theme"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "text"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "button"
-    },
-    {
-      "type": "video"
-    },
-    {
-      "type": "group"
-    },
-    {
-      "type": "spacer"
-    }
-  ],
+  "name": "Cart Page",
+  "tag": "section",
+  "class": "page-width page-top page-section",
   "settings": [
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
+      "type": "richtext",
+      "id": "fine_print",
+      "label": "Order Summary Fine Print"
     },
     {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
-    },
-    {
-      "type": "header",
-      "content": "t:content.padding"
-    },
-    {
-      "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
+      "type": "richtext",
+      "id": "empty_cart_text",
+      "label": "Empty Cart Text"
     }
   ]
 }

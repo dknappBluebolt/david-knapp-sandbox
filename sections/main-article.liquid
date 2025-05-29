@@ -1,0 +1,49 @@
+{{- 'template-article.css' | asset_url | stylesheet_tag -}}
+{%- assign originalContent = article.content -%}
+{%- assign newContent = originalContent
+  | replace: '<img', '<img loading="lazy" class="round"'
+  | replace: 'src="https://www.youtube.com', 'class="ratio__content lazy-iframe" data-src="https://www.youtube.com'
+  | replace: '<iframe','<div class="round extended-section"><div class="ratio ratio--16-9"><iframe'
+  | replace: '/iframe>','/iframe></div></div>'
+  | replace: '<blockquote', '<blockquote class="extended-section"'
+  | replace: ' [[ ', '[['
+  | replace: ' ]]', ']] '
+-%}
+{%- for video in article.metafields.custom.videos.value -%}
+  {%- assign videoItem = '<p>[[video ' | append: forloop.index | append: ']]</p>' -%}
+  {%- capture videoWithPoster -%}
+    {%- render 'component-video-with-poster', class: "extended-section", video: video, section: section, sizes: "(max-width: 1023px) 100vw, 938px" -%}
+  {%- endcapture -%}
+  {%- assign newContent = newContent | replace: videoItem, videoWithPoster -%}
+{%- endfor -%}
+
+<div class="d--flex flex-column align-items--center article-section">
+  <div class="text--center">
+    {%- render 'blog-tags', section: section, filters: article.blog.metafields.custom.filters, article: article -%}
+  </div>
+  <h1 class="h3 my-20 text--center width-100 lg-up--50 article-title">
+    {{- article.title -}}
+  </h1>
+  {%- if article.image -%}
+    <a href="{{ article.url }}" class="mb-30 ratio ratio--16-9 d--block round">
+      <img
+        class="ratio__content ratio__content--cover width--100"
+        srcset="{{ article.image | image_url: width: 400 }} 400w, {{ article.image | image_url: width: 600 }} 600w, {{ article.image | image_url: width: 800 }} 800w, {{ article.image | image_url: width: 1300 }} 1300w"
+        sizes="(max-width: 1467px) calc(100vw - (var(--page-gutter) * 2), 1300px"
+        fetchpriority="high"
+      >
+    </a>
+  {%- endif -%}
+  <div class="article-body rte rte--md rte--list">
+    {{- newContent -}}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Article Page",
+  "tag": "section",
+  "class": "page-width page-section page-top--pad",
+  "settings": []
+}
+{% endschema %}

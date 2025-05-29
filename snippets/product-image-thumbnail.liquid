@@ -1,0 +1,13 @@
+<div class="swiper-slide width--16">
+  <button type="button" class="ratio ratio--4-3" aria-label="{{ 'accessibility.select_image' | t }} {{ image.alt | escape }}">
+    <img
+      class="d--block ratio__content ratio__content--cover"
+      srcset="{{ image | image_url: width: 120 }} 120w, {{ image | image_url: width: 240 }} 240w"
+      sizes="(max-width: 767px) 16vw,(min-width: 768px) and (max-width: 1730px) 8vw, 110px"
+      alt="{{ image.alt | escape }}"
+      {% unless lazyLoad == false %}
+        loading="lazy"
+      {%- endunless -%}
+    >
+  </button>
+</div>

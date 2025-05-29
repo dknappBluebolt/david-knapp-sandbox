@@ -1,0 +1,300 @@
+{%- liquid
+  if section.settings.background_image_desktop != blank
+    assign backgroundImageDesktop = section.settings.background_image_desktop
+    if section.settings.background_image_mobile != blank
+      assign backgroundImageMobile = section.settings.background_image_mobile
+    else
+      assign backgroundImageMobile = backgroundImageDesktop
+    endif
+  endif
+-%}
+
+{{- 'component-media-blocks-2.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    color: var(--color-{{ section.settings.text_color }});
+  }
+  #shopify-section-{{ section.id }}::before {
+    background: linear-gradient(0deg, rgba(22,22,22,{{ section.settings.overlay_bottom_opacity | times: 0.01 }}) 5%, rgba(22,22,22,{{ section.settings.overlay_top_opacity | times: 0.01 }}) 100%);
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.settings.background_image_desktop != blank -%}
+  <picture class="height--100 width--100 absolute" style="left:0;top:0;z-index: 0;">
+    <source
+      media="(min-width: 1024px)"
+      srcset="{{ backgroundImageDesktop | image_url: width: 600 }} 600w, {{ backgroundImageDesktop | image_url: width: 1200 }} 1200w, {{ backgroundImageDesktop | image_url: width: 2000 }} 2000w"
+    >
+    <img
+      style="object-fit: cover; object-position: {{ section.settings.background_position }};"
+      class="height--100 width--100"
+      srcset="{{ backgroundImageMobile | image_url: width: 600 }} 600w, {{ backgroundImageMobile | image_url: width: 1200 }} 1200w, {{ backgroundImageMobile | image_url: width: 2000 }} 2000w"
+      {%- if section.index > 2 -%}
+        loading="lazy"
+      {%- else -%}
+        fetchpriority="high"
+      {%- endif -%}
+    >
+  </picture>
+{%- endif -%}
+<div class="page-width height--100 width--100 relative z-index--1 d--flex flex-grow flex-wrap--wrap lg-down--align-items-center {{ section.settings.mobile_text_alignment }} {{ section.settings.desktop_text_alignment }}">
+  <div class="section-header page-section--md width--100">
+    {%- if section.settings.pretitle != blank -%}
+      <div class="section-pretitle flex-items">
+        {{- section.settings.pretitle -}}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2  class="section-title">
+        {{- section.settings.title -}}
+      </h2>
+    {%- endif -%}
+  </div>
+  {%- if section.blocks.size > 0 -%}
+    <div class="media-grid d--grid width--100">
+      {%- for block in section.blocks -%}
+        <div class="media-grid__item round--bottom--lg round--top--lg v-stack gap-16">
+          {%- if block.settings.title != blank -%}
+            <h3 class="line-height-12 text--no-bold">
+              {{- block.settings.title -}}
+            </h3>
+          {%- endif -%}
+          {%- if block.settings.content != blank -%}
+            <div class="rte rte--lg links-underline text--semibold">
+              {{- block.settings.content -}}
+            </div>
+          {%- endif -%}
+          {%- if block.settings.link_text != blank -%}
+            <div class="media-grid__item-link rte--lg">
+              <a class="link" href="{{ block.settings.link_url }}">
+                {{- block.settings.link_text -}}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+  {
+    "name": "Media Blocks 2",
+    "class": "media-section round--bottom--lg round--top--lg relative",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text Color",
+        "options": [
+          {
+            "value": "black",
+            "label": "Black"
+          },
+          {
+            "value": "white",
+            "label": "White"
+          }
+        ],
+        "default": "white"
+      },
+      {
+        "type": "select",
+        "id": "desktop_text_alignment",
+        "label": "Desktop Text Alignment",
+        "options": [
+            {
+              "value": "lg-up--text-left",
+              "label": "Left"
+            },
+            {
+              "value": "lg-up--text-center",
+              "label": "Center"
+            },
+            {
+              "value": "lg-up--text-right",
+              "label": "Right"
+            }
+          ],
+        "default": "lg-up--text-left"
+      },
+      {
+        "type": "select",
+        "id": "mobile_text_alignment",
+        "label": "Mobile Text Alignment",
+        "options": [
+          {
+            "value": "lg-down--text-left",
+            "label": "Left"
+          },
+          {
+            "value": "lg-down--text-center",
+            "label": "Center"
+          },
+          {
+            "value": "lg-down--text-right",
+            "label": "Right"
+          }
+        ],
+        "default": "lg-down--text-left"
+      },
+      {
+        "type": "header",
+        "content": "Background Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_desktop",
+        "label": "Desktop image"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_mobile",
+        "label": "Mobile image"
+      },
+      {
+        "type": "select",
+        "id": "background_position",
+        "label": "Position Background Image",
+        "options": [
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "overlay_top_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Gradient overlay top opacity",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "overlay_bottom_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Gradient overlay bottom opacity",
+        "default": 100
+      }
+    ],
+    "blocks": [
+      {
+        "type": "media_blocks",
+        "name": "Media Block",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Body Text"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link Text"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Media Blocks 2",
+        "blocks": [
+          {
+            "type": "media_blocks"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

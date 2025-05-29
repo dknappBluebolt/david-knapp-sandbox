@@ -1,0 +1,13 @@
+{%- comment -%}
+Accepts:
+    - modalId: {String} custom modal id that should correspond to a button
+    - html: {HTML from capture} html for the content of the modal
+{%- endcomment -%}
+<tcg-modal class="modal modal__toggle-close" id="{{ modalId }}">
+    <div class="modal-content round ">
+        <button class="modal-close-button js-close bg-color--black color--white line-height-0 round round--lg" aria-label="{{ 'accessibility.close' | t }}">
+            {%- render 'icons-sprite-icon', id: 'icon-close', size: 15 -%}
+        </button>
+        {{ html }}
+    </div>
+</tcg-modal>

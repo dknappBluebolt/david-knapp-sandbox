@@ -1,0 +1,6 @@
+<div class="d--flex align-items--center" id="variant-price-{{ section.id }}">
+  <div class="h4 mb-0">{{ selected_variant.price | money }}</div>
+  {%- if selected_variant.compare_at_price != null -%}
+    <s class="ml-10 d--flex color--gray-text">{{ selected_variant.compare_at_price | money }}</s>
+  {%- endif -%}
+</div>

@@ -1,0 +1,176 @@
+{% comment %}
+  Accepts:
+      - product: {Object} shopify product object
+      - shape: {String} optional, used to set the shape of the upgrade card
+      - classes: {String} optional, used to add additional classes to the upgrade card
+{% endcomment %}
+{%- if product.variants.size > 1 -%}
+    {%- assign is_multi_variant = true -%}
+  {%- else -%}
+    {%- assign is_multi_variant = false -%}
+  {%- endif -%}
+  <tcg-configure-upgrade-card
+    class="upgrade-promos__upgrade {{ classes | default: '' }}"
+    data-package-all-variant-ids="{{ product.variants | map: "id" | join: ',' }}"
+    data-filter-type="{% for filter in product.first_available_variant.metafields.custom.upgrade_sort_options.value %}{{ filter | handleize }} {% endfor %}"
+    {% if shape %}
+      data-shape="{{ shape }}"
+    {% endif %}
+  >
+    <div class="promo-cards__card{% if is_multi_variant %} multi-select{% endif %}{% if product.first_available_variant.price > 0 %} is-upsell{% endif %}{% if product.metafields.custom.featured_upgrade == true %} featured-upgrade{% endif %}">
+      <div class="promo-cards__top">
+        {%- if is_multi_variant -%}
+          {% assign featured_image = product.first_available_variant.featured_image | remove_first: 'files/' %}
+        {%- else -%}
+          {% assign featured_image = product.featured_image | remove_first: 'files/' %}
+        {%- endif -%}
+        <img
+          class="promo-cards__image"
+          src="{{ featured_image | file_url }}"
+          alt="{{ featured_image.alt | default: product.title | escape }}"
+          loading="lazy"
+        >
+          {%- assign badge_text = "" -%}
+          {%- if product.first_available_variant.price == 0 -%}
+            {%- assign badge_text = section.settings.label_free -%}
+          {%- elsif product.first_available_variant.metafields.custom.badge -%}
+            {%- assign badge_text = product.first_available_variant.metafields.custom.badge -%}
+          {%- endif -%}
+          <p class="promo-cards__badge{% if badge_text == blank %} hidden{% endif %}">
+            {{ badge_text }}
+          </p>
+      </div>
+      <div class="promo-cards__bottom">
+        <div>
+          <input
+            data-configurator-multi-type="upgrades_addons"
+            data-configurator-id="{{ product.first_available_variant.id }}"
+            data-configurator-option-price="{{ product.first_available_variant.price }}"
+            data-configurator-original-option-price="{{ product.first_available_variant.price }}"
+            data-configurator-variants="{{ product.first_available_variant.metafields.custom.associated_variants.value | map: 'id' | join: ',' }}"
+            data-configurator-step="4"
+            data-configurator-all-variant-ids="{{ product.variants | map: "id" | join: ',' }}"
+            class="promo-cards__input visually-hidden"
+            type="checkbox"
+            id="{{ product.title | replace: " ", "_" | escape }}"
+            name="options_2"
+            value="{{ product.title | escape }}"
+            tabindex="-1"
+          >
+          <label tabindex="0" class="promo-cards__title h5 d--flex" for="{{ product.title | replace: " ", "_" | escape }}"
+            ><span class="promo-cards__indicator is-checkbox"></span>
+            {{- product.title -}}
+          </label>
+        </div>
+
+        {%- if is_multi_variant -%}
+          <label for="promo_{{ product.title | replace: " ", "_" | escape }}_select" class="d--flex text--md text--bold option-name">{{ product.options_with_values.first.name }}</label>
+          <select
+            id="promo_{{ product.title | replace: " ", "_" | escape }}_select"
+            class="promo-cards__select"
+            value="{{ product.first_available_variant.id }}"
+          >
+            {%- for option_value in product.options_with_values.first.values -%}
+              {%- if option_value.available -%}
+                {%- assign badge_text = "" -%}
+                {%- if option_value.variant.price == 0 -%}
+                  {%- assign badge_text = section.settings.label_free -%}
+                {%- elsif option_value.variant.metafields.custom.badge -%}
+                  {%- assign badge_text = option_value.variant.metafields.custom.badge -%}
+                {%- endif -%}
+                <option
+                  value="{{ option_value.variant.id }}"
+                  data-image-src="{{ option_value.variant.featured_image | remove_first: 'files/' | file_url }}"
+                  data-image-alt="{{ option_value.variant.featured_image.alt | default: product.title | escape }}"
+                  data-unformatted-price="{{ option_value.variant.price }}"
+                  data-price="{% if option_value.variant.price > 0 %}{{ option_value.variant.price | money | remove_first: '$' }}{% else %}{{ section.settings.label_free }}{% endif %}"
+                  data-compare-at-price="{% if option_value.variant.compare_at_price > 0 %}{{ option_value.variant.compare_at_price | money }}{% endif %}"
+                  data-blurb="{{ option_value.variant.metafields.custom.blurb }}"
+                  data-associated-variants="{{ metafields.custom.associated_variants.value | map: 'id' | join: ',' }}"
+                  data-badge="{{ badge_text }}"
+                >
+                  {{ option_value.name }}
+                </option>
+              {%- endif -%}
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+
+        <p class="promo-cards__desc">{{ product.first_available_variant.metafields.custom.blurb }}</p>
+        {% comment %} Details Modal {% endcomment %}
+        {%- capture details_modal_html -%}
+          <div id="details-modal-{{ section.id }}" class="">
+              <div class="d--flex flex-column gap-20">
+                  <h2 class="h4 title">
+                    {{ product.title }}
+                    {%- for variant in product.variants -%}
+                      {%- if variant.title != "Default Title" -%}
+                        <span class="js-variant-modal-header{% unless variant == product.first_available_variant %} hidden{% endunless %}" data-id="{{ variant.id }}"> - {{ variant.title }}</span>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </h2>
+                  {%- if product.has_only_default_variant -%}
+                    <img
+                      srcset="
+                      {{- product.featured_image | image_url: width: 600 }} 600w,
+                      {{- product.featured_image | image_url: width: 800 }} 800w,
+                      {{- product.featured_image | image_url: width: 1200 }} 1200w"
+                      sizes="{{ modalImgSizes }}"
+                      width="800"
+                      height="{{ 800 | times: product.featured_image.aspect_ratio }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      loading="lazy"
+                      class="round details-modal-image d--flex align-self--center"
+                    >
+                      <div class="rte rte--lg">
+                        {{ product.first_available_variant.metafields.custom.details | metafield_tag }}
+                      </div>
+                  {%- else -%}
+                    {%- for variant in product.variants -%}
+                      <div class="js-variant-modal-content d--flex flex-column gap-20{% unless variant == product.first_available_variant %} hidden{% endunless %}" data-id="{{ variant.id }}">
+                        <img
+                          srcset="
+                          {{- variant.featured_image | image_url: width: 600 }} 600w,
+                          {{- variant.featured_image | image_url: width: 800 }} 800w,
+                          {{- variant.featured_image | image_url: width: 1200 }} 1200w"
+                          sizes="{{ modalImgSizes }}"
+                          width="800"
+                          height="{{ 800 | times: variant.featured_image.aspect_ratio }}"
+                          alt="{{ variant.featured_image.alt | escape }}"
+                          loading="lazy"
+                          class="round details-modal-image d--flex align-self--center"
+                        >
+                        <div class="rte rte--lg" data-id="{{ variant.id }}">
+                          {{ variant.metafields.custom.details | metafield_tag }}
+                        </div>
+                      </div>
+                    {%- endfor -%}
+                  {%- endif -%}
+              </div>
+          </div>
+          {%- endcapture -%}
+      </div>
+      <div class="promo-cards__bottom--details">
+        <p class="promo-cards__price">
+          {%- if product.first_available_variant.price > 0 -%}
+            +{{ product.first_available_variant.price | money -}}
+          {%- else -%}
+            {{- section.settings.label_free -}}
+          {%- endif -%}
+          {% if product.first_available_variant.compare_at_price > product.first_available_variant.price %}
+            <s class="color--gray-text">{{ product.first_available_variant.compare_at_price | money }}</s>
+          {%- endif -%}
+        </p>
+        {%- assign product_modal_id = 'details' | append: product.id -%}
+        <tcg-modal-button
+          tabindex="0"
+          role="button"
+          class="d--block modal-button link"
+          data-modal-id="{{ product_modal_id }}"
+        >
+          {{- section.settings.label_details -}}
+        </tcg-modal-button>
+      </div>
+    </div>
+    {%- render 'component-modal', modalId: product_modal_id, html: details_modal_html -%}
+  </tcg-configure-upgrade-card>

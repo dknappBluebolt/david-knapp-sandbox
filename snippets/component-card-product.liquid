@@ -1,0 +1,54 @@
+<div class="card-product card-slide__card v-stack gap-16">
+  {%- liquid
+    if product.featured_image != blank
+      assign image = product.featured_image
+    else
+      assign image = settings.product_placeholder
+    endif
+    assign cheapestVariant = product.variants | sort: 'price' | first
+  -%}
+  <a class="card-product__image d--block relative ratio ratio--square round" href="{{ product.url }}" aria-hidden="true" tabindex="-1">
+    <img
+      class="card-product__img d--block ratio__content ratio__content--product"
+      srcset="{{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 600 }} 600w"
+      alt="{{ image.alt | escape }}"
+      sizes="(max-width: 639px) 50vw,(min-width: 640px) and (max-width: 1023px) 33w,(min-width: 1024px) and (max-width: 1700px) 20w, 300px"
+      width="{{ image.width }}"
+      height="{{ image.height }}"
+      tabindex="-1"
+      {% unless lazyLoad == false %}
+        loading="lazy"
+      {%- endunless -%}
+    >
+  </a>
+  <div class="flex-between flex-column flex-grow gap-10">
+    <div>
+      <h3 class="card-product__title card-title text--truncate">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h3>
+      {%- if product.metafields.custom.tagline != blank and showDescription != false -%}
+        <p class="card-product__subtitle color--gray-text text--sm">
+          {{- product.metafields.custom.tagline -}}
+        </p>
+      {%- endif -%}
+    </div>
+    <div>
+      <div class="card-product__prices text--bold text--sm">
+        {%- if product.price_varies -%}
+          <span class="price--varies mr-5">
+            {{- 'products.product.from' | t -}}
+          </span>
+        {%- endif -%}
+        <span class="price">
+          {{- cheapestVariant.price | money -}}
+        </span>
+        {%- if cheapestVariant.compare_at_price > cheapestVariant.price %}
+          <s class="price--compare text--strike color--gray-text">
+            {{- cheapestVariant.compare_at_price | money -}}
+          </s>
+        {%- endif -%}
+        <div class="yotpo-widget-instance" data-yotpo-instance-id="712127" data-yotpo-product-id="{{ product.id }}" data-yotpo-cart-product-id="{{ item.product.id }}" data-yotpo-section-id="{{ template.name }}"></div>
+      </div>
+    </div>
+  </div>
+</div>

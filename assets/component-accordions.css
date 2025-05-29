@@ -1,0 +1,21 @@
+.faq-section {
+  max-width: 796px;
+  margin: auto;
+}
+
+.accordion {
+  border-bottom: 2px solid var(--color-light-gray);
+}
+
+.accordion:first-of-type {
+  border-top: 4px solid var(--color-dark-gray);
+}
+
+.accordion__summary {
+  font-weight: 700;
+  color:#000000;
+}
+
+.accordion[open] .fa-chevron-down {
+  transform: rotate(180deg);
+}

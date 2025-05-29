@@ -1,0 +1,25 @@
+<div class="d--flex flex-column gap-20">
+	<h2 class="h4 title">
+    {%- liquid unless details.product.title contains 'Upgrades'
+      echo details.product.title
+      echo ', '
+    endunless
+    echo details.title -%}
+  </h2>
+  <img
+    srcset="
+    {{- details.featured_image | image_url: width: 600 }} 600w,
+    {{- details.featured_image | image_url: width: 800 }} 800w,
+    {{- details.featured_image | image_url: width: 1200 }} 1200w"
+    sizes="{{ modalImgSizes }}"
+    width="800"
+    height="{{ 800 | times: details.featured_image.aspect_ratio }}"
+    alt="{{ details.featured_image.alt | escape }}"
+    loading="lazy"
+    class="round details-modal-image d--flex align-self--center"
+  >
+  {%- if details.subtitle != blank -%}
+    <h3>{{ details.subtitle }}</h3>
+  {%- endif -%}
+  {{- details.metafields.custom.description | metafield_tag | replace: 'metafield-rich_text_field','rte rte--lg' -}}
+</div>

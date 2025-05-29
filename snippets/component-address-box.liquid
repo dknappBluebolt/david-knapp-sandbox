@@ -1,0 +1,37 @@
+<li data-address class="grid__item sm--100 md-up--33 page-section--md d--flex direction--column">
+  <div class="relative v-stack flex-grow width--100">
+    <h5 class="bg-color--black color--white round--top px-30 py-20 m-0{% if default_address %} d--flex align-items--center{% endif %}">
+      {%- if default_address -%}
+        {{- 'customer.account.nav.default_address_title' | t -}}
+        <span class="badge body round text--no-wrap" style="margin-left: 5px;">{{ 'customer.addresses.default' | t }}</span>
+      {%- else -%}
+        {{- 'customer.account.nav.address_title' | t }} {{ addressNumber -}}
+      {%- endif -%}
+    </h5>
+    <div class="round--bottom p-30 bg-color--gray-off-white flex-grow account-gray-box">
+      {{- address | format_address -}}
+      <p>
+        <tcg-modal-button class="link modal-button" data-modal-id="{{ edit_modal_form_id }}" aria-haspopup="true" aria-controls="{{ edit_modal_form_id }}">
+          {{- 'customer.addresses.edit' | t -}}
+        </tcg-modal-button>
+        <br>
+        <button
+          class="link"
+          type="button"
+          aria-label="
+          {%- liquid echo  'customer.addresses.delete' | t | append: ' '
+          if default_address
+            echo 'customer.addresses.default_address_title' | t
+          else
+            echo 'customer.account.nav.address_title' | t | append: ' ' | append: addressNumber
+          endif -%}
+          "
+          data-target="{{ address.url }}"
+          data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}"
+        >
+          {{- 'customer.addresses.delete' | t -}}
+        </button>
+      </p>
+    </div>
+  </div>
+</li>

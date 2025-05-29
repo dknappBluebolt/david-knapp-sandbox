@@ -1,0 +1,373 @@
+{{- 'template-product.css' | asset_url | stylesheet_tag -}}
+{{- 'cover-configurator.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'template-product.js' | asset_url }}" defer></script>
+<script src="{{ 'cover-configurator.js' | asset_url }}" defer></script>
+<script src="{{ 'configurator-upgrade-card.js' | asset_url }}" defer></script>
+<link id="swiper-css" href="{{ 'swiper.min.css' | asset_url }}" media="all" rel="stylesheet">
+<script id="swiper-js" src="{{ 'swiper.min.js' | asset_url }}"></script>
+
+{%- liquid assign selected_variant = product.selected_or_first_available_variant
+if product.selected_variant != blank
+  assign selected_variant = product.selected_variant
+else
+  for variant in product.variants
+    if variant.metafields.custom.default_selected_variant == true
+      assign selected_variant = variant
+      break
+    endif
+  endfor
+endif -%}
+
+<div class="product-with-configurator-view page-width">
+  <div class="d--flex flex-wrap--wrap justify--space-between">
+    <div class="product-section">
+      {%- render 'product-images', product: product, selected_variant: selected_variant, section: section, checkLazy: false -%}
+      <div id="info-tabs-desktop-{{ section.id }}" class="sm--hide md--hide">
+        {%- render 'product-info-tabs', product: product, selected_variant: selected_variant, section: section, desktop_or_mobile: 'desktop' -%}
+      </div>
+    </div>
+    <div class="product-section ">
+      <div class="section-sticky">
+        {%- render 'product-title-section', product: product, selected_variant: selected_variant, section: section -%}
+        {%- render 'product-form-configurator', product: product, selected_variant: selected_variant -%}
+        {% for block in section.blocks %}
+          {% if block.type == '@app' %}
+            <div class="mt-16">{%- render block -%}</div>
+          {% endif %}
+        {% endfor %}
+        {%- if localization.country.iso_code == 'US' -%}
+          <p
+            class="affirm-as-low-as mt-16"
+            data-amount="{{ selected_variant.price }}"
+            data-affirm-color="black"
+            data-learnmore-show="true"
+            data-page-type="product"
+          ></p>
+        {%- endif -%}
+      </div>
+      <div id="info-tabs-mobile-{{ section.id }}" class="lg-up--hide product-section product-section--tabs">
+        {%- render 'product-info-tabs', product: product, selected_variant: selected_variant, section: section, desktop_or_mobile: 'mobile' -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- render 'cover-configurator', product: product, selected_variant: selected_variant -%}
+
+{%- liquid
+  if selected_variant.featured_media
+    assign seo_media = selected_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {% if seo_media -%}
+      "image": [
+        {{ seo_media | image_url: width: 1920 | prepend: "https:" | json }}
+      ],
+    {%- endif %}
+    "description": {{ product.description | strip_html | json }},
+    {% if selected_variant.sku != blank -%}
+      "sku": {{ selected_variant.sku | json }},
+    {%- endif %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    },
+    "offers": [
+      {%- for variant in product.variants -%}
+        {
+          "@type" : "Offer",
+          {%- if variant.sku != blank -%}
+            "sku": {{ variant.sku | json }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 12 -%}
+            "gtin12": {{ variant.barcode }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 13 -%}
+            "gtin13": {{ variant.barcode }},
+          {%- endif -%}
+          {%- if variant.barcode.size == 14 -%}
+            "gtin14": {{ variant.barcode }},
+          {%- endif -%}
+          "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+          "price" : {{ variant.price | divided_by: 100.00 | json }},
+          "priceCurrency" : {{ cart.currency.iso_code | json }},
+          "url" : {{ request.origin | append: variant.url | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+<script type="text/javascript">
+  window.swiperOptions["{{ section.id }}"] = {% render 'swiper-js', swiper_id: section.id %};
+  window.swiperOptions["{{ section.id }}-thumbs"] = {%- render 'swiper-thumb-js' -%};
+  window.initProductSwipers = function() {
+    this.thumbs = new Swiper(`#swiper-thumbs-{{ section.id }}`,  window.swiperOptions[`{{ section.id }}-thumbs`]);
+		window.swiperOptions[`{{ section.id }}`].thumbs = {
+      swiper: this.thumbs
+		};
+		this.swiper = new Swiper(`#swiper-{{ section.id }}`, window.swiperOptions[`{{ section.id }}`]);
+  }
+  window.initProductSwipers();
+</script>
+<script>
+  const configuratorErrors = {
+    "shape_required": {{ section.settings.error_shape_required | json }},
+    "dimension_invalid": {{ section.settings.error_dimension_invalid | json }},
+    "dimensions_attestation_required": {{ section.settings.error_dimensions_attestation_required | json }},
+    "fold_direction_required": {{ section.settings.error_fold_direction_required | json }},
+    "strap_location_required": {{ section.settings.error_strap_location_required | json }},
+    "skirt_length_required": {{ section.settings.error_skirt_length_required | json }},
+    "color_required": {{ section.settings.error_color_required | json }},
+    "options1_required": {{ section.settings.error_options1_required | json }}
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Cover Configurator Page",
+  "tag": "section",
+  "class": "page-top page-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "label_dimension",
+      "label": "Label: Dimension",
+      "default": "Dimension"
+    },
+    {
+      "type": "text",
+      "id": "label_dimension_longest",
+      "label": "Label: Dimension Always Longest",
+      "default": "*Always longest"
+    },
+    {
+      "type": "text",
+      "id": "label_fold_direction",
+      "label": "Label: Fold Direction",
+      "default": "Cover Fold Direction"
+    },
+    {
+      "type": "text",
+      "id": "label_fold_direction_select",
+      "label": "Label: Select Fold Direction",
+      "default": "Choose fold direction"
+    },
+    {
+      "type": "text",
+      "id": "label_strap_location",
+      "label": "Label: Strap Location",
+      "default": "Strap Location"
+    },
+    {
+      "type": "text",
+      "id": "label_strap_location_select",
+      "label": "Label: Select Strap Location",
+      "default": "Choose strap location"
+    },
+    {
+      "type": "text",
+      "id": "label_skirt_length",
+      "label": "Label: Skirt Length",
+      "default": "Skirt Length"
+    },
+    {
+      "type": "text",
+      "id": "label_skirt_length_select",
+      "label": "Label: Select Skirt Length",
+      "default": "Choose skirt length"
+    },
+    {
+      "type": "text",
+      "id": "label_additional_handles",
+      "label": "Label: Additional Handles",
+      "default": "Additional Handles"
+    },
+    {
+      "type": "text",
+      "id": "label_shape",
+      "label": "Label: Shape",
+      "default": "Shape"
+    },
+    {
+      "type": "text",
+      "id": "label_color",
+      "label": "Label: Color",
+      "default": "Color"
+    },
+    {
+      "type": "text",
+      "id": "label_total",
+      "label": "Label: Total",
+      "default": "Your Total"
+    },
+    {
+      "type": "text",
+      "id": "label_continue",
+      "label": "Label: Continue",
+      "default": "Continue"
+    },
+    {
+      "type": "text",
+      "id": "label_add_to_cart",
+      "label": "Label: Add to Cart",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "label_view_step_details",
+      "label": "Label: View Step Details",
+      "default": "View Details"
+    },
+    {
+      "type": "text",
+      "id": "label_edit",
+      "label": "Label: Edit",
+      "default": "Edit"
+    },
+    {
+      "type": "text",
+      "id": "label_start_over",
+      "label": "Label: Start Over",
+      "default": "Start Over"
+    },
+    {
+      "type": "text",
+      "id": "label_save",
+      "label": "Label: Save",
+      "default": "Save"
+    },
+    {
+      "type": "text",
+      "id": "label_off",
+      "label": "Label: Off",
+      "default": "Off",
+      "info": "x% Off"
+    },
+    {
+      "type": "text",
+      "id": "label_off_each",
+      "label": "Label: Off Each",
+      "default": "Off Each",
+      "info": "$x Off Each"
+    },
+    {
+      "type": "text",
+      "id": "label_free",
+      "label": "Label: Free",
+      "default": "Free"
+    },
+    {
+      "type": "text",
+      "id": "label_view_all",
+      "label": "Label: View All",
+      "default": "View All"
+    },
+    {
+      "type": "text",
+      "id": "label_details",
+      "label": "Label: Details",
+      "default": "Details"
+    },
+    {
+      "type": "text",
+      "id": "label_how_to_measure",
+      "label": "Label: How to Measure",
+      "default": "How to Measure"
+    },
+    {
+      "type": "text",
+      "id": "label_step_durability_taper",
+      "label": "Step: Durability + Taper",
+      "default": "Durability + Taper"
+    },
+    {
+      "type": "text",
+      "id": "label_step_dimensions",
+      "label": "Step: Cover Dimensions",
+      "default": "Cover Dimensions"
+    },
+    {
+      "type": "text",
+      "id": "label_step_color_style",
+      "label": "Step: Color + Style",
+      "default": "Color + Style"
+    },
+    {
+      "type": "text",
+      "id": "label_step_upgrades_accessories",
+      "label": "Step: Upgrades + Accessories",
+      "default": "Upgrades + Accessories"
+    },
+    {
+      "type": "header",
+      "content": "Errors"
+    },
+    {
+      "type": "text",
+      "id": "error_shape_required",
+      "label": "Shape Required",
+      "default": "A shape selection is required. Please choose a shape."
+    },
+    {
+      "type": "text",
+      "id": "error_dimension_invalid",
+      "label": "Dimension Invalid",
+      "default": "Dimension must be a number with up to 4 decimal places."
+    },
+    {
+      "type": "text",
+      "id": "error_dimensions_attestation_required",
+      "label": "Dimensions Attestation Required",
+      "default": "Please confirm that the measurements are correct by selecting the checkbox above."
+    },
+    {
+      "type": "text",
+      "id": "error_fold_direction_required",
+      "label": "Fold Direction Required",
+      "default": "Please select a fold direction."
+    },
+    {
+      "type": "text",
+      "id": "error_strap_location_required",
+      "label": "Strap Location Required",
+      "default": "Please select a strap location."
+    },
+    {
+      "type": "text",
+      "id": "error_skirt_length_required",
+      "label": "Skirt Length Required",
+      "default": "Please select a skirt length."
+    },
+    {
+      "type": "text",
+      "id": "error_color_required",
+      "label": "Color Required",
+      "default": "A color selection is required. Please choose a color."
+    },
+    {
+      "type": "text",
+      "id": "error_options1_required",
+      "label": "Option1 (Handles) Required",
+      "default": "An option selection is required. Please choose an option."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

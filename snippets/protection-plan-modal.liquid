@@ -1,0 +1,216 @@
+<tcg-modal class="modal modal__toggle-close" id="protection_plan_modal">
+    <div class="modal-content round text--center">
+      <div class="protection-plan-top">
+        <button class="modal-close-button js-close bg-color--black color--white line-height-0 round round--lg" aria-label="{{ 'accessibility.close' | t }}">
+            {%- render 'icons-sprite-icon', id: 'icon-close', size: 15 -%}
+        </button>
+        <div class="headings">
+          <img src="{{ plan_modal.badge | file_url }}" width="180px" height="72px">
+          <h2 class="h2 title plan-modal-heading">{{ plan_modal.heading }}</h2>
+          <p>{{ plan_modal.sub_heading }}</p>
+        </div>
+	<div class="plans" id="protection-plan-{{ section.id }}" class="">
+	{%- for plan in plan_modal.protection_plans.value limit: 3 -%}
+      <input
+          type="radio"
+          id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+          name="configurator_variant"
+          value="{{ plan.id | escape }}"
+          form="{{ product_form_id }}"
+          data-configurator-variant-price="{{ plan.price | money }}"
+          data-configurator-id="{{ plan.id }}"
+          data-configurator-title="{{ plan.title }}"
+          data-configurator-type="_main_product"
+          data-configurator-selling-plan="{{ plan.selling_plan_allocations.first.selling_plan.id }}"
+          {% if option.selected_value == value or plan == selected_variant %}
+            checked
+          {% endif %}
+          class="visually-hidden js-protection-plan configurator_variant {% if option_disabled %} disabled{% endif %}"
+        >
+        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="product-options-label configurator-option {% if option_disabled %} disabled{% endif %}">
+          <div class="configurator-option__bottom">
+            <div class="d--flex align-items--center flex-wrap--wrap gap-10">
+              <span class="product-options-radio"></span>
+              <p class="h5">{{ plan.product.metafields.custom.protection_plan_title }}</p>
+              {%- if plan.metafields.custom.bestseller == true -%}
+                <span class="cover-configurator-bestseller">– {{ 'products.configurator.bestseller' | t }}</span>
+              {%- endif -%}
+            </div>
+            {%- if plan.metafields.custom.blurb != blank -%}
+              <div class="options-blurb-wrapper">
+              <span class="options-blurb">
+                {{ plan.metafields.custom.blurb }}
+              </span>
+              </div>
+            {%- endif -%}
+            <div class="bottom-content">
+              <div class="options-pricing">
+                <span class="current-price">{{ plan.price | money }}{% if plan.product.metafields.custom.protection_plan_period %}/{{ plan.product.metafields.custom.protection_plan_period }}{% endif %}{% if plan.product.metafields.custom.protection_plan_fine_print %}*{% endif %}</span>
+                {%- if plan.compare_at_price -%}<span class="compare-at-price">{{ plan.compare_at_price | money }}</span>{%- endif -%}
+              </div>
+            {%- if plan.product.metafields.custom.protection_plan_fine_print -%}<div class="protection-plan-fine-print"><span>{{ plan.product.metafields.custom.protection_plan_fine_print }}</span></div>{%- endif -%}
+            </div>
+          </div>
+        </label>     
+       {%- endfor -%}
+      </div>
+      <div class="cta-items">
+        <button class="configurator-content__continue--btn add-protection-plan button--primary">Add to Cart</button>
+        <div class="no-thanks-container">
+          <a href="javascript:void(0)" class="no-thanks-link configurator-content__continue--btn is-step-4">No Thanks</a>
+        </div>
+      </div>
+    </div>
+    <div class="features">
+      <h4 class="features-heading h4">{{ plan_modal.list_heading }}</h4>
+      {%- for feature in plan_modal.features.value -%}
+        <div class="feature">
+          <div class="feature-left">
+            <img class="feature-icon" src="{{ feature.icon | file_url }}" width="51px" height="52px">
+          </div>
+          <div class="feature-right">
+            <h5 class="feature-name h5 title">{{ feature.name }}</h5>
+            <ul class="feature-bullets">
+              {%- for bullet in feature.bullets.value -%}
+                <li class="bullet">{{ bullet }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</tcg-modal>
+<style>
+  #protection_plan_modal .modal-content{
+    padding: unset;
+  }
+  .protection-plan-top{
+    padding: 62px 62px 0px 62px;
+  }
+  .headings{
+    max-width:550px;
+    margin: auto;
+    margin-bottom: 20px;
+  }
+  .headings img{
+    margin-bottom: 10px;
+  }
+  .plan-modal-heading{
+    font-size: 42px;
+  }
+  .plans{
+    margin-bottom: 30px;
+    display: flex;
+    align-items: stretch;
+  }
+  .plans label{
+    margin: 10px;
+  }
+  .plans .configurator-option{
+    text-align: left;
+    width: 33%;
+    padding: 20px;
+  }
+  .options-blurb-wrapper{
+    margin: 10px 0px;
+    color: #757575;
+    min-height: 72px;
+  }
+  .plans .current-price{
+    font-weight: bold;
+  }
+  .protection-plan-fine-print{
+    color: #757575;
+    font-size: 12px;
+    text-decoration: italic;
+  }
+  .configurator-option__bottom{
+   height: 100%;
+    position: relative;
+    padding-bottom: 42px;
+  }
+  .bottom-content{
+    position: absolute;
+    bottom: 0;
+  }
+  .cta-items{
+    margin-bottom: 30px;
+  }
+  .no-thanks-container{
+    display: inline-block;
+    padding: 20px;
+  }
+  .no-thanks-link{
+    border-bottom: 2px solid black;
+    padding-bottom: 5px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .no-thanks-link:hover{
+    border-bottom: 2px solid #757575;
+    color: #757575;
+  }
+  .features{
+    background: #efefef;
+    padding: 62px 62px 62px 62px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+  .features-heading{
+    width: 100%;
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+  .features .feature{
+    width: 50%;
+    float: left;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .feature-right{
+    padding-left: 10px;
+  }
+  .feature-name{
+    margin-bottom: 5px;
+    font-size: 18px;
+  }
+  .feature-bullets{
+    padding-left: 20px;
+    margin-top: 0px;
+  }
+  .features img{
+    max-width: unset;
+  }
+  @media all and (max-width: 1230px){
+    .plans .configurator-option{
+      width: 100%;
+      max-width: 380px;
+      margin: 10px auto;
+    }
+    .plans{
+      flex-direction: column;
+    }
+    .options-blurb-wrapper{
+      min-height: auto;
+    }
+    .plans label{
+      margin: 10px 0px;
+    }
+    .configurator-option__bottom{
+      padding-bottom: 60px;
+    }
+    .plan-modal-heading{
+      font-size: 28px;
+    }
+    .features .feature {
+      width: 100%;
+      max-width: 324px;
+      margin: 10px auto;
+    }
+  }
+</style>

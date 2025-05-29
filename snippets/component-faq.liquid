@@ -1,0 +1,44 @@
+{%- liquid
+  assign faq_handle = block.settings.faq_handle
+  assign faq = shop.metaobjects.faq[faq_handle]
+  assign imgSizes = "(max-width: 1730px) 50vw, 760px"
+-%}
+{%- if faq -%}
+  <details class="accordion-item" {{ block.shopify_attributes }}>
+    {%- if faq.question != blank -%}
+      <summary class="accordion-item__title flex-between align-items--center width--100">
+        {{- faq.question -}}
+        <span class="plus-minus-icon plus d--inline-block relative"></span>
+      </summary>
+    {%- endif -%}
+    <div class="accordion-item__content">
+      {%- if faq.video_above != blank -%}
+        {%- render 'component-video-with-poster', video: faq.video_above.value, class: 'inline-spacing' section: section, sizes: imgSizes -%}
+      {%- endif -%}
+      {%- if faq.image_above != blank -%}
+        <picture class="d--block width--100 round inline-spacing">
+          <source media="(min-width: 1024px)"
+          srcset="{{ faq.image_above  | image_url: width: 600 }} 600w, {{ faq.image_above | image_url: width: 800 }} 800w ,{{ faq.image_above | image_url: width: 1200 }} 1200w, {{ faq.image_above | image_url: width: 1600 }} 1600w"
+          sizes="(max-width: 1730px) 50vw, 760px">
+          <img class="d--block width--100"
+          srcset="{{ faq.image_above | image_url: width: 600 }} 600w, {{ faq.image_above | image_url: width: 800 }} 800w, {{ faq.image_above | image_url: width: 1200 }} 1200w, {{ faq.image_above | image_url: width: 1600 }} 1600w"
+          loading="lazy">
+        </picture>
+      {%- endif -%}
+      {{- faq.answer | metafield_tag | replace: 'metafield-rich_text_field','accordion-item-description rte rte--md inline-spacing' -}}
+      {%- if faq.image_below != blank -%}
+        <picture class="d--block width--100 round inline-spacing">
+          <source media="(min-width: 1024px)"
+          srcset="{{ faq.image_below | image_url: width: 600 }} 600w, {{ faq.image_below | image_url: width: 800 }} 800w, {{ faq.image_below | image_url: width: 1200 }} 1200w, {{ faq.image_below | image_url: width: 1600 }} 1600w"
+          sizes="(max-width: 1730px) 50vw, 760px">
+          <img class="d--block width--100"
+          srcset="{{ faq.image_below | image_url: width: 600 }} 600w, {{ faq.image_below | image_url: width: 800 }} 800w, {{ faq.image_below | image_url: width: 1200 }} 1200w, {{ faq.image_below | image_url: width: 1600 }} 1600w"
+          loading="lazy">
+        </picture>
+      {%- endif -%}
+      {%- if faq.video_below != blank -%}
+        {%- render 'component-video-with-poster', video: faq.video_below.value, class: 'inline-spacing', section: section, sizes: imgSizes -%}
+      {%- endif -%}
+    </div>
+  </details>
+{%- endif -%}

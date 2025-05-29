@@ -1,0 +1,1047 @@
+{%- liquid 
+	assign configurator = product.metafields.custom.cover_configurator.value
+	assign modalImgSizes = "(max-width: 767px) calc(80vw - 60px),(min-width: 768px) and (max-width: 1023px) calc(80vw - 124px), (min-width: 1024px) and (max-width: 1308px) calc(65vw - 124px), 726px" 
+-%}
+
+{%- assign all_upgrade_variants = "" -%}
+
+{%- for upgrade_product in configurator.upgrades.value -%}
+	{%- assign upgrade_ids = upgrade_product.variants | map: 'id' | join: ', ' -%}
+	{%- assign all_upgrade_variants = all_upgrade_variants | append: upgrade_ids | append: ', ' -%}
+{%- endfor -%}
+{%- for accessory_product in configurator.accessories.value -%}
+	{%- assign accessory_ids = accessory_product.variants | map: 'id' | join: ', ' -%}
+	{%- assign all_upgrade_variants = all_upgrade_variants | append: accessory_ids | append: ', ' -%}
+{%- endfor -%}
+{%- assign all_upgrade_variants = all_upgrade_variants | remove_last: ', ' -%}
+
+<div class="configurator-view">
+	<div class="configurator-view__inner">
+
+		<div class="page-width">
+			<button class="configurator-view__restart">
+				{%- render 'icons-sprite-icon', id: 'icon-caret', size: 10, class: 'rotate--180' %}
+				<span class="link">{{ section.settings.label_start_over }}</span>
+			</button>
+		</div>
+
+		{% comment %} Mobile Configurator Step Menu {% endcomment %}
+		<div class="configurator-steps is-mobile">
+			<div class="configurator-steps__step is-step-1 is-complete">
+				<span class="configurator-steps__count">01.</span>
+				<span class="configurator-steps__desc">{{ section.settings.label_step_durability_taper }}</span>
+			</div>
+			<div class="configurator-steps__step is-step-2 is-active">
+				<span class="configurator-steps__count">02.</span>
+				<span class="configurator-steps__desc">{{ section.settings.label_step_dimensions }}</span>
+			</div>
+			<div class="configurator-steps__step is-step-3">
+				<span class="configurator-steps__count">03.</span>
+				<span class="configurator-steps__desc">{{ section.settings.label_step_color_style }}</span>
+			</div>
+			<div class="configurator-steps__step is-step-4">
+				<span class="configurator-steps__count">04.</span>
+				<span class="configurator-steps__desc">{{ section.settings.label_step_upgrades_accessories }}</span>
+			</div>
+
+			<button class="mobile-configurator-menu-trigger">
+				<span class="visually-hidden">View Mobile Menu</span>
+				<svg width="25" height="5" viewBox="0 0 25 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<circle cx="2.5" cy="2.5" r="2.5" fill="white"/>
+					<circle cx="12.5" cy="2.5" r="2.5" fill="white"/>
+					<circle cx="22.5" cy="2.5" r="2.5" fill="white"/>
+				</svg>
+			</button>
+		</div>
+
+		{% comment %} Mobile Modal Menu {% endcomment %}
+		<div class="configurator-mobile-menu-modal">
+			<div class="configurator-mobile-menu-modal__close">
+				<span class="visually-hidden">Close Configurator Menu</span>
+				{%- render 'icons-sprite-icon', id: 'icon-close', size: 15 -%}
+			</div>
+			<div class="configurator-steps__step is-step-1 is-complete">
+				<div class="configurator-steps__step--inner">
+					<span class="configurator-steps__count">
+						<span>01.</span>
+					</span>
+					<span class="configurator-steps__desc">{{ section.settings.label_step_durability_taper }}</span>
+					<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+					<button class="configurator-steps__toggle" aria-controls="nav-step-1-mobile" aria-label="{{ section.settings.label_view_step_details | escape }}">
+						{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+					</button>
+				</div>
+				<div id="nav-step-1-mobile" class="configurator-steps__reveal is-step-1"></div>
+			</div>
+			<div class="configurator-steps__step is-step-2 is-active">
+				<div class="configurator-steps__step--inner">
+					<span class="configurator-steps__count">02.</span>
+					<span class="configurator-steps__desc">{{ section.settings.label_step_dimensions }}</span>
+					<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+					<button class="configurator-steps__toggle" aria-controls="nav-step-2-mobile" aria-label="{{ section.settings.label_view_step_details | escape }}">
+						{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+					</button>
+				</div>
+				<div id="nav-step-2-mobile" class="configurator-steps__reveal is-step-2"></div>
+			</div>
+			<div class="configurator-steps__step is-step-3">
+				<div class="configurator-steps__step--inner">
+					<span class="configurator-steps__count">03.</span>
+					<span class="configurator-steps__desc">{{ section.settings.label_step_color_style }}</span>
+					<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+					<button class="configurator-steps__toggle" aria-controls="nav-step-3-mobile" aria-label="{{ section.settings.label_view_step_details | escape }}">
+						{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+					</button>
+				</div>
+				<div id="nav-step-3-mobile" class="configurator-steps__reveal is-step-3"></div>
+			</div>
+			<div class="configurator-steps__step is-step-4">
+				<div class="configurator-steps__step--inner">
+					<span class="configurator-steps__count">04.</span>
+					<span class="configurator-steps__desc">{{ section.settings.label_step_upgrades_accessories }}</span>
+					<button class="configurator-steps__edit">{{ section.settings.label_edit }}</button>
+					<button class="configurator-steps__toggle" aria-controls="nav-step-4-mobile" aria-label="{{ section.settings.label_view_step_details | escape }}">
+						{%- render 'icons-sprite-icon', id: 'icon-caret', size: 13, class: 'rotate--90' %}
+					</button>
+				</div>
+				<div id="nav-step-4-mobile" class="configurator-steps__reveal is-step-4"></div>
+			</div>
+		</div>
+
+		<div class="configurator-content">
+			{% comment %} Step Two {% endcomment %}
+			<div class="configurator-content__step is-step-2 is-active">
+				<div class="configurator-content__step--inner">
+
+					{% comment %} Desktop Configurator Step Menu {% endcomment %}
+					<div class="configurator-steps is-desktop">
+						{% render 'component-desktop-configurator-nav' %}
+					</div>
+
+					<div class="configurator-steps is-desktop is-tablet is-condensed">
+						{% render 'component-desktop-configurator-nav' %}
+					</div>
+
+					<div class="configurator-content__step--display">
+						{% render 'configurator-display' %}
+					</div>
+					<div class="configurator-content__step--selection">
+						<div class="configurator-content__step--selection-inner">
+
+							<p class="h4 d--flex option-name">{{ configurator.shape_heading }}</p>
+							<p class="configurator-selected is-shape">
+								<span class="configurator-selected__label">{{ section.settings.label_shape }}:</span>
+								<span class="configurator-selected__selected is-shape"></span>
+							</p>
+							<div class="configurator-shapes">
+								{% for shape in configurator.shapes.value %}
+									<div class="configurator-shapes__shape">
+										{% assign shapeId = shape.name | replace: ' ', '_' %}
+										<json data-shape-json-id="{{ shapeId }}" class="shape-json shape-json-for-{{ shapeId }} d--none">
+											{
+												"shape_id": "{{ shapeId }}",
+												"fold_directions": [
+													{% for fold_direction_shape in shape.fold_directions.value %}
+														{
+															"option_select_name": "{{ fold_direction_shape.option_select_name }}",
+															"untranslated_option_select_name": "{{ fold_direction_shape.untranslated_option_select_name | downcase }}",
+															"image": "{{ fold_direction_shape.image | file_url }}",
+															"strap_locations": [
+																{% for strap_location in fold_direction_shape.strap_locations.value %}
+																	{
+																		"option_select_name": "{{ strap_location.option_select_name }}",
+																		"image": "{{ strap_location.image | file_url }}"
+																	}{% unless forloop.last %},{% endunless %}
+																{% endfor %}
+															],
+															"strap_option_image": "{{ fold_direction_shape.strap_location_options_image | file_url }}"
+														}{% unless forloop.last %},{% endunless %}
+													{% endfor %}
+												],
+												"shape_dimension_a": "{{ shape.dimension_a }}",
+												"shape_dimension_a_formula": "{{ shape.dimension_a_formula }}",
+												"shape_dimension_a_ranges": [
+													{%- for range in shape.dimension_a_ranges.value -%}
+														{%- capture message -%}{{- range.message | metafield_tag | json -}}{%- endcapture -%}
+														{
+															"high": "{{ range.high }}",
+															"low": "{{ range.low }}",
+															"id": "{{ range.fee_product.value.id }}",
+															"price": "{{ range.fee_product.value.price }}",
+															"display_price": "{{ range.fee_product.value.price | money }}",
+															"message": {{ message }},
+															"disable_continuation": "{{ range.disable_continuation }}"
+														}{%- unless forloop.last -%},{%- endunless -%}
+													{%- endfor -%}
+												],
+												"shape_dimension_b": "{{ shape.dimension_b }}",
+												"shape_dimension_b_formula": "{{ shape.dimension_b_formula }}",
+												"shape_dimension_b_ranges": [
+													{%- for range in shape.dimension_b_ranges.value -%}
+														{%- capture message -%}{{- range.message | metafield_tag | json -}}{%- endcapture -%}
+														{
+															"high": "{{ range.high }}",
+															"low": "{{ range.low }}",
+															"id": "{{ range.fee_product.value.id }}",
+															"price": "{{ range.fee_product.value.price }}",
+															"display_price": "{{ range.fee_product.value.price | money }}",
+															"message": {{ message }},
+															"disable_continuation": "{{ range.disable_continuation }}"
+														}{%- unless forloop.last -%},{%- endunless -%}
+													{%- endfor -%}
+												],
+												"shape_dimension_c": "{{ shape.dimension_c }}",
+												"shape_dimension_c_formula": "{{ shape.dimension_c_formula }}",
+												"shape_dimension_c_ranges": [
+													{%- for range in shape.dimension_c_ranges.value -%}
+														{%- capture message -%}{{- range.message | metafield_tag | json -}}{%- endcapture -%}
+														{
+															"high": "{{ range.high }}",
+															"low": "{{ range.low }}",
+															"id": "{{ range.fee_product.value.id }}",
+															"price": "{{ range.fee_product.value.price }}",
+															"display_price": "{{ range.fee_product.value.price | money }}",
+															"message": {{ message }},
+															"disable_continuation": "{{ range.disable_continuation }}"
+														}{%- unless forloop.last -%},{%- endunless -%}
+													{%- endfor -%}
+												],
+												"shape_dimension_d": "{{ shape.dimension_d }}",
+												"shape_dimension_d_formula": "{{ shape.dimension_d_formula }}",
+												"shape_dimension_d_ranges": [
+													{%- for range in shape.dimension_d_ranges.value -%}
+														{%- capture message -%}{{- range.message | metafield_tag | json -}}{%- endcapture -%}
+														{
+															"high": "{{ range.high }}",
+															"low": "{{ range.low }}",
+															"id": "{{ range.fee_product.value.id }}",
+															"price": "{{ range.fee_product.value.price }}",
+															"display_price": "{{ range.fee_product.value.price | money }}",
+															"message": {{ message }},
+															"disable_continuation": "{{ range.disable_continuation }}"
+														}{%- unless forloop.last -%},{%- endunless -%}
+													{%- endfor -%}
+												]
+											}
+										</json>
+										<input
+											data-configurator-type="_shape"
+											data-configurator-id="{{ shapeId }}"
+											data-shape-image="{{ shape.image | file_url }}"
+											class="configurator-shapes__input visually-hidden"
+											type="radio"
+											id="{{ shapeId | handleize }}_shape"
+											name="configurator_shape"
+											data-untranslated-name="{{ shape.untranslated_name }}"
+											value="{{ shape.name }}"
+											aria-describedby="error-msg-shape"
+											tabindex="-1">
+										<label tabindex="0" class="configurator-shapes__label" for="{{ shapeId | handleize }}_shape">
+											<span class="visually-hidden">{{ shape.name }}</span>
+											<img class="is-original" src="{{ shape.icon | file_url }}" loading="lazy" role="presentation">
+											<img class="is-selected" src="{{ shape.selected_icon | file_url }}" loading="lazy" role="presentation">
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+							<div class="configurator-content__error" id="error-msg-shape"></div>
+
+							<div class="configurator-content__p mt-20">{{ configurator.custom_callout | metafield_tag }}</div>
+
+							<p class="h4 d--flex option-name mt-40">{{ configurator.measurements_heading }}</p>
+
+							{% if configurator.measuring_help != blank %}
+								{%- assign measurementsModalId = "measurements" | append: section.id -%}
+								<tcg-modal-button role="button" tabindex="0" class="d--block mt-20 icon-info modal-button" data-modal-id="{{ measurementsModalId }}">
+									<span class="link">{{ configurator.measuring_help }}</span>
+								</tcg-modal-button>
+							{% endif %}
+
+							<div class="configurator-content__table mt-20">
+								{%- render 'cover-configurator-dimension', dimension_name: 'a' -%}
+								{%- render 'cover-configurator-dimension', dimension_name: 'b' -%}
+								{%- render 'cover-configurator-dimension', dimension_name: 'c' -%}
+								{%- render 'cover-configurator-dimension', dimension_name: 'd' -%}
+							</div>
+
+							<div class="configurator-fields__attestation">
+								<span class="custom-control">
+									<input
+										type="checkbox"
+										id="dimensions-attestation"
+										name="dimensions_attestation"
+										aria-describedby="error-msg-attestation"
+									>
+									<span class="custom-control__element"></span>
+								</span>
+								<label for="dimensions-attestation">{{ configurator.dimensions_attestation }}</label>
+							</div>
+
+							<div class="configurator-content__error" id="error-msg-attestation"></div>
+
+							<p class="h4 d--flex option-name mt-40">{{ configurator.fold_straps_and_skirt_heading }}</p>
+							<div class="configurator-fields__cover-sizing">
+								<div>
+
+									<label for="fold-location" class="mt-20">{{ section.settings.label_fold_direction }}</label>
+									<select
+										data-configurator-type="_fold_location"
+										id="fold-location"
+										class="configurator-field__fold-location"
+										aria-describedby="error-msg-fold-direction"
+										data-select-text="{{ section.settings.label_fold_direction_select | escape }}"
+									>
+										<option value="">{{ section.settings.label_fold_direction_select | escape }}</option>
+										{%- comment %} Populated dynamically by shape JSON {% endcomment -%}
+									</select>
+									<div class="configurator-content__error" id="error-msg-fold-direction"></div>
+
+									<label for="strap-location" class="mt-20">{{ section.settings.label_strap_location }}</label>
+									<small id="strap-location-helper" class="configurator-field-help" aria-live="polite"></small>
+									<select
+										id="strap-location"
+										class="configurator-field__strap-location"
+										data-configurator-type="_strap_location"
+										aria-describedby="error-msg-strap-location"
+										data-select-text="{{ section.settings.label_strap_location_select | escape }}"
+									>
+										<option value="">{{ section.settings.label_strap_location_select | escape }}</option>
+										{%- comment %} Populated dynamically by shape JSON {% endcomment -%}
+									</select>
+									<div class="configurator-content__error" id="error-msg-strap-location"></div>
+
+									{% if configurator.skirt_length_options.value != blank %}
+										<label for="skirt-length" class="mt-20">{{ section.settings.label_skirt_length }}</label>
+										<select
+											id="skirt-length"
+											class="configurator-field__skirt-length"
+											data-configurator-type="_skirt_length"
+											aria-describedby="error-msg-skirt-length"
+											data-configurator-select-price
+											data-select-text="{{ section.settings.label_skirt_length_select | escape }}"
+										>
+											<option value="">{{ section.settings.label_skirt_length_select | escape }}</option>
+											{%- comment %} Universal for all shapes {% endcomment -%}
+											{%- for skirt_length in configurator.skirt_length_options.value -%}
+												<option
+													value="{{ skirt_length.title }}"
+													data-configurator-option-price="{{ skirt_length.price }}"
+													data-configurator-id="{{ skirt_length.id }}">
+													{%- liquid echo skirt_length.title
+														if skirt_length.price > 0
+															echo ' (+'
+															echo skirt_length.price | money
+															if skirt_length.compare_at_price > skirt_length.price
+																assign percent = skirt_length.price | times: 1.00 | divided_by: skirt_length.compare_at_price
+																assign percentOff = 1.00 | minus: percent | times: 100.00 | floor
+																echo ', ' | append: section.settings.label_save
+																echo ' ' | append: percentOff | append: '%'
+															endif
+															echo ')'
+														endif -%}
+												</option>
+											{%- endfor -%}
+										</select>
+									{%- endif -%}
+
+									<div class="configurator-content__error" id="error-msg-skirt-length"></div>
+
+									{% if configurator.length_help != blank %}
+										{%- assign lengthModalId = "length" | append: section.id -%}
+										<tcg-modal-button tabindex="0" role="button" class="d--block mt-20 icon-info modal-button mt-10" data-modal-id="{{ lengthModalId }}">
+											<span class="link">{{ configurator.length_help }}</span>
+										</tcg-modal-button>
+									{% endif %}
+								</div>
+								<div>
+									<div id="cover-strap-options-image">
+										{% comment %} Populated dynamically by shape JSON {% endcomment %}
+									</div>
+								</div>
+							</div>
+
+							<div class="configurator-content__continue mb-40 sticky-bottom bg-color--white p-20">
+								<p>{{ section.settings.label_total }} <strong>{{ cart.currency.symbol }}<span class="configurator-total-price">0</span></strong></p>
+								<button class="configurator-content__continue--btn is-step-2 button--primary">
+									{{- section.settings.label_continue -}}
+								</button>
+							</div>
+							<div class="mobile-continue-section md-up--hide bg-color--white px-20 py-6">
+								<div class="configurator-content__continue mobile">
+									<p>{{ section.settings.label_total }} <strong>{{ cart.currency.symbol }}<span class="configurator-total-price">0</span></strong></p>
+									<button class="configurator-content__continue--btn is-step-2 button--primary">
+										{{- section.settings.label_continue -}}
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{% comment %} Step Three {% endcomment %}
+			<div class="configurator-content__step is-step-3">
+				<div class="configurator-content__step--inner">
+
+					{% comment %} Desktop Configurator Step Menu {% endcomment %}
+					<div class="configurator-steps is-desktop">
+						{% render 'component-desktop-configurator-nav' %}
+					</div>
+
+					<div class="configurator-steps is-desktop is-tablet is-condensed">
+						{% render 'component-desktop-configurator-nav' %}
+					</div>
+
+					<div class="configurator-content__step--display">
+						{% render 'configurator-display' %}
+					</div>
+					<div class="configurator-content__step--selection">
+						<div class="configurator-content__step--selection-inner">
+
+							<p class="h4 d--flex option-name">{{ configurator.color_heading }}</p>
+
+							{%- assign lazyLoad = false -%}
+							{%- assign checkLazy = false -%}
+
+							<script>
+								window.swiperOptions["swiper-materials-1"] = {
+									keyboard: true,
+									slidesPerView: 4,
+									autoHeight: true,
+									breakpoints: {
+										600: {slidesPerView: 6.2, slidesPerGroup: 1},
+									},
+									navigation: {
+										nextEl: '#swiper-materials-1 .swiper-button-next',
+										prevEl: '#swiper-materials-1 .swiper-button-prev'
+									}
+								};
+								window.addEventListener('shopify:section:load',() => {
+									var swiper = new Swiper("#swiper-materials-1", window.swiperOptions["swiper-materials-1"]);
+								});
+							</script>
+
+							<div class="material-tiles">
+
+								<p class="configurator-selected is-color-1">
+									<span class="configurator-selected__label">{{ section.settings.label_color }}:</span>
+									<span class="configurator-selected__selected is-color-1"></span>
+								</p>
+
+								<div id="swiper-materials-1" class="swiper" data-swiper-init="swiper-materials-1">
+									<div class="swiper-wrapper d--flex">
+										{% for variant in configurator.color_options.value %}
+											{% if variant.available == true %}
+											<div class="material-tiles__wrapper swiper-slide">
+												{% assign featured_image = variant.featured_image | remove_first: "files/" %}
+												<input
+													data-configurator-type="color"
+													data-configurator-id="{{ variant.id }}"
+													data-material-image="{{ featured_image | file_url }}"
+													data-configurator-step="3"
+													class="material-tiles__input visually-hidden vinyl-colors-1"
+													type="radio"
+													id="{{ variant.title | handleize }}_color"
+													name="vinyl_color"
+													value="{{ variant.title }}"
+													tabindex="-1"
+												>
+												<label tabindex="0" class="material-tiles__tile" for="{{ variant.title | handleize }}_color">
+													<span class="visually-hidden">{{ variant.title }}</span>
+													<div class="material-tiles__tile--inner">
+														<img src="{{ featured_image | file_url }}" alt="{{ featured_image.alt | default: variant.title | escape }}" loading="lazy">
+													</div>
+												</label>
+											</div>
+										{% endif %}
+										{% endfor %}
+									</div>
+									<div class="swiper-button swiper-button-prev"></div>
+									<div class="swiper-button swiper-button-next"></div>
+								</div>
+							</div>
+
+							<div class="configurator-content__error" id="error-msg-color"></div>
+
+							{%- assign available_upsell_colors = configurator.upsell_color_options.value | where: 'available', true -%}
+							{%- if available_upsell_colors.size > 0 -%}
+								{% if configurator.color_heading_2 != blank %}
+									<p class="h4 d--flex option-name mt-40 mb-0">{{ configurator.color_heading_2 }}</p>
+								{% endif %}
+								<p class="option-upsell">
+									{% comment %} Price range of upsell colors  {% endcomment %}
+
+									{% assign prices = "" %}
+									{% assign compareAtPrices = "" %}
+									{% for variant in configurator.upsell_color_options.value %}
+										{% if variant.price > 0 %}
+											{% assign price = variant.price | money %}
+											{% assign prices = prices | append: price | append: " " %}
+										{% endif %}
+										{% if variant.compare_at_price > 0 %}
+											{% assign compareAtPrice = variant.compare_at_price | money %}
+											{% assign compareAtPrices = compareAtPrices | append: compareAtPrice | append: " " %}
+										{% endif %}
+									{% endfor %}
+									{% assign prices = prices | split: " " %}
+									{% assign compareAtPrices = compareAtPrices | split: " " %}
+									{% for variant in configurator.upsell_color_options.value %}
+										{% if variant.price > 0 %}
+											{% assign price = variant.price | money %}
+											{% assign prices = prices | push: price %}
+										{% endif %}
+										{% if variant.compare_at_price > 0 %}
+											{% assign compareAtPrice = variant.compare_at_price | money %}
+											{% assign compareAtPrices = compareAtPrices | push: compareAtPrice %}
+										{% endif %}
+									{% endfor %}
+
+
+									{% assign lowestPrice = prices | sort | first %}
+									{% assign highestPrice = prices | sort | last %}
+									{% assign lowestCompareAtPrice = compareAtPrices | sort | first %}
+									{% assign highestCompareAtPrice = compareAtPrices | sort | last %}
+
+									{% if lowestPrice != highestPrice %}
+										+{{ lowestPrice }} <span>({{ lowestCompareAtPrice }})</span> to +{{ highestPrice }} <span>{{ highestCompareAtPrice }}</span>
+									{% else %}
+										+{{ lowestPrice }} <span>{{ lowestCompareAtPrice }}</span>
+									{% endif %}
+								</p>
+
+								{%- if configurator.color_blurb_less != blank -%}
+									<div>
+										<p class="d--inline-block">{{ configurator.color_blurb_less }}</p>
+										<tcg-modal-button tabindex="0" role="button" class="modal-button link" data-modal-id="color-blurb">
+											{{- 'general.labels.more' | t -}}
+										</tcg-modal-button>
+									</div>
+									{%- capture color_blurb -%}
+										<div class="d--flex flex-column gap-20">
+											<h2 class="h4 title">{{ configurator.color_blurb_heading }}</h2>
+											{%- if configurator.color_blurb_media -%}
+												{%- if configurator.color_blurb_media.value.media_type == 'video' -%}
+													<div>
+														{%- render 'component-video-with-poster', video: configurator.color_blurb_media.value, section: section, sizes: modalImgSizes -%}
+													</div>
+												{%- else -%}
+													<div class="d--flex justify--center">
+														<img
+															srcset="
+															{{- configurator.color_blurb_media | image_url: width: 600 }} 600w,
+															{{- configurator.color_blurb_media | image_url: width: 800 }} 800w,
+															{{- configurator.color_blurb_media | image_url: width: 1200 }} 1200w"
+															sizes="{{ modalImgSizes }}"
+															aria-hidden="true"
+															width="800"
+															height="{{ 800 | times: configurator.color_blurb_media.aspect_ratio }}"
+															alt="{{ configurator.color_blurb_media.alt | escape }}"
+															loading="lazy"
+															class="round details-modal-image d--flex align-self--center"
+														/>
+													</div>
+												{%- endif -%}
+											{%- endif -%}
+											{{- configurator.color_blurb_more | metafield_tag | replace: 'metafield-rich_text_field', 'rte rte--lg' -}}
+										</div>
+									{%- endcapture -%}
+									{%- render 'component-modal', modalId: 'color-blurb', html: color_blurb -%}
+								{%- endif -%}
+
+								<script>
+									window.swiperOptions["swiper-materials-2"] = {
+										keyboard: true,
+										slidesPerView: 4,
+										autoHeight: true,
+										breakpoints: {
+											600: {slidesPerView: 6.2, slidesPerGroup: 1},
+										},
+										navigation: {
+											nextEl: '#swiper-materials-2 .swiper-button-next',
+											prevEl: '#swiper-materials-2 .swiper-button-prev'
+										}
+									};
+									window.addEventListener('shopify:section:load',() => {
+										var swiper = new Swiper("#swiper-materials-2", window.swiperOptions["swiper-materials-2"]);
+									});
+								</script>
+
+								<div class="material-tiles">
+
+									<p class="configurator-selected is-color-2">
+										<span class="configurator-selected__label">{{ section.settings.label_color }}:</span>
+										<span class="configurator-selected__selected is-color-2"></span>
+									</p>
+
+									<div id="swiper-materials-2" class="swiper" data-swiper-init="swiper-materials-2">
+										<div class="swiper-wrapper d--flex">
+											{% for variant in configurator.upsell_color_options.value %}
+												{% if variant.available == true %}
+												{% assign featured_image_upsell = variant.featured_image | remove_first: "files/" %}
+												<div class="material-tiles__wrapper swiper-slide">
+													<input
+														data-configurator-type="color"
+														data-configurator-id="{{ variant.id }}"
+														data-material-image="{{ featured_image_upsell | file_url }}"
+														data-configurator-step="3"
+														class="material-tiles__input visually-hidden vinyl-colors-2"
+														type="radio"
+														id="{{ variant.title | handleize }}_color"
+														name="vinyl_color"
+														data-configurator-option-price="{{ variant.price }}"
+														value="{{ variant.title }}"
+														tabindex="-1"
+													>
+													<label tabindex="0" class="material-tiles__tile {% if variant.price > 0 %} is-upsell{% endif %}" for="{{ variant.title | handleize }}_color">
+														<span class="visually-hidden">{{ variant.title }}</span>
+														<div class="material-tiles__tile--inner">
+															<img src="{{ featured_image_upsell | file_url }}" alt="{{ featured_image_upsell.alt | default: variant.title | escape }}" loading="lazy">
+														</div>
+													</label>
+												</div>
+											{%- endif -%}
+											{% endfor %}
+										</div>
+										<div class="swiper-button swiper-button-prev"></div>
+										<div class="swiper-button swiper-button-next"></div>
+									</div>
+								</div>
+							{% endif %}
+
+							{%- assign available_handle_options = configurator.handle_options.value | where: 'available', true -%}
+							{% if available_handle_options.size > 0 %}
+								<p class="h4 d--flex option-name mt-40">Select Handles</p>
+								<div class="promo-cards mt-20">
+									{% for variant in configurator.handle_options.value %}
+										{%- if variant.available == true -%}
+										<div class="promo-cards__card {% if variant.price > 0 %} is-upsell{% endif %}">
+											<div class="promo-cards__top">
+												{% assign featured_image = variant.featured_image | remove_first: "files/" %}
+												<img src="{{ featured_image | file_url }}" alt="{{ featured_image.alt | default: variant.title | escape }}" loading="lazy">
+											</div>
+											<div class="promo-cards__bottom">
+												<input
+													data-configurator-type="handles"
+													data-configurator-id="{{ variant.id }}"
+													data-configurator-option-price="{{ variant.price }}"
+													class="promo-cards__input visually-hidden"
+													type="radio"
+													id="{{ variant.title | replace: " ", "_" }}"
+													name="options_1"
+													data-configurator-step="3"
+													value="{{ variant.title }}"
+													tabindex="-1">
+												<label tabindex="0" class="h5 d--flex" for="{{ variant.title | replace: " ", "_" }}"><span class="promo-cards__indicator"></span>{{ variant.title }}</label>
+												<p class="promo-cards__desc">{{ variant.metafields.custom.blurb }}</p>
+												<div class="d--flex sm--flex-column gap-4 justify--space-between">
+													<p class="promo-cards__price">
+														{% if variant.price > 0 %}
+															{%- if variant.compare_at_price > variant.price -%}
+																+{{ variant.price | money }} <s class="color--gray-text">{{ variant.compare_at_price | money }}</s>
+															{%- else -%}
+																+{{ variant.price | money }}
+															{% endif %}
+														{%- endif -%}
+													</p>
+
+														{%- assign variantModalId = "details" | append: variant.id -%}
+														<tcg-modal-button tabindex="0" role="button" class="d--block modal-button link" data-modal-id="{{ variantModalId }}">
+															{{- section.settings.label_details -}}
+														</tcg-modal-button>
+												</div>
+												{% comment %} Details Modal {% endcomment %}
+												{%- capture details_modal_html -%}
+													<div id="details-modal-{{ section.id }}" class="">
+														{%- render 'component-details-modal', details: variant, modalImgSizes: modalImgSizes -%}
+													</div>
+												{%- endcapture -%}
+												{%- render 'component-modal', modalId: variantModalId, html: details_modal_html -%}
+											</div>
+										</div>
+									{%- endif -%}
+									{% endfor %}
+								</div>
+							{% endif %}
+
+							<div class="configurator-content__error mt-20" id="error-msg-options-1"></div>
+
+							{%- assign available_additional_handle_options = configurator.additional_handle_options.value | where: 'available', true -%}
+							{% if available_additional_handle_options.size > 0 %}
+								<p class="h4 d--flex option-name mt-40">{{ section.settings.label_additional_handles }}</p>
+								<div class="promo-cards mt-20">
+									{% for variant in configurator.additional_handle_options.value %}
+										<div class="promo-cards__card {% if variant.price > 0 %} is-upsell{% endif %}">
+											<div class="promo-cards__top">
+												{% assign featured_image = variant.featured_image | remove_first: "files/" %}
+												<img src="{{ featured_image | file_url }}" alt="{{ featured_image.alt | default: variant.title | escape }}" loading="lazy">
+											</div>
+											<div class="promo-cards__bottom">
+												<input
+													data-configurator-multi-type="extra_handles"
+													data-configurator-id="{{ variant.id }}"
+													data-configurator-option-price="{{ variant.price }}"
+													class="promo-cards__input visually-hidden"
+													type="checkbox"
+													id="{{ variant.title | replace: " ", "_" }}"
+													name="options_2"
+													data-configurator-step="3"
+													value="{{ variant.title }}"
+													tabindex="-1">
+												<label tabindex="0" class="h5 d--flex" for="{{ variant.title | replace: " ", "_" }}">
+													<span class="promo-cards__indicator is-checkbox"></span>
+													{{ variant.title }}
+												</label>
+												<p class="promo-cards__desc">{{ variant.metafields.custom.blurb }}</p>
+												<div class="d--flex sm--flex-column gap-4 justify--space-between">
+													<p class="promo-cards__price">
+														{% if variant.price > 0 %}
+															{%- if variant.compare_at_price > variant.price -%}
+																+{{ variant.price | money }} <s class="color--gray-text">{{ variant.compare_at_price | money }}</s>
+															{%- else -%}
+																+{{ variant.price | money }}
+															{% endif %}
+														{%- endif -%}
+													</p>
+													{%- assign variantModalId = "details" | append: variant.id -%}
+													<tcg-modal-button tabindex="0" role="button" class="d--block modal-button link" data-modal-id="{{ variantModalId }}">
+														{{- section.settings.label_details -}}
+													</tcg-modal-button>
+												</div>
+												{% comment %} Details Modal {% endcomment %}
+												{%- capture details_modal_html -%}
+													<div id="details-modal-{{ section.id }}" class="">
+														{%- render 'component-details-modal', details: variant, modalImgSizes: modalImgSizes -%}
+													</div>
+												{%- endcapture -%}
+												{%- render 'component-modal', modalId: variantModalId, html: details_modal_html -%}
+											</div>
+										</div>
+									{% endfor %}
+								</div>
+							{% endif %}
+
+							<div class="configurator-content__continue mb-40 sticky-bottom bg-color--white p-20">
+								<p>{{ section.settings.label_total }} <strong>{{ cart.currency.symbol }}<span class="configurator-total-price">0</span></strong></p>
+								<button class="configurator-content__continue--btn is-step-3 button--primary">
+									{{- section.settings.label_continue -}}
+								</button>
+							</div>
+						</div>
+						<div class="mobile-continue-section md-up--hide bg-color--white px-20 py-6">
+							<div class="configurator-content__continue mobile">
+								<p>{{ section.settings.label_total }} <strong>{{ cart.currency.symbol }}<span class="configurator-total-price">0</span></strong></p>
+								<button class="configurator-content__continue--btn is-step-3 button--primary">
+									{{- section.settings.label_continue -}}
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{% comment %} Step Four {% endcomment %}
+			<div class="configurator-content__step is-step-4">
+				<div class="configurator-content__step--inner">
+
+					{% comment %} Desktop Configurator Step Menu {% endcomment %}
+					<div class="configurator-steps is-desktop">
+						{% render 'component-desktop-configurator-nav' %}
+					</div>
+
+					<div class="configurator-steps is-desktop is-tablet is-condensed">
+						{% render 'component-desktop-configurator-nav' %}
+					</div>
+
+					<div class="configurator-content__step--display">
+						{% render 'configurator-display' %}
+					</div>
+					<div class="configurator-content__step--selection">
+						<div class="configurator-content__step--selection-inner">
+							{% if configurator.upgrades_heading != blank %}
+								<p class="h4 d--flex option-name mb-40">{{ configurator.upgrades_heading }}</p>
+							{% endif %}
+							{% comment %} <div class="configurator-upgrade-filters">
+								<button class="filter-trigger" data-filter-type="view-all">{{ section.settings.label_view_all }}</button>
+								{% for filter in configurator.upgrades_and_accessories_sort_options.value %}
+									<button class="filter-trigger" data-filter-type="{{ filter | handleize }}">
+										{{ filter }}
+									</button>
+								{% endfor %}
+							</div> {% endcomment %}
+							{%- assign upsell_packages_available = false -%}
+							{%- for package in configurator.upgrades_and_accessories_packages.value -%}
+								{%- assign all_products_available = true -%}
+								{%- for variant in package.products.value -%}
+									{%- unless all_upgrade_variants contains variant.id and variant.available -%}
+										{%- assign all_products_available = false -%}
+										{%- break -%}
+									{%- endunless -%}
+								{%- endfor -%}
+								{%- if all_products_available -%}
+									{%- assign upsell_packages_available = true -%}
+									{%- break -%}
+								{%- endif -%}
+							{%- endfor -%}
+							{%- if configurator.upgrades_and_accessories_packages.value != blank and upsell_packages_available -%}
+								<div class="upsell-packages mt-20 flex-column">
+									{%- for upsell_package in configurator.upgrades_and_accessories_packages.value -%}
+
+										{%- liquid # Calculate total number of products in the package
+										assign totalVariantsCount = upsell_package.products.value.count
+
+										# Calculate variant product total price
+										assign prices_array = ''
+										assign packageTotalPrice = 0
+										assign packageTotalRoundedPrice = 0
+										assign missing_product = false
+										for variant in upsell_package.products.value
+											unless all_upgrade_variants contains variant.id and variant.available
+												assign missing_product = true
+												break
+											endunless
+											assign price = variant.price | divided_by: 100.0
+											if forloop.first
+												capture prices_array
+													echo price
+												endcapture
+											else
+												capture prices_array
+													echo prices_array | append: ',' | append: price
+												endcapture
+											endif
+											assign packageTotalPrice = packageTotalPrice | plus: price 
+											assign packageTotalRoundedPrice = packageTotalRoundedPrice | plus: price | round
+										endfor
+
+										# Calculate discount
+										if upsell_package.discount_type == 'Percentage'
+											assign percentage = upsell_package.discount_amount | divided_by: 100
+											assign discountAmount = packageTotalRoundedPrice | times: percentage
+											assign finalTotal = packageTotalRoundedPrice | minus: discountAmount | round: 2
+										elsif upsell_package.discount_type == 'Dollar'
+											assign discountAmount = upsell_package.discount_dollar.value | divided_by: 100.00 | times: totalVariantsCount
+											assign finalTotal = packageTotalRoundedPrice | minus: discountAmount
+										endif
+										assign packageName = upsell_package.name | replace: " ", "_"
+										-%}
+
+										{%- unless missing_product -%}
+											{%- assign package_modal_id = "upsell_package_modal_" | append: upsell_package.system.id -%}
+											
+
+											<tcg-configure-upsell-package-card class="promo-cards__card {% if finalTotal > 0 %}is-upsell{% endif %}">
+												<div class="promo-cards__top">
+													<img src="{{ upsell_package.image | image_url  }}" alt="{{ upsell_package.name | escape }}" loading="lazy">
+												</div>
+												<div class="promo-cards__bottom">
+													<input
+														data-configurator-multi-type="upsell_packages"
+														data-configurator-id="{{ upsell_package.name }}"
+														data-configurator-step="4"
+														data-configurator-option-price="{{ finalTotal | times: 100 }}"
+														data-configurator-discount-type="{{ upsell_package.discount_type }}"
+														data-configurator-discount-amount="
+														{%- liquid if upsell_package.discount_type == 'Percentage'
+															echo upsell_package.discount_amount
+														else
+															echo upsell_package.discount_dollar.value
+														endif -%}
+														"
+														class="promo-cards__input visually-hidden"
+														type="checkbox" id="{{ packageName }}"
+														name="options_2"
+														value="{{ upsell_package.name }}"
+														data-package-products="{{ upsell_package.products.value | map: 'id' | join: ',' }}"
+														tabindex="-1"
+													>
+													<label tabindex="0" class="promo-cards__title mb-0" for="{{ packageName }}">
+														<span class="promo-cards__indicator is-checkbox"></span>{{ upsell_package.name }}
+														{% if upsell_package.bestseller == true %}
+															<span class="cover-configurator-bestseller">{{ 'products.configurator.bestseller' | t }}</span>
+														{% endif %}
+													</label>
+													<p class="promo-cards__desc">{{ upsell_package.description }}</p>
+													<div class="d--flex justify--space-between align-items--end">
+														<p class="promo-cards__price">
+															<span class="d--block width--100 text--sm text--bold percent--off">
+																{%- liquid if upsell_package.discount_amount > 0 or upsell_package.discount_dollar.value.amount != 0
+																	if upsell_package.discount_type == 'Percentage'
+																		echo upsell_package.discount_amount | round | append: '% '
+																		echo section.settings.label_off
+																	elsif upsell_package.discount_type == 'Dollar'
+																		echo upsell_package.discount_dollar.value | money
+																		echo ' '
+																		echo section.settings.label_off_each
+																	endif
+																endif -%}
+															</span>
+															{%- liquid if finalTotal > 0
+																echo '+'
+																echo finalTotal | times: 100 | money
+															else
+																echo section.settings.label_free
+															endif
+															if packageTotalPrice > finalTotal
+																echo ' <span>'
+																echo packageTotalPrice | times: 100 | money
+																echo '</span>'
+															endif -%}
+														</p>
+														<tcg-modal-button
+															tabindex="0"
+															role="button"
+															class="d--block modal-button link"
+															data-modal-id="{{ package_modal_id }}"
+														  >
+															{{ section.settings.label_details }}
+														  </tcg-modal-button>
+														  {%- capture upsell_modal_html -%}
+															<div class="d--flex flex-column gap-20">
+															  <h2 class="h4 title">{{ upsell_package.name }}</h2>
+															  <img
+																src="{{ upsell_package.image | image_url: width: 800 }}"
+																alt="{{ upsell_package.name | escape }}"
+																loading="lazy"
+																class="round details-modal-image d--flex align-self--center"
+															  >
+															  <div class="rte rte--lg">
+																{{ upsell_package.modal_description | metafield_tag }}
+															  </div>
+															</div>
+														  {%- endcapture -%}
+												  
+														  {% render 'component-modal', modalId: package_modal_id, html: upsell_modal_html %}
+													</div>
+												</div>
+											</tcg-configure-upsell-package-card>
+
+										{%- endunless -%}
+										
+									{%- endfor -%}
+								</div>
+							{%- endif -%}
+
+							<div class="upgrades-promos">
+								{% comment %} Product Upgrades {% endcomment %}
+								{% for product in configurator.upgrades.value %}
+									{%- if product.available -%}
+										{% render 'configurator-upgrade-card', product: product %}
+									{%- endif -%}
+								{% endfor %}
+
+								{% comment %} Shape Upgrades {% endcomment %}
+								{% for shape in configurator.shapes.value %}
+									{% for product in shape.upgrades.value %}
+										{%- if product.available -%}
+											{% render 'configurator-upgrade-card', product: product, shape: shape.name.value %}
+										{%- endif -%}
+									{% endfor %}
+								{% endfor %}
+
+							</div>
+
+							{% if configurator.accessories_heading != blank %}
+								<p id="accessories_heading" class="hidden h4 d--flex option-name mt-40">{{ configurator.accessories_heading }}</p>
+							{% endif %}
+							<div class="upgrades-promos">
+								{% comment %} Product Upgrades {% endcomment %}
+								{% for product in configurator.accessories.value %}
+									{%- if product.available -%}
+										{% render 'configurator-upgrade-card', product: product, classes: "js-accessory" %}
+									{%- endif -%}
+								{% endfor %}
+
+								{% comment %} Shape Upgrades {% endcomment %}
+								{% for shape in configurator.shapes.value %}
+									{% for product in shape.accessories.value %}
+										{%- if product.available -%}
+											{% render 'configurator-upgrade-card', product: product, shape: shape.name.value, classes: "js-accessory" %}
+										{%- endif -%}
+									{% endfor %}
+								{% endfor %}
+
+							</div>
+							<div class="configurator-content__continue mb-40 sticky-bottom bg-color--white p-20">
+								<p>{{ section.settings.label_total }} <strong>{{ cart.currency.symbol }}<span class="configurator-total-price">0</span></strong></p>
+								{%- if configurator.protection_plan_modal.value.protection_plans.value.count > 0 -%}
+                  <tcg-modal-button tabindex="0" role="button" style="width: 100%;" class="modal-button" data-modal-id="protection_plan_modal">
+										<button class="configurator-content__continue--btn is-step-4 button--primary protection-plan">
+											{{- section.settings.label_add_to_cart -}}
+										</button>
+                  </tcg-modal-button>
+                {%- else -%}
+									<button class="configurator-content__continue--btn is-step-4 button--primary">
+										{{- section.settings.label_add_to_cart -}}
+									</button>
+								{%- endif -%}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mobile-continue-section md-up--hide bg-color--white px-20 py-6">
+					<div class="configurator-content__continue mobile">
+						<p>{{ section.settings.label_total }} <strong>{{ cart.currency.symbol }}<span class="configurator-total-price">0</span></strong></p>
+						{%- if configurator.protection_plan_modal.value.protection_plans.value.count > 0 -%}
+              <tcg-modal-button tabindex="0" role="button" style="width: 100%;" class="modal-button" data-modal-id="protection_plan_modal">
+                <button class="configurator-content__continue--btn is-step-4 button--primary protection-plan">
+									{{- section.settings.label_add_to_cart -}}
+								</button>
+              </tcg-modal-button>
+            {%- else -%}
+							<button class="configurator-content__continue--btn is-step-4 button--primary">
+								{{- section.settings.label_add_to_cart -}}
+							</button>
+            {%- endif -%}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	window.strapLocationMessages = {
+		"Rounded Square": {
+		"A": "{{ 'products.configurator.strap_location_rounded_square_a' | t }}",
+		"B_C": "{{ 'products.configurator.strap_location_rounded_square_b_c' | t }}"
+		},
+		"Square": {
+		"A": "{{ 'products.configurator.strap_location_square_a' | t }}",
+		"B_C": "{{ 'products.configurator.strap_location_square_b_c' | t }}"
+		},
+		"Octagon": {
+		"A": "{{ 'products.configurator.strap_location_octagon_a' | t }}",
+		"B_C": "{{ 'products.configurator.strap_location_octagon_b_c' | t }}"
+		},
+		"Rounded Rectangle": {
+		"A": "{{ 'products.configurator.strap_location_rounded_rectangle_a' | t }}",
+		"B_C": "{{ 'products.configurator.strap_location_rounded_rectangle_b_c' | t }}"
+		},
+		"Rectangle": {
+		"A": "{{ 'products.configurator.strap_location_rectangle_a' | t }}",
+		"B_C": "{{ 'products.configurator.strap_location_rectangle_b_c' | t }}"
+		}
+	};
+</script>
+  
+{% comment %} Protection Plan Modal {% endcomment %}
+{%- assign plan_modal = configurator.protection_plan_modal.value -%}
+{%- render 'protection-plan-modal', plan_modal: plan_modal -%}
+                                  
+{% comment %} Measurements Modal {% endcomment %}
+{%- capture measurements_modal_html -%}
+	<h2 class="h4 title">{{ section.settings.label_how_to_measure }}</h2>
+	<div id="how-to-measure-{{ section.id }}" class="">
+		{%- render 'component-how-to-measure', how_to_measure: product.metafields.custom.how_to_measure -%}
+	</div>
+{%- endcapture -%}
+{%- render 'component-modal', modalId: measurementsModalId, html: measurements_modal_html -%}
+
+{% comment %}  Modal {% endcomment %}
+{%- capture length_modal_html -%}
+	<h2 class="h4 title">{{ configurator.length_help }}</h2>
+	<div id="length-help-{{ section.id }}" class="">
+		{%- render 'component-length-help', length_help: product.metafields.custom.length_help, modalImgSizes: modalImgSizes -%}
+	</div>
+{%- endcapture -%}
+{%- render 'component-modal', modalId: lengthModalId, html: length_modal_html -%}

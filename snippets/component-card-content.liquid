@@ -1,0 +1,85 @@
+{%- comment -%}
+  Accepts:
+    - image: {Object} shopify image object: https://shopify.dev/docs/api/liquid/objects/image
+    - url: {String} url string
+    - image_url: {String} url string
+    - title: {String} title string
+    - overlay_icon: {Object} shopify image object: https://shopify.dev/docs/api/liquid/objects/image,
+    - rich_text: {Object} shopify richtext,
+    - link_text_1: {String} text for link
+    - link_url_1: {String} url for link,
+    - link_text_2: {String} text for link,
+    - link_url_2: {String} url for link,
+    - link_text_3: {String} text for link,
+    - link_url_3: {String} url for link,
+    - link_text_4: {String} text for link,
+    - link_url_4: {String} url for link,
+    - lazyLoad: {Boolean} determines image lazyloading
+{%- endcomment -%}
+
+{%- capture block_image -%}
+  <img
+    class="card-content__img ratio__content ratio__content--cover"
+    srcset="{{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 600 }} 600w"
+    alt="{{ image.alt | escape }}"
+    sizes="(max-width: 639px) 50vw,(min-width: 640px) and (max-width: 1023px) 33w,(min-width: 1024px) and (max-width: 1700px) 20w, 300px"
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    {% unless lazyLoad == false %}
+      loading="lazy"
+    {%- endunless -%}
+  >
+{%- endcapture -%}
+
+<div class="card-content card-slide__card v-stack">
+  <div class="relative">
+    {%- if image_url != blank -%}
+      <a href="{{ image_url }}" class="card-content__image round ratio" style="--ratio-percent: 120%;" aria-hidden="true" tabindex="-1">
+        {{- block_image -}}
+      </a>
+    {% else %}
+      <div class="card-content__image round ratio mb-10" style="--ratio-percent: 120%;" aria-hidden="true" tabindex="-1">
+        {{- block_image -}}
+      </div>
+    {% endif %}
+    {% if overlay_icon != blank %}
+      <img class="card-content__image-overlay absolute left-0 bottom-0 mb-10" src="{{ overlay_icon | image_url: width: 90 }}" loading="lazy" />
+    {% endif %}
+  </div>
+  {%- if title != blank -%}
+    <h4 class="mb-0">{{ title }}</h4>
+  {%- endif -%}
+  {%- if rich_text != blank -%}
+    <div class="text--lg">
+      {{- rich_text -}}
+    </div>
+  {%- endif -%}
+  {%- if link_text_1 != blank and link_url_1 != null -%}
+    <div>
+      <a class="card-content__link link" href="{{ link_url_1 }}">
+        {{- link_text_1 -}}
+      </a>
+    </div>
+  {%- endif -%}
+  {%- if link_text_2 != blank and link_url_2 != null -%}
+    <div>
+      <a class="card-content__link link" href="{{ link_url_2 }}">
+        {{- link_text_2 -}}
+      </a>
+    </div>
+  {%- endif -%}
+  {% if link_text_3 != blank and link_url_3 != null %}
+    <div>
+      <a class="card-content__link link" href="{{ link_url_3 }}">
+        {{- link_text_3 -}}
+      </a>
+    </div>
+  {%- endif -%}
+  {%- if link_text_4 != blank and link_url_4 != null -%}
+    <div>
+      <a class="card-content__link link" href="{{ link_url_4 }}">
+        {{- link_text_4 -}}
+      </a>
+    </div>
+  {%- endif -%}
+</div>

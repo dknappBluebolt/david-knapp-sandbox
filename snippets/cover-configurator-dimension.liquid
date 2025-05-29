@@ -1,0 +1,10 @@
+<div class="configurator-content__table--dimension" id="cover-dimension-{{ dimension_name }}">
+  <label for="dimension-{{ dimension_name }}">
+    {{- section.settings.label_dimension }} <strong>{{ dimension_name | upcase }}: </strong>
+    {%- if dimension_name == 'a' -%}
+      <br><small class="text--semibold text--xs">{{ section.settings.label_dimension_longest }}</small>
+    {%- endif -%}
+  </label>
+  <input id="dimension-{{ dimension_name }}" onwheel="this.blur()" class="dimension" data-configurator-type="_dimension_{{ dimension_name }}" type="number" placeholder="" aria-describedby="error-msg-dimension-{{ dimension_name }}" onkeydown="preventArrowKeyChange(event)"> In
+  <div class="configurator-content__error links-underline" id="error-msg-dimension-{{ dimension_name }}"></div>
+</div>

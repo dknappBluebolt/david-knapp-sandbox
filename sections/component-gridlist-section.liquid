@@ -1,0 +1,214 @@
+{{- 'component-cards.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- if section.settings.title != blank -%}
+  <div class="section-header page-section--md page-width">
+    {%- if section.settings.pretitle != blank -%}
+    <div class="section-pretitle">
+      {{- section.settings.pretitle -}}
+    </div>
+    {%- endif -%}
+    {%- if section.settings.header_link_text != blank and section.settings.header_link_url != blank -%}
+      <div class="grid justify--space-between flex-wrap--no-wrap align-items--center">
+        <div class="grid__item width--auto">
+          <h2 class="section-title">
+            {{- section.settings.title -}}
+          </h2>
+        </div>
+        <div class="grid__item width--auto text--no-wrap text--right">
+          <a href="{{ section.settings.header_link_url }}" class="link">{{ section.settings.header_link_text }}</a>
+        </div>
+      </div>
+    {%- else -%}
+      <h2 class="section-title">
+        {{- section.settings.title -}}
+      </h2>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+<div class="page-width lg-down--p-bottom-10">
+  <div class="grid">
+    {%- for block in section.blocks -%}
+      <div class="grid__item md-up--50 lg-up--25" {{ block.shopify_attributes }}>
+        {%- render 'component-gridlist-content',
+          url: block.settings.url,
+          image: block.settings.image,
+          image_url: block.settings.image_url,
+          title: block.settings.title,
+          rich_text: block.settings.rich_text,
+          link_text_1: block.settings.link_text_1,
+          link_url_1: block.settings.link_url_1,
+          link_text_2: block.settings.link_text_2,
+          link_url_2: block.settings.link_url_2,
+          link_text_3: block.settings.link_text_3,
+          link_url_3: block.settings.link_url_3,
+          link_text_4: block.settings.link_text_4,
+          link_url_4: block.settings.link_url_4
+        -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Grid List",
+    "tag": "section",
+    "class": "overflow-hidden",
+    "max_blocks": 10,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "header_link_text",
+        "label": "Header Link Text"
+      },
+      {
+        "type": "url",
+        "id": "header_link_url",
+        "label": "Header Link Url"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "content",
+        "name": "Content Block",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "image_url",
+            "label": "Image URL"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "rich_text",
+            "label": "Rich Text"
+          },
+          {
+            "type": "text",
+            "id": "link_text_1",
+            "label": "Link Text 1"
+          },
+          {
+            "type": "url",
+            "id": "link_url_1",
+            "label": "Link URL 1"
+          },
+          {
+            "type": "text",
+            "id": "link_text_2",
+            "label": "Link Text 2"
+          },
+          {
+            "type": "url",
+            "id": "link_url_2",
+            "label": "Link URL 2"
+          },
+          {
+            "type": "text",
+            "id": "link_text_3",
+            "label": "Link Text 3"
+          },
+          {
+            "type": "url",
+            "id": "link_url_3",
+            "label": "Link URL 3"
+          },
+          {
+            "type": "text",
+            "id": "link_text_4",
+            "label": "Link Text 4"
+          },
+          {
+            "type": "url",
+            "id": "link_url_4",
+            "label": "Link URL 4"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Grid List"
+      }
+    ]
+  }
+{% endschema %}

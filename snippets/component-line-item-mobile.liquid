@@ -1,0 +1,83 @@
+{%- comment -%}
+  Accepts:
+    - line_item: {Object} line_item shopify object
+    - class: {String} list of classes
+    - final_price: {Int} an override for final line price
+    - adustable_quantity (Optional) {Boolean} an override to allow adjusting quantity/remove from cart
+    - line_index: {Int} (Optional) forloop.index
+    - variant_ids: {String} (Optional) variant ids for reorder button
+    - quantities: {String} (Optional) quantities for reorder button
+    - properties: {String} (Optional) properties for the reorder button
+    - keys: {String} (Optional) keys to remove multiple lines the from cart
+    - reorder: {Boolean} determines if the item is coming from an order or the cart
+{%- endcomment -%}
+{%- assign itemImage = line_item.image -%}
+<div class="{{ class }}">
+  <div class="d--flex justify--space-between">
+    <div class="d--flex align-items--start width--100 gap-16">
+      <div class="ratio ratio--4-3 flex-shrink-0 line-item--image round round--md">
+        <img
+          srcset="{{ itemImage | image_url: width: 130 }} 130w, {{ itemImage | image_url: width: 260 }} 260w"
+          sizes="(max-width: 639px) 100px, 130px"
+          loading="lazy"
+          alt="{{ itemImage.alt | escape }}"
+        >
+      </div>
+      <div class="d--flex flex-column width--100">
+        <div class="d--flex justify--space-between mb-16 align-items--center gap-16">
+          <h5 class="m-0">
+            {%- if line_item.url != blank -%}
+              <a href="{{ line_item.url }}">{{ line_item.product.title }}</a>
+            {%- else -%}
+              {{- line_item.product.title }}
+            {%- endif -%}
+          </h5>
+          {%- render 'component-line-item-options',
+            adjustable_quantity: adjustable_quantity,
+            line_item: line_item,
+            line_index: line_index,
+            variant_ids: variant_ids,
+            quantities: quantities,
+            properties: properties,
+            keys: keys,
+            is_mobile: true,
+            reorder: reorder
+          -%}
+        </div>
+        <div class="d--flex justify--space-between flex-column">
+          {%- if line_item.product.has_only_default_variant == false -%}
+            <small class="color--gray-text d--block">{{ line_item.variant.title }}</small>
+          {%- endif -%}
+          {%- render 'component-line-item-properties' properties: properties, line_item: line_item, class: 'color--gray-text' -%}
+          {%- if line_item.selling_plan_allocation != null -%}
+            <small class="color--gray-text d--block">{{ line_item.selling_plan_allocation.selling_plan.name }}</small>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d--flex justify--space-between">
+    <div>
+      <div class="order-details-title">
+        {{- 'customer.order.quantity' | t -}}
+      </div>
+      {%- if adjustable_quantity -%}
+        {%- render 'component-cart-quantity', line_item: line_item, line_index: line_index -%}
+      {%- else -%}
+        <div class="text--lg">{{ line_item.quantity }}</div>
+      {%- endif -%}
+    </div>
+    <div class="text--right">
+      <div class="order-details-title">
+        {{- 'customer.order.total' | t -}}
+      </div>
+      <div class="text--bold">
+        {%- liquid if final_price != blank
+          echo final_price | money
+        else
+          echo line_item.final_line_price | money
+        endif -%}
+      </div>
+    </div>
+  </div>
+</div>

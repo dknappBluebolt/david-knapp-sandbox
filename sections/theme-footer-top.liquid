@@ -1,0 +1,58 @@
+{%- if section.blocks.size > 0 -%}
+  <div class="footer-values gap-30 d--flex justify--{% if section.blocks.size > 3 %}space-between{% else %}center{% endif %} round--top--lg" style="background-color: var(--color-{{ section.settings.bg_color }});color: var(--color-{{ section.settings.text_color }});">
+    {%- for block in section.blocks -%}
+      {%- if block.settings.text != blank -%}
+        <div class="footer-values__item d--flex gap-10 align-items--center text--semibold line-height-1">
+          {%- render 'icons-sprite-icon', id: "icon-arrow-right-circle", size: 30 -%}
+          {{- block.settings.text -}}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Footer Top",
+    "class": "critical-hidden page-width page-width--full lg-down--hide",
+    "tag": "section",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Background Color",
+        "options": [
+          {
+            "value": "teal",
+            "label": "Teal"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text Color",
+        "options": [
+          {
+            "value": "black",
+            "label": "Black"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Item",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

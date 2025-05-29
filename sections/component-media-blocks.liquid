@@ -1,0 +1,283 @@
+{{- 'component-media-block.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="page-width">
+  <div class="section-header page-section--md">
+    {%- if section.settings.pretitle != blank -%}
+      <div class="section-pretitle flex-items">
+        {{- section.settings.pretitle -}}
+      </div>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2 class="section-title">
+        {{- section.settings.title -}}
+      </h2>
+    {%- endif -%}
+  </div>
+</div>
+{%- if section.blocks.size > 0 -%}
+  <div class="media-blocks relative z-index--1 round--bottom--lg round--top--lg overflow-hidden">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        if block.settings.background_image_desktop != blank
+          assign backgroundImageDesktop = block.settings.background_image_desktop
+          if block.settings.background_image_mobile != blank
+            assign backgroundImageMobile = block.settings.background_image_mobile
+          else
+            assign backgroundImageMobile = backgroundImageDesktop
+          endif
+        endif
+      -%}
+      <div class="media-block relative" {{ block.shopify_attributes }}>
+        <a class="lg-up--hide absolute height--100 width--100" href="{{ block.settings.link_url }}" style="left:0;top:0;z-index:2;"></a>
+        {%- if block.settings.background_image_desktop != blank -%}
+          <picture class="height--100 width--100" style="position: absolute;left:0;top:0;z-index: 0;">
+            <source
+              media="(min-width: 1024px)"
+              srcset="{{ backgroundImageDesktop | image_url: width: 600 }} 600w, {{ backgroundImageDesktop | image_url: width: 1200 }} 1200w, {{ backgroundImageDesktop | image_url: width: 2000 }} 2000w"
+            >
+            <img
+              style="object-fit: cover;"
+              class="height--100 width--100"
+              srcset="{{ backgroundImageMobile | image_url: width: 600 }} 600w, {{ backgroundImageMobile | image_url: width: 1200 }} 1200w, {{ backgroundImageMobile | image_url: width: 2000 }} 2000w"
+              {%- if section.index > 2 -%}
+                loading="lazy"
+              {%- else -%}
+                fetchpriority="high"
+              {%- endif -%}
+            >
+          </picture>
+        {%- endif -%}
+        <div class="page-width d--flex align-items--center line-height-15 relative z-index--1 gap-30">
+          <div class="media-block--number d--flex align-items--center justify--center text--bold">
+            {%- liquid
+              if section.settings.list_type == "numbers"
+                if forloop.index < 10
+                  echo '0'
+                endif
+                echo forloop.index
+                echo '.'
+              else
+                render 'icons-sprite-icon', id: 'icon-caret', size: 14, class: ''
+              endif
+            -%}
+          </div>
+          {%- if block.settings.title != blank -%}
+            <h3 class="mb-0 line-height-12 flex-grow">
+              {{- block.settings.title -}}
+            </h3>
+          {%- endif -%}
+          {%- if block.settings.content != blank -%}
+            <div class="rte--lg text--semibold links-underline lg-down--hide">
+              {{- block.settings.content -}}
+            </div>
+          {%- endif -%}
+          {%- if block.settings.link_text != blank -%}
+            <div class="media-block--get-started text--right xs--hide">
+              {%- assign custom_ctalink_class = 'link text--lg' -%}
+              {%- if section.settings.cta_type == 'buttons' -%}
+                {%- assign custom_ctalink_class = 'button--primary' -%}
+              {%- endif -%}
+              <a class="{{ custom_ctalink_class }}" href="{{ block.settings.link_url }}">
+                {{- block.settings.link_text -}}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var mediaBlocks = document.querySelectorAll('.media-block');
+
+  function handleMediaBlockClick(event) {
+    event.preventDefault();
+    var block = event.currentTarget;
+    var linkUrl = block.querySelector('a').href;
+
+    block.classList.add('hover');
+
+    setTimeout(function() {
+      block.classList.remove('hover');
+      window.location.href = linkUrl;
+    }, 500);
+  }
+
+  mediaBlocks.forEach(function(block) {
+    if (window.innerWidth < 1024) {
+      block.addEventListener('click', handleMediaBlockClick);
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    mediaBlocks.forEach(function(block) {
+      if (window.innerWidth < 1024) {
+        block.addEventListener('click', handleMediaBlockClick);
+      } else {
+        block.removeEventListener('click', handleMediaBlockClick);
+      }
+    });
+  });
+});
+</script>
+
+{% schema %}
+  {
+    "name": "Media Blocks",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "select",
+        "id": "list_type",
+        "label": "List Type",
+        "options": [
+          {
+            "value": "numbers",
+            "label": "Numbers"
+          },
+          {
+            "value": "arrows",
+            "label": "Arrows"
+          }
+        ],
+        "default": "numbers"
+      },
+      {
+        "type": "select",
+        "id": "cta_type",
+        "label": "CTA Type",
+        "options": [
+          {
+            "value": "links",
+            "label": "Links"
+          },
+          {
+            "value": "buttons",
+            "label": "Buttons"
+          }
+        ],
+        "default": "links"
+      }
+    ],
+    "blocks": [
+    {
+      "type": "media_blocks",
+      "name": "Media Block",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_desktop",
+          "label": "Desktop background image"
+        },
+        {
+          "type": "image_picker",
+          "id": "background_image_mobile",
+          "label": "Mobile background image"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Body Text"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text",
+          "default": "Get Started"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+    ],
+    "presets": [
+      {
+        "name": "Media Block",
+        "blocks": [
+          {
+            "type": "media_blocks"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,227 @@
+{%- liquid assign products = section.settings.products
+if template.name == 'article'
+  assign products = article.metafields.custom.related_products.value
+endif -%}
+
+{%- if products.count > 0 -%}
+  {{- 'component-cards.css' | asset_url | stylesheet_tag -}}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    }
+    .swiper-scrollbar-{{ section.id }} {
+      left: var(--page-gutter) !important;
+      background: none;
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      #shopify-section-{{ section.id }} {
+        margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+      }
+      #shopify-section-{{ section.id }} .swiper-button-prev, #shopify-section-{{ section.id }} .swiper-button-next {
+        top: 100%;
+        margin-top: calc(0px - var(--swiper-navigation-size));
+        --swiper-navigation-sides-offset: 50%;
+      }
+      #shopify-section-{{ section.id }} .swiper-button-prev {margin-left: calc(0px - var(--swiper-navigation-size) - 10px);}
+      #shopify-section-{{ section.id }} .swiper-button-next {margin-right: calc(0px - var(--swiper-navigation-size) - 10px);}
+    }
+    @media (min-width: 1024px) {
+      #shopify-section-{{ section.id }} {
+        margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      }
+      .swiper-scrollbar-{{ section.id }} {
+        display:none;
+      }
+    }
+  {%- endstyle -%}
+
+  {%- if section.index <= 2 or request.design_mode -%}
+    <link id="swiper-css" href="{{ 'swiper.min.css' | asset_url }}" media="all" rel="stylesheet">
+    <script id="swiper-js" src="{{ 'swiper.min.js' | asset_url }}"></script>
+    {%- assign lazyLoad = false -%}
+    {%- assign checkLazy = false -%}
+  {%- else -%}
+    {%- assign checkLazy = true -%}
+  {%- endif -%}
+
+  {%- if section.settings.title != blank -%}
+    <div class="section-header page-section--md page-width">
+      {%- if section.settings.pretitle != blank -%}
+        <div class="section-pretitle">
+          {{- section.settings.pretitle -}}
+        </div>
+      {%- endif -%}
+      <h2 class="section-title {{ section.settings.title_size }}">
+        {{- section.settings.title -}}
+      </h2>
+    </div>
+  {%- endif -%}
+
+  <div class="page-width page-width--peek relative lg-down--p-bottom-10">
+    <div
+      id="swiper-{{ section.id }}"
+      class="featured-products swiper card-slider"
+      {% if section.index > 2 %}
+        data-swiper-init="{{ section.id }}"
+      {% endif %}
+    >
+      <div class="swiper-wrapper d--flex mb-40">
+        {%- for prod in products -%}
+          {%- liquid
+            if checkLazy
+              if forloop.index > 5 or section.index > 2
+                assign lazyLoad = true
+              else
+                assign lazyLoad = false
+              endif
+            endif
+          -%}
+          <div class="swiper-slide card-slide">
+            {%- render 'component-card-product', product: prod, lazyLoad: lazyLoad -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="swiper-button swiper-button-prev sm--hide"></div>
+      <div class="swiper-button swiper-button-next sm--hide"></div>
+    </div>
+    <div class="swiper-scrollbar swiper-scrollbar-{{ section.id }}"></div>
+  </div>
+
+  <script>
+    window.swiperOptions["{{ section.id }}"] = {
+      keyboard: true,
+      slidesPerView: 1.75,
+      breakpoints: {
+        640: {slidesPerView: 2.5},
+        768: {slidesPerView: 3.5,slidesPerGroup: 3.5},
+        1024: {slidesPerView: 5,slidesPerGroup: 5}
+      },
+      navigation: {
+        nextEl: '#swiper-{{ section.id }} .swiper-button-next',
+        prevEl: '#swiper-{{ section.id }} .swiper-button-prev'
+      },
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}',
+        draggable: true,
+        snapOnRelease: true,
+        hide: true
+      }
+    };
+    {%- if section.index <= 2 or request.design_mode -%}
+      window.addEventListener('DOMContentLoaded',() => {
+        var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+      });
+      {% if request.design_mode %}
+        window.addEventListener('shopify:section:load',() => {
+          var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+        });
+      {%- endif -%}
+    {%- endif -%}
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Featured Products",
+  "tag": "section",
+  "class": "overflow-hidden",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_desktop",
+      "label": "Margin Top (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "label": "Margin Top (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_desktop",
+      "label": "Margin Bottom (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "label": "Margin Bottom (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "pretitle",
+      "label": "Pre-Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products"
+    }
+  ]
+}
+{% endschema %}

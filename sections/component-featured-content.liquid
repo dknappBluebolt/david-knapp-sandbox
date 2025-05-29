@@ -1,0 +1,292 @@
+{{- 'component-cards.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+  }
+  .swiper-scrollbar-{{ section.id }} {
+    left: var(--page-gutter) !important;
+    background: none !important;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+    }
+    .swiper-scrollbar-{{ section.id }} {
+      display:none;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid assign swiper_maxitems = 5
+if section.blocks.size < 5
+  assign swiper_maxitems = 4
+endif -%}
+
+{%- if section.index <= 2 or request.design_mode -%}
+  <link id="swiper-css" href="{{ 'swiper.min.css' | asset_url }}" media="all" rel="stylesheet">
+  <script id="swiper-js" src="{{ 'swiper.min.js' | asset_url }}"></script>
+  {%- assign lazyLoad = false -%}
+  {%- assign checkLazy = false -%}
+{%- else -%}
+  {%- assign checkLazy = true -%}
+{%- endif -%}
+
+{%- if section.settings.title != blank -%}
+  <div class="section-header page-section--md page-width">
+    {%- if section.settings.pretitle != blank -%}
+    <div class="section-pretitle">
+      {{- section.settings.pretitle -}}
+    </div>
+    {%- endif -%}
+    {%- if section.settings.header_link_text != blank and section.settings.header_link_url != blank -%}
+      <div class="grid justify--space-between flex-wrap--no-wrap align-items--center">
+        <div class="grid__item width--auto">
+          <h2 class="section-title">
+            {{- section.settings.title -}}
+          </h2>
+        </div>
+        <div class="grid__item width--auto text--no-wrap text--right">
+          <a href="{{ section.settings.header_link_url }}" class="link">{{ section.settings.header_link_text }}</a>
+        </div>
+      </div>
+    {%- else -%}
+      <h2 class="section-title">
+        {{- section.settings.title -}}
+      </h2>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+<div class="page-width page-width--peek relative lg-down--p-bottom-10">
+  <div id="swiper-{{ section.id }}" class="featured-content swiper card-slider"{% if section.index > 2 %} data-swiper-init="{{ section.id }}"{% endif %}>
+    <div class="swiper-wrapper d--flex">
+      {%- for block in section.blocks -%}
+        {%- liquid if checkLazy
+          if forloop.index > swiper_maxitems or section.index > 2
+            assign lazyLoad = true
+          else
+            assign lazyLoad = false
+          endif
+        endif -%}
+        <div class="swiper-slide card-slide" {{ block.shopify_attributes }}>
+          {%- render 'component-card-content',
+            url: block.settings.url,
+            image: block.settings.image,
+            image_url: block.settings.image_url,
+            title: block.settings.title,
+            overlay_icon: block.settings.overlay_icon,
+            rich_text: block.settings.rich_text,
+            link_text_1: block.settings.link_text_1,
+            link_url_1: block.settings.link_url_1,
+            link_text_2: block.settings.link_text_2,
+            link_url_2: block.settings.link_url_2,
+            link_text_3: block.settings.link_text_3,
+            link_url_3: block.settings.link_url_3,
+            link_text_4: block.settings.link_text_4,
+            link_url_4: block.settings.link_url_4,
+            lazyLoad: lazyLoad
+          -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="swiper-button swiper-button-prev sm--hide"></div>
+    <div class="swiper-button swiper-button-next sm--hide"></div>
+  </div>
+  <div class="swiper-scrollbar swiper-scrollbar-{{ section.id }}"></div>
+</div>
+
+<script>
+  window.swiperOptions["{{ section.id }}"] = {
+    keyboard: true,
+    slidesPerView: 1.75,
+    autoHeight: {{ section.settings.autoheight }},
+    breakpoints: {
+      640: {slidesPerView: 2.5},
+      768: {slidesPerView: 3.5,slidesPerGroup: 3.5},
+      1024: {slidesPerView: {{ swiper_maxitems }},slidesPerGroup: {{ swiper_maxitems }}, autoHeight: false}
+    },
+    navigation: {
+      nextEl: '#swiper-{{ section.id }} .swiper-button-next',
+      prevEl: '#swiper-{{ section.id }} .swiper-button-prev'
+    },
+    scrollbar: {
+      el: '.swiper-scrollbar-{{ section.id }}',
+      draggable: true,
+      snapOnRelease: true,
+      hide: true
+    }
+  };
+  {%- if section.index <= 2 or request.design_mode -%}
+    window.addEventListener('DOMContentLoaded',() => {
+      var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+    });
+    {% if request.design_mode %}
+      window.addEventListener('shopify:section:load',() => {
+        var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+      });
+    {%- endif -%}
+  {%- endif -%}
+</script>
+
+{% schema %}
+  {
+    "name": "Featured Content",
+    "tag": "section",
+    "class": "overflow-hidden",
+    "max_blocks": 10,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Section Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_desktop",
+        "label": "Margin Top (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_top_mobile",
+        "label": "Margin Top (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_desktop",
+        "label": "Margin Bottom (desktop)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 60
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_mobile",
+        "label": "Margin Bottom (mobile)",
+        "min": -180,
+        "max": 180,
+        "step": 5,
+        "default": 40
+      },
+      {
+        "type": "header",
+        "content": "Section Content"
+      },
+      {
+        "type": "text",
+        "id": "pretitle",
+        "label": "Pre-Title"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "header_link_text",
+        "label": "Header Link Text"
+      },
+      {
+        "type": "url",
+        "id": "header_link_url",
+        "label": "Header Link Url"
+      },          
+      {
+        "type": "checkbox",
+        "id": "autoheight",
+        "label": "Enable Automatic Height Adjustment"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "content",
+        "name": "Content Block",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "image_url",
+            "label": "Image URL"
+          },
+          {
+            "type": "image_picker",
+            "id": "overlay_icon",
+            "label": "Overlay Icon"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "rich_text",
+            "label": "Rich Text"
+          },
+          {
+            "type": "text",
+            "id": "link_text_1",
+            "label": "Link Text 1"
+          },
+          {
+            "type": "url",
+            "id": "link_url_1",
+            "label": "Link URL 1"
+          },
+          {
+            "type": "text",
+            "id": "link_text_2",
+            "label": "Link Text 2"
+          },
+          {
+            "type": "url",
+            "id": "link_url_2",
+            "label": "Link URL 2"
+          },
+          {
+            "type": "text",
+            "id": "link_text_3",
+            "label": "Link Text 3"
+          },
+          {
+            "type": "url",
+            "id": "link_url_3",
+            "label": "Link URL 3"
+          },
+          {
+            "type": "text",
+            "id": "link_text_4",
+            "label": "Link Text 4"
+          },
+          {
+            "type": "url",
+            "id": "link_url_4",
+            "label": "Link URL 4"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Featured Content"
+      }
+    ]
+  }
+{% endschema %}

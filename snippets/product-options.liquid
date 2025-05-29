@@ -1,0 +1,32 @@
+{% comment %}
+  Accepts:
+    - product: {Object} product object.
+    - section: {Object} section the liquid is rendered in
+{% endcomment %}
+
+<product-options
+    data-form-id="{{ product_form_id }}"
+    data-url="{{ product.url }}"
+    data-section-id="{{ section.id }}"
+    id="options-{{ section.id }}">
+  {%- for option in product.options_with_values -%}
+    <div class="h4 d--flex option-name mt-30 mb-16">{{ option.name }}</div>
+    {%- if option.values.size > 3 -%}
+      <select
+        id="Option-{{ section.id }}-{{ forloop.index0 }}"
+        class="max-width--500"
+        name="options[{{ option.name | escape }}]"
+        form="{{ product_form_id }}"
+      >
+        {%- render 'product-option', option: option, selected_variant: selected_variant, section: section, dropdown_flag: true -%}
+      </select>
+    {%- else -%}
+      <fieldset class="d--flex justify--space-between border-0 p-0 gap-20 lg-down-flex-wrap--wrap">
+        {%- render 'product-option', option: option, selected_variant: selected_variant, section: section, dropdown_flag: false -%}
+      </fieldset>
+    {%- endif -%}
+  {%- endfor -%}
+  <script type="application/json">
+    {{ product.variants | json }}
+  </script>
+</product-options>

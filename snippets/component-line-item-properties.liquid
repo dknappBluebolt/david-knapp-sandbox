@@ -1,0 +1,46 @@
+{%- comment -%}
+  Accepts:
+    - line_item: {Object} line_item shopify object
+    - properties: {String} (Optional) properties for the reorder button
+{%- endcomment -%}
+{%- assign brand_property = '' -%}
+{%- assign model_property = '' -%}
+{%- assign dimensions = '' -%}
+{%- assign meta_type = product.metafields.custom.cover_configurator.value.type -%}
+{%- for property in line_item.properties -%}
+{%- assign first_character = property.first | slice: 0 -%}
+{%- if property.first contains 'dimension'  -%}
+  {%- assign property_int = property.last | times: 1 | round -%}
+  {%- if property_int != 0 -%}
+    {%- assign dimensions = dimensions | append: property.last | append: '" x ' -%}
+  {%- endif -%}
+{%- elsif property.first == '_brand'-%}
+  {%- assign brand_property = property.last -%}
+{%- elsif property.first == '_model' -%}
+  {%- assign model_property = property.last -%}
+{%- elsif property.first == '_strap_location' -%}
+  {%- assign strap_location = property.last -%}
+{%- elsif property.first == '_fold_location' -%}
+  {%- assign fold_location = property.last -%}
+{% else %}
+  {%- unless first_character == '_' -%}
+    {%- capture property_render -%}
+      {{ property_render }}
+      <small class="d--block {{ class }}">{{ property.last }}{% if property.first == "skirt_length" %}" Skirt{%- endif -%}</small>
+    {%- endcapture -%}
+  {%- endunless -%}
+{% endif %}
+{%- endfor -%}
+{%- assign dimensions = dimensions | remove_last: 'x' -%}
+{%- if brand_property != blank and model_property != blank -%}
+  <small class="d--block {{ class }}">{{ brand_property }}, {{ model_property }}</small>
+{%- endif -%}
+{%- if dimensions != blank -%}
+  <small class="d--block {{ class }}">{{ dimensions }}</small>
+{%- endif -%}
+{%- if fold_location != blank and strap_location != blank -%}
+  <small class="d--block {{ class }}">{{ fold_location }}, Strap Placement {{ strap_location }}</small>
+{%- elsif meta_type == "swim_spa" -%}
+  <small class="d--block {{ class }}">{{ 'templates.cart.cart_contact_later' | t }}</small>
+{%- endif -%}
+{{ property_render }}

@@ -1,0 +1,55 @@
+{%- if swiper_id == blank -%}
+  {%- assign swiper_id = section.id -%}
+{%- endif -%}
+
+{%- if selected_variant.featured_image != null -%}
+  {%- capture main_images -%}
+    {%- render 'component-card-image', image: selected_variant.featured_image, lazyLoad: false, fetchpriority: 'high' -%}
+  {%- endcapture -%}
+  {%- capture thumbnails -%}
+    {%- render 'product-image-thumbnail', image: selected_variant.featured_image -%}
+  {%- endcapture -%}
+{%- endif -%}
+{%- for image in product.images -%}
+  {%- unless selected_variant.featured_image == image -%}
+    {%- liquid
+      if checkLazy
+        if forloop.index > 2
+          assign lazyLoad = true
+        else
+          assign lazyLoad = false
+        endif
+      endif
+    -%}
+    {%- capture main_images -%}
+      {{- main_images -}}
+      {%- render 'component-card-image', image: image, lazyLoad: lazyLoad -%}
+    {%- endcapture -%}
+    {%- capture thumbnails -%}
+      {{- thumbnails -}}
+      {%- render 'product-image-thumbnail', image: image -%}
+    {%- endcapture -%}
+  {%- endunless -%}
+{%- endfor -%}
+<swiper-section data-section-id="{{ section.id }}">
+  <div
+    id="swiper-{{ section.id }}"
+    class="swiper pdp-main-swiper featured-products mb-20 {{ class }}"
+    {% if section.index > 2 %}
+      data-swiper-init="{{ swiper_id }}"
+    {% endif %}
+  >
+    <div class="swiper-wrapper d--flex">
+      {{- main_images -}}
+    </div>
+    <div class="swiper-button swiper-button-prev"></div>
+    <div class="swiper-button swiper-button-next"></div>
+    <div class="swiper-pagination small--hide"></div>
+  </div>
+  <div id="swiper-thumbs-{{ swiper_id }}" class="swiper thumbs sm--mb-30">
+    <div class="swiper-wrapper d--flex">
+      {{- thumbnails -}}
+    </div>
+  </div>
+</swiper-section>
+

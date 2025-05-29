@@ -1,0 +1,40 @@
+{%- comment -%}
+  Accepts:
+    - class: {String} a string containing classes you want applied
+    - line_item: {Object} shopify line_item object
+    - line_index: {Int} index of the line item
+{%- endcomment -%}
+<quantity-input class="quantity critical-hidden d--flex align-items--center {{ class }}" data-index="{{ line_index }}">
+  <button class="quantity-button no-js-hidden" name="minus" type="button">
+    <span class="visually-hidden">
+      {{- 'products.product.quantity.decrease' | t: product: line_item.product.title | escape -}}
+    </span>
+    -
+  </button>
+  <label for="quantity-{{ line_index }}" class="visually-hidden">Quantity</label>
+  <input
+    class="js-quantity quantity-input"
+    type="number"
+    name="quantity"
+    id="quantity-{{ line_index }}"
+    data-cart-quantity="{{ line_item.quantity }}"
+    data-min="0"
+    min="0"
+    {% if line_item.variant.inventory_management == "shopify" and line_item.variant.inventory_policy == "deny" %}
+      data-max="{{ line_item.variant.inventory_quantity }}"
+      max="{{ line_item.variant.inventory_quantity }}"
+    {% endif %}
+    step="{{ line_item.variant.quantity_rule.increment }}"
+    value="{{ line_item.quantity }}"
+    form="{{ product_form_id }}"
+  >
+  <button class="quantity-button no-js-hidden" name="plus" type="button">
+    <span class="visually-hidden">
+      {{- 'products.product.quantity.increase' | t: product: line_item.product.title | escape -}}
+    </span>
+    +
+  </button>
+</quantity-input>
+<div class="cart-item__error" id="line-item-error-{{ line_index }}" role="alert">
+  <small class="cart-item__error-text"></small>
+</div>

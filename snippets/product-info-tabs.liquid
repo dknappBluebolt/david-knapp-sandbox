@@ -1,0 +1,142 @@
+{%- comment -%}
+  Accepts:
+    - product: {Object} product object.
+    - section: {Object} the section the snippet is being rendered in
+    - desktop_or_mobile {String} to denote if this is the desktop or mobile tabs
+{%- endcomment -%}
+
+{%- assign tab_buttons = blank -%}
+{%- assign tabs = blank -%}
+
+{% comment %} Add Description Tab {% endcomment %}
+{%- if product.description != blank
+  or selected_variant.metafields.custom.description != blank
+-%}
+  {%- capture tab_buttons -%}
+    {{- tab_buttons -}}
+    <button class="js-tab-button h5{% if tab_buttons == blank %} active{%- endif -%}" data-id="description-{{ section.id }}-{{ desktop_or_mobile }}">
+      {{- 'products.product.info.description' | t -}}
+    </button>
+  {%- endcapture -%}
+  {%- capture tabs -%}
+    {{- tabs -}}
+    <div id="description-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab rte rte--lg rte--list{% unless tabs == blank %} d--none{% endunless %}">
+      {{- selected_variant.metafields.custom.description | metafield_tag -}}
+      {{- product.description -}}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- comment %} Add Features Tab {%- endcomment %}
+{%- if product.metafields.custom.features != blank -%}
+  {%- capture tab_buttons -%}
+    {{- tab_buttons -}}
+    <button class="js-tab-button h5{% if tab_buttons == '' %} active{% endif %}" data-id="features-{{ section.id }}-{{ desktop_or_mobile }}">
+      {{- 'products.product.info.features' | t -}}
+    </button>
+  {%- endcapture -%}
+  {%- capture tabs -%}
+    {{- tabs -}}
+    <div id="features-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab rte rte--lg rte--list{% unless tabs == blank %} d--none{% endunless %}">
+      {{- product.metafields.custom.features | metafield_tag -}}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- comment %} Add Compatibility tab {%- endcomment %}
+{%- if product.metafields.custom.compatibility.value != blank
+  or product.metafields.custom.compatibility != blank
+-%}
+  {%- capture tab_buttons -%}
+    {{- tab_buttons -}}
+    <button class="js-tab-button h5{% if tab_buttons == '' %} active{% endif %}" data-id="compatibility-{{ section.id }}-{{ desktop_or_mobile }}">
+      {{- 'products.product.info.compatibility' | t -}}
+    </button>
+  {%- endcapture -%}
+  {%- capture tabs -%}
+    {{- tabs -}}
+    <div id="compatibility-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab rte rte--lg rte--list{% unless tabs == blank %} d--none{% endunless %}">
+        {{- product.metafields.custom.compatibility.value -}}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- comment %} Add Specifications tab {%- endcomment %}
+{%- if product.metafields.custom.specifications_table.value != blank
+  or product.metafields.custom.specifications != blank
+-%}
+  {%- capture tab_buttons -%}
+    {{- tab_buttons -}}
+    <button class="js-tab-button h5{% if tab_buttons == '' %} active{% endif %}" data-id="specifications-{{ section.id }}-{{ desktop_or_mobile }}">
+      {{- 'products.product.info.specifications' | t -}}
+    </button>
+  {%- endcapture -%}
+  {%- capture tabs -%}
+    {{- tabs -}}
+    <div id="specifications-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab rte rte--lg rte--list{% unless tabs == blank %} d--none{% endunless %}">
+        {{- product.metafields.custom.specifications_table.value -}}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{% comment %} Directions For Use Tab {% endcomment %}
+{%- if product.metafields.custom.directions_for_use != blank -%}
+  {%- capture tab_buttons -%}
+    {{- tab_buttons -}}
+    <button class="js-tab-button h5{% if tab_buttons == '' %} active{% endif %}" data-id="directions-for-use-{{ section.id }}-{{ desktop_or_mobile }}">
+      {{- 'products.product.info.directions' | t -}}
+    </button>
+  {%- endcapture -%}
+  {%- capture tabs -%}
+    {{- tabs -}}
+    <div id="directions-for-use-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab rte rte--lg rte--list{% unless tabs == blank %} d--none{% endunless %}">
+        {{- product.metafields.custom.directions_for_use | metafield_tag -}}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- comment %} Add How To Measure Tab {%- endcomment %}
+{%- if product.metafields.custom.bonus_content.value != blank -%}
+  {%- capture tab_buttons -%}
+    {{- tab_buttons -}}
+    <button class="js-tab-button h5{% if tab_buttons == '' %} active{% endif %}" data-id="how-to-measure-{{ section.id }}-{{ desktop_or_mobile }}">
+      {{ product.metafields.custom.bonus_content.value.name }}
+    </button>
+  {%- endcapture -%}
+  {%- capture tabs -%}
+    {{- tabs -}}
+    <div id="how-to-measure-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab d--none">
+      {%- render 'component-how-to-measure', how_to_measure: product.metafields.custom.bonus_content -%}
+    </div>
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- comment %} Add Reviews Tab {%- endcomment %}
+{%- capture tab_buttons -%}
+  {{- tab_buttons -}}
+  <button class="js-tab-button h5{% if tab_buttons == '' %} active{% endif %}" data-id="reviews-{{ section.id }}-{{ desktop_or_mobile }}">
+    {{- 'products.product.info.reviews' | t -}}
+  </button>
+{%- endcapture -%}
+{%- capture tabs -%}
+  {{- tabs -}}
+  <div id="reviews-{{ section.id }}-{{ desktop_or_mobile }}" class="js-tab d--none">
+    <div
+      class="yotpo yotpo-main-widget"
+      data-product-id="{{ product.id }}"
+      data-name="{{ product.title | escape }}"
+      data-url="{{ shop.url }}{{ product.url }}"
+      data-image-url="{{ product.featured_image | product_img_url: 'large' | replace: '?', '%3F' | replace: '&','%26'}}"
+      data-price="{{ selected_variant.price | money_without_currency }}"
+      data-currency="{{ shop.currency }}"
+      data-description="{{ product.description | escape }}"
+    >
+    </div>
+  </div>
+{%- endcapture -%}
+<product-info-tabs class="product-info-tabs">
+  <div class="d--flex header">
+    {{- tab_buttons -}}
+  </div>
+  {{- tabs -}}
+</product-info-tabs>

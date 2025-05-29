@@ -1,0 +1,164 @@
+{{- 'template-account.css' | asset_url | stylesheet_tag -}}
+
+<div class="customer customer-form-box width--100 mx-auto round p-30 md-up--p-60 bg-color--white" style="border: 1px solid var(--color-border);">
+  <h1 class="h3 mb-30">
+    {{- 'customer.register.title' | t -}}
+  </h1>
+  {%- form 'create_customer', class: 'account-form-box' -%}
+    {%- if form.errors contains 'form' -%}
+      <div class="form-msg form-msg--error mb-20 critical-hidden" tabindex="-1" autofocus>
+        {{- form.errors.messages.form -}}
+      </div>
+    {%- endif -%}
+    <div class="field">
+      <input
+        class="field__input"
+        type="text"
+        name="customer[first_name]"
+        id="RegisterForm-FirstName"
+        autocomplete="given-name"
+        placeholder="{{ 'customer.register.first_name' | t }}"
+        {% unless form.errors %}
+          autofocus
+        {% endunless %}
+        {% if form.first_name %}
+          value="{{ form.first_name }}"
+        {%- endif -%}
+      >
+      <label for="RegisterForm-FirstName" class="field__label">
+        {{- 'customer.register.first_name' | t -}}
+      </label>
+    </div>
+    <div class="field mt-30">
+      <input
+        class="field__input"
+        type="text"
+        name="customer[last_name]"
+        id="RegisterForm-LastName"
+        autocomplete="family-name"
+        placeholder="{{ 'customer.register.last_name' | t }}"
+        {% if form.last_name %}
+          value="{{ form.last_name }}"
+        {% endif -%}
+      >
+      <label for="RegisterForm-LastName" class="field__label">
+        {{- 'customer.register.last_name' | t -}}
+      </label>
+    </div>
+    <div class="mt-30">
+      <div class="field">
+        <input
+          class="field__input{% if form.errors contains 'email' %} input--error{% endif %}"
+          type="email"
+          name="customer[email]"
+          id="RegisterForm-email"
+          {% if form.email %}
+            value="{{ form.email }}"
+          {% endif -%}
+          spellcheck="false"
+          autocapitalize="off"
+          autocomplete="email"
+          aria-required="true"
+          required
+          placeholder="{{ 'customer.register.email' | t }}"
+          {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="RegisterForm-email-error"
+          {%- endif -%}
+        >
+        <label for="RegisterForm-email" class="field__label">
+          {{- 'customer.register.email' | t }}
+          <span class="color--red" aria-label="Required">*</span>
+        </label>
+      </div>
+      {%- if form.errors contains 'email' -%}
+        <div id="RegisterForm-email-error" class="text--xs text--semibold color--red mt-5">
+          {{- form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email }}.
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="mt-30">
+      <div class="field">
+        <input
+          class="field__input{% if form.errors contains 'password' %} input--error{% endif %}"
+          type="password"
+          name="customer[password]"
+          id="RegisterForm-password"
+          aria-required="true"
+          required
+          placeholder="{{ 'customer.register.password' | t }}"
+          {% if form.errors contains 'password' %}
+            aria-invalid="true"
+            aria-describedby="RegisterForm-password-error"
+          {%- endif -%}
+        >
+        <label for="RegisterForm-password" class="field__label">
+          {{- 'customer.register.password' | t }}
+          <span class="color--red" aria-label="Required">*</span>
+        </label>
+      </div>
+      {%- if form.errors contains 'password' -%}
+        <div id="RegisterForm-password-error" class="text--xs text--semibold color--red mt-5">
+          {{- form.errors.translated_fields.password | capitalize }}
+          {{ form.errors.messages.password }}.
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="mt-40">
+      <label class="d--flex text--bold rte align-items--center" for="RegisterForm-terms-and-conditions">
+        <span class="custom-control">
+          <input type="checkbox"
+          name="customer[terms]"
+          id="RegisterForm-terms-and-conditions"
+          aria-required="true"
+          required>
+          <span class="custom-control__element"></span>
+        </span>
+        {{- section.settings.terms_and_conditions -}}
+        <span class="visually-hidden">{{ 'customer.required_field' | t }}</span>
+      </label>
+    </div>
+    <label class="d--flex text--bold align-items--center mt-20" for="RegisterForm-accepts_marketing">
+      <input type="hidden" name="customer[accepts_marketing]" value="false" />
+      <span class="custom-control">
+        <input
+          type="checkbox"
+          name="customer[accepts_marketing]"
+          id="RegisterForm-accepts_marketing"
+        />
+        <span class="custom-control__element"></span>
+      </span>
+      {{- section.settings.newsletter -}}
+    </label>
+    <div class="text-center mt-30 width--100">
+      <button class="button button--primary button--xl width--100" type="submit">
+        {{- 'customer.register.submit' | t -}}
+      </button>
+    </div>
+    {%- liquid assign marketTag = request.locale.root_url | remove: '/'
+    if marketTag == ''
+      assign marketTag = 'en-us'
+    endif -%}
+    <input type="hidden" name="customer[tags]" value="{{ marketTag }}">
+  {%- endform -%}
+</div>
+
+{% schema %}
+{
+  "name": "Create Account",
+  "class": "bg-color--gray-off-white page-width page-section page-top--lg account--main",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "terms_and_conditions",
+      "label": "Terms and Conditions Text"
+    },
+    {
+      "type": "text",
+      "id": "newsletter",
+      "label": "Newsletter Signup Text"
+    }
+  ]
+}
+{% endschema %}

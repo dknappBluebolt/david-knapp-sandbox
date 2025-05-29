@@ -1,0 +1,33 @@
+{%- if paginate.parts.size > 0 -%}
+  <div class="pagination-wrapper critical-hidden {{ class }}">
+    <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+      <ul class="pagination__list d--flex flex-wrap--wrap justify--center list-unstyled">
+        <li class="pagination__list-item">
+          <a {% unless paginate.previous %}aria-disabled="true"{% endunless %} href="{{ paginate.previous.url }}{{ anchor }}" class="pagination__item pagination__item--arrow flex-center">
+            {%- render 'icons-sprite-icon', id: 'icon-right-caret', size: 16, class: 'rotate--180' -%}
+            <span class="xs-up--hide">{{ 'general.pagination.previous' | t }}</span>
+          </a>
+        </li>
+
+        {%- for part in paginate.parts -%}
+          <li class="pagination__list-item xs--hide">
+            <a {% if part.is_link %}href="{{ part.url }}{{ anchor }}"{% endif %}
+              class="pagination__item {% if part.title == paginate.current_page %} pagination__item--current{% endif %} flex-center"
+              aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+              {% if part.title == paginate.current_page %} aria-current="page"{% endif -%}
+            >
+              {{- part.title -}}
+            </a>
+          </li>
+        {%- endfor -%}
+
+        <li class="pagination__list-item">
+          <a {% unless paginate.next %}aria-disabled="true"{% endunless %} href="{{ paginate.next.url }}{{ anchor }}" class="pagination__item pagination__item--arrow flex-center">
+            <span class="xs-up--hide">{{ 'general.pagination.next' | t }}</span>
+            {%- render 'icons-sprite-icon', id: 'icon-right-caret', size: 16 -%}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+{%- endif -%}

@@ -1,0 +1,88 @@
+{%- comment -%}
+  Accepts:
+    - line_item: {Object} line_item shopify object
+    - adustable_quantity {Boolean} an override to allow adjusting quantity/remove from cart
+    - line_index: {Int} (Optional) forloop.index
+    - reorder: {Boolean} determines if the item is an order or in the cart
+    - variant_ids: {String} (Optional) variant ids for reorder button
+    - quantities: {String} (Optional) quantities for reorder button
+    - properties: {String} (Optional) properties for reorder button
+    - keys: {String} (Optional) keys to remove multiple lines the from cart
+    - is_mobile: {Boolean} determines if it's in mobile view
+{%- endcomment -%}
+
+{%- if variant_ids == blank -%}
+  {%- assign variant_ids = line_item.variant_id -%}
+{%- endif -%}
+
+{%- if quantities == blank -%}
+  {%- assign quantities = line_item.quantity -%}
+{%- endif -%}
+{%- if keys and is_mobile -%}
+  <tcg-tooltip-toggle
+    class="mobile-tooltip"
+    role="button"
+    aria-haspopup="true"
+    aria-controls="line-actions-{{ line_item.id }}"
+    aria-label="{{ 'templates.cart.edit' | t }} or {{ 'templates.cart.remove' | t }} {{ line_item.title | escape }}"
+  >
+    {%- render 'icons-sprite-icon', id: 'icon-pepicons', size: 24 -%}
+    <div id="line-actions-{{ line_item.id }}" class="tooltip-text visibility-hidden">
+      <tcg-remove-button class="d--flex" data-index="{{ line_index }}" data-keys="{{ keys }}">
+        <button class="text--sm link">
+          {{- 'templates.cart.remove' | t }}
+          <span class="visually-hidden">{{ line_item.title }}</span>
+        </button>
+      </tcg-remove-button>
+      <div class="d--flex">
+        <a href="{{ line_item.product.url }}" class="text--sm link">
+          {{- 'templates.cart.edit' | t -}}
+        </a>
+      </div>
+    </div>
+  </tcg-tooltip-toggle>
+{%- else -%}
+  {%- if adjustable_quantity or line_index != blank -%}
+    <tcg-remove-button class="d--flex" data-index="{{ line_index }}" data-keys="{{ keys }}">
+      <button class="text--sm link">
+        {{- 'templates.cart.remove' | t }}
+        <span class="visually-hidden">{{ line_item.title }}</span>
+      </button>
+    </tcg-remove-button>
+  {%- else -%}
+    {%- unless order.name contains 'CG19-' -%}
+      <quick-add-to-cart class="d--flex">
+        <button
+          class="js-quick-add-to-cart text--sm link"
+          data-variant-ids="{{ variant_ids }}"
+          data-quantities="{{ quantities }}"
+          data-properties="{{ properties }}"
+        >
+          <span class="js-start-text">
+            {{- 'customer.account.order.reorder' | t -}}
+          </span>
+          <span class="loader hidden"></span>
+          <span class="js-finished-text hidden">
+            {{- 'customer.account.order.add_to_cart' | t -}}
+          </span>
+        </button>
+      </quick-add-to-cart>
+    {%- endunless -%}
+  {%- endif -%}
+  {%- if variant_ids != line_item.variant_id -%}
+    <div class="d--flex">
+      {%- assign tub_info = '' -%}
+      {% if line_item.properties._brand != blank %}
+        {%- assign tub_info = tub_info | append: '&brand=' | append: line_item.properties._brand -%}
+      {% endif %}
+      {% if line_item.properties._model != blank %}
+        {%- assign tub_info = tub_info | append: '&model=' | append: line_item.properties._model -%}
+      {% endif %}
+      {%- unless reorder -%}
+        <a href="{{ line_item.product.url }}?key={{ line_item.key }}{{ tub_info }}" class="text--sm link">
+          {{- 'templates.cart.edit' | t -}}
+        </a>
+      {%- endunless -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

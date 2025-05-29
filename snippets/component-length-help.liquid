@@ -1,0 +1,26 @@
+{%- comment -%}
+  Accepts:
+    - length_help: {Object} a length help metaobject https://admin.shopify.com/store/973929-be/settings/custom_data/metaobjects/length_help
+    - section: {Object} section that the snippet is rendered in
+{%- endcomment -%}
+
+<div class="d--flex flex-column gap-20">
+  {%- if length_help.value.video != blank -%}
+    {%- render 'component-video-with-poster', video: length_help.value.video.value, section: section, sizes: modalImgSizes -%}
+  {%- endif -%}
+  {%- if length_help.value.image != blank -%}
+    <img
+      srcset="
+      {{- length_help.value.image | image_url: width: 600 }} 600w,
+      {{- length_help.value.image | image_url: width: 800 }} 800w,
+      {{- length_help.value.image | image_url: width: 1200 }} 1200w"
+      sizes="{{ modalImgSizes }}"
+      width="800"
+      height="{{ 800 | times: length_help.value.image.aspect_ratio }}"
+      alt="{{ length_help.value.image.alt | escape }}"
+      loading="lazy"
+      class="round mt-10"
+    >
+  {%- endif -%}
+  {{- length_help.value.rich_text | metafield_tag | replace: 'metafield-rich_text_field','rte rte--lg' -}}
+</div>

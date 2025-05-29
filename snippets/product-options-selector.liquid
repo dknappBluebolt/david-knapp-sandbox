@@ -1,0 +1,19 @@
+{%- for option in options -%}
+  <fieldset>
+    <legend{% if options.size == 1 %} class="visually-hidden"{% endif %}>
+      {{- option.name -}}
+    </legend>
+    <div class="product-options-wrapper d--flex flex-wrap--wrap lg-down--flex-column">
+      {%- for value in option.values %}
+        <label for="{{ option.name | handle }}-{{ value | handle }}" class="variant">
+          <input id="{{ option.name | handle }}-{{ value | handle }}" type="radio" class="product-options" name="{{ option.name | handle }}" value="{{ value }}"
+            {%- liquid if option.selected_value == value
+              echo ' checked'
+            endif -%}
+          >
+          {{- value -}}
+        </label>
+      {%- endfor -%}
+    </div>
+  </fieldset>
+{%- endfor -%}

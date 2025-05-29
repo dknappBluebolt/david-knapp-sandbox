@@ -1,0 +1,174 @@
+{%- assign max = 4 -%}
+{%- assign count = 0 -%}
+{%- assign rendered_articles = '' -%}
+{%- for new_article in blog.articles -%}
+  {%- if max <= count -%}
+    {%- break -%}
+  {%- endif -%}
+  {%- for tag in new_article.tags -%}
+    {%- if article.tags contains tag -%}
+      {%- capture rendered_articles -%}
+        {{- rendered_articles -}}
+        {%- render 'component-card-article', filters: blog.metafields.custom.filters.value, article: new_article, section: section -%}
+      {%- endcapture -%}
+      {%- assign count = count | plus: 1 -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{%- if count > 0 -%}
+  {%- style -%}
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    }
+    @media (min-width: 768px) {
+      #shopify-section-{{ section.id }} {background-color: var(--color-gray-off-white);}
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+      #shopify-section-{{ section.id }} {
+        margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+      }
+    }
+    @media (min-width: 1024px) {
+      #shopify-section-{{ section.id }} {
+        margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      }
+    }
+  {%- endstyle -%}
+  {{- 'component-card-article.css' | asset_url | stylesheet_tag -}}
+  {%- assign tag_handles = '' -%}
+  {%- for tag in blog.metafields.custom.filters.value -%}
+    {%- if article.tags contains tag -%}
+      {%- assign tag_handle = tag | handle -%}
+      {%- assign tag_handles = tag_handles | append: '+' | append: tag_handle -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign tag_handles = tag_handles | remove_first: '+' -%}
+  <div class="page-width md-up--pt-80 md-up--pb-40">
+    <div class="d--flex justify--space-between align-items--center mb-40">
+      {%- if section.settings.title != blank -%}
+        <div class="section-header">
+          {%- if section.settings.pretitle != blank -%}
+            <div class="section-pretitle">
+              {{- section.settings.pretitle -}}
+            </div>
+          {%- endif -%}
+          <h2 class="mb-0 section-title {{ section.settings.title_size }}">
+            {{- section.settings.title -}}
+          </h2>
+        </div>
+      {%- endif -%}
+
+      <a class="d--flex text--no-wrap link" href="{{ blog.url }}/tagged/{{ tag_handles }}">
+        {{- 'templates.blog.view_all' | t -}}
+      </a>
+    </div>
+    <div class=" d--flex gap-30 mb-40 flex-column lg-up--flex-row flex-wrap--wrap">
+      {{- rendered_articles -}}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Related Articles",
+  "tag": "section",
+  "class": "overflow-hidden page-section--md round md-up--bg-color--gray-off-white",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_desktop",
+      "label": "Margin Top (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "label": "Margin Top (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_desktop",
+      "label": "Margin Bottom (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "label": "Margin Bottom (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "pretitle",
+      "label": "Pre-Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title Size",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Articles"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["article"]
+  }
+}
+{% endschema %}

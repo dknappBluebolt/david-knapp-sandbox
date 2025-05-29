@@ -1,0 +1,41 @@
+{%- comment -%}
+  Accepts:
+    - article: {Object} featured article to display.
+    - filters: {Array[String]} a list of strings to prioritize the displayed tags
+    - section: {Object} section object.
+    - limit: {Number} a max limit on the number of shown tags if left blank, default to 999
+{%- endcomment -%}
+
+{% if limit == blank or limit == 0 %}
+  {%- assign limit = 999 -%}
+{%- endif -%}
+
+{%- assign selected_tag_count = 0 -%}
+{%- assign selected_tag_string = '' -%}
+{%- for tag in article.tags -%}
+  {%- if selected_tag_count >= limit -%}
+    {%- break -%}
+  {%- endif -%}
+  {%- if filters contains tag -%}
+    {%- assign selected_tag_count = selected_tag_count | plus: 1 -%}
+    {%- assign selected_tag_string = selected_tag_string | append: tag | append: ';' -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- for tag in article.tags -%}
+  {%- if selected_tag_count >= limit -%}
+    {%- break -%}
+  {%- endif -%}
+  {%- unless selected_tags contains tag or selected_tag_string contains tag -%}
+    {%- assign selected_tag_count = selected_tag_count | plus: 1 -%}
+    {%- assign selected_tag_string = selected_tag_string | append: tag | append: ';' -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+<div class="d--flex flex-wrap--wrap gap-10">
+  {%- assign selected_tag_split = selected_tag_string | split: ';' -%}
+  {%- for tag in selected_tag_split -%}
+    <div class="color--dark-yellow bg-color--light-yellow text--xs px-10 py-6 round flex-center text--center line-height-1">
+      {{- tag -}}
+    </div>
+  {%- endfor -%}
+</div>

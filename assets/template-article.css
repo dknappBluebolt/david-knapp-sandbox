@@ -1,0 +1,101 @@
+.article .grid .grid__item h3 {
+    line-height: 120%;
+}
+.article .grid .grid__item h3::after {
+    display: inline-flex;
+    width: 100px;
+    height: 2px;
+    background-color: #222;
+    content: "";
+    vertical-align: middle;
+    margin-left: 20px;
+}
+
+.article-section {
+    max-width: 1300px;
+    margin: auto;
+}
+
+.article-body p:first-of-type:first-letter {
+    margin: 0 10px -20px 0;
+    font-size: 55px;
+    font-weight: var(--font-weight-bold);
+    line-height: 55px;
+    float: left;
+}
+
+.article-body {
+    flex: 0 0 95%;
+    max-width: 95%;
+}
+
+.article-body p, .article-body ul {
+    font-feature-settings: 'clig' off, 'liga' off;
+    letter-spacing: 0.2px;
+}
+
+.article-body ul {
+    margin: 0 0 var(--spacing-inline);
+    padding-left: 0;
+}
+
+.article-body .h1, .article-body h1,
+.article-body .h2, .article-body h2,
+.article-body .h3, .article-body h3,
+.article-body .h4, .article-body h4,
+.article-body .h5, .article-body h5,
+.article-body .h6, .article-body h6,
+.article-title {
+    font-weight: var(--font-weight-semibold);
+    line-height: 120%;
+}
+
+.article-body blockquote p:first-of-type:first-letter {
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    float: none;
+}
+
+.article-body blockquote {
+    justify-content: center;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: var(--font-weight-semibold);
+    line-height: 170%; /* 40.8px */
+    padding-block: 1.5rem;
+    margin-inline: 0;
+    border-top: 2px solid var(--color-black-text);
+    border-bottom: 2px solid var(--color-black-text);
+    padding-left: 0;
+}
+
+.article-body .extended-section {
+    display: flex;
+    margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .article-body blockquote {
+        font-size: 24px;
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .article-body {
+        max-width: 670px;
+    }
+
+    .article-body p:first-of-type:first-letter {
+        font-size: 100px;
+        line-height: 100px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .article-body .extended-section {
+        margin-left: -20%;
+        margin-right: -20%;
+        width: 140%;
+    }
+}

@@ -1,97 +1,88 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */{
+{
   "sections": {
-    "section": {
-      "type": "main-blog-post",
+    "main": {
+      "type": "main-article",
+      "settings": {
+      }
+    },
+    "component_rich_content_JJh8Jt": {
+      "type": "component-rich-content",
       "blocks": {
-        "blog-post-title": {
-          "type": "text",
-          "name": "Title",
-          "static": true,
+        "content_dnKPLQ": {
+          "type": "content",
           "settings": {
-            "text": "<h1>{{ article.title }}</h1>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "content": "<h3>Your Hot Tub is Always Ready With The Cover Guy<\/h3><p>By embracing the benefits of hydrotherapy and light hot tub exercises, your hot tub is not only a personal oasis but also a great way to enhance your physical and mental well-being. The Cover Guy is here to guide you on this wellness journey, for a healthier, happier you. Connect with us for all your hot tub cover needs.<\/p>",
+            "text_size": "md"
+          }
         },
-        "blog-post-details": {
-          "type": "_blog-post-info-text",
-          "name": "Blog post details",
-          "static": true,
+        "buttons_4KQe8F": {
+          "type": "buttons",
           "settings": {
-            "show_date": false,
-            "show_author": false,
-            "type_preset": "",
-            "alignment": "center",
-            "show_alignment": true,
-            "padding-block-start": 24,
-            "padding-block-end": 0
-          },
-          "blocks": {}
-        },
-        "blog-post-image": {
-          "type": "image",
-          "name": "Featured image",
-          "static": true,
-          "settings": {
-            "image_ratio": "landscape",
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "blog-post-content": {
-          "type": "_blog-post-content",
-          "static": true,
-          "settings": {},
-          "blocks": {}
+            "button_1_type": "link",
+            "button_1_text": "Contact Us",
+            "button_1_url": "shopify:\/\/pages\/contact",
+            "button_2_type": "primary",
+            "button_2_text": "",
+            "button_2_url": ""
+          }
         }
       },
+      "block_order": [
+        "content_dnKPLQ",
+        "buttons_4KQe8F"
+      ],
       "settings": {
-        "content_direction": "column",
-        "gap": 32,
-        "color_scheme": "",
-        "padding-block-start": 40,
-        "padding-block-end": 80
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": 40,
+        "margin_x_desktop": 180,
+        "margin_x_mobile": 5,
+        "padding_top_desktop": 50,
+        "padding_top_mobile": 50,
+        "padding_bottom_desktop": 50,
+        "padding_bottom_mobile": 50,
+        "round_top": false,
+        "round_bottom": false,
+        "background_color": "white",
+        "text_color": "black",
+        "desktop_text_alignment": "left",
+        "mobile_text_alignment": "left"
+      }
+    },
+    "component_featured_products_7FcXyQ": {
+      "type": "component-featured-products",
+      "settings": {
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": 40,
+        "pretitle": "",
+        "title": "Related Products",
+        "title_size": "h3",
+        "products": [
+
+        ],
+        "use_article_products": true
+      }
+    },
+    "component_related_articles_CDnxCQ": {
+      "type": "component-related-articles",
+      "settings": {
+        "margin_top_desktop": 0,
+        "margin_top_mobile": 0,
+        "margin_bottom_desktop": 60,
+        "margin_bottom_mobile": 40,
+        "pretitle": "",
+        "title": "Related Articles",
+        "title_size": "h3"
       }
     }
   },
   "order": [
-    "section"
+    "main",
+    "component_rich_content_JJh8Jt",
+    "component_featured_products_7FcXyQ",
+    "component_related_articles_CDnxCQ"
   ]
 }

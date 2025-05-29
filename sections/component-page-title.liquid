@@ -1,0 +1,74 @@
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin-top: {{ section.settings.margin_top_mobile }}px;
+    margin-bottom: {{ section.settings.margin_bottom_mobile }}px;
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin-top: {{ section.settings.margin_top_desktop }}px;
+      margin-bottom: {{ section.settings.margin_bottom_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+<div class="page-section--md text--center">
+  <h1 class="h3">
+    {{- section.settings.title | default: [request.page_type].title -}}
+  </h1>
+</div>
+
+{% schema %}
+{
+  "name": "Page Title (h1)",
+  "tag": "section",
+  "class": "page-width page-width--narrow",
+  "settings": [
+    {
+      "type": "range",
+      "id": "margin_top_desktop",
+      "label": "Margin Top (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "label": "Margin Top (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_desktop",
+      "label": "Margin Bottom (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "label": "Margin Bottom (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "defaults to page title"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Title (h1)"
+    }
+  ]
+}
+{% endschema %}

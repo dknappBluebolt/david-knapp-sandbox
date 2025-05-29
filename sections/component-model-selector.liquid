@@ -1,0 +1,352 @@
+{{- 'component-cards.css' | asset_url | stylesheet_tag -}}
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    margin: {{ section.settings.margin_top_mobile }}px 0 {{ section.settings.margin_bottom_mobile }}px;
+    padding: {{ section.settings.padding_top_mobile }}px 0 {{ section.settings.padding_bottom_mobile }}px;
+    background-color: var(--color-{{ section.settings.background_color }});
+    color: var(--color-{{ section.settings.text_color }});
+    border-top-left-radius: {{ section.settings.border_radius_top }}px;
+    border-top-right-radius: {{ section.settings.border_radius_top }}px;
+    border-bottom-left-radius: {{ section.settings.border_radius_bottom }}px;
+    border-bottom-right-radius: {{ section.settings.border_radius_bottom }}px;
+  }
+  .swiper-scrollbar-{{ section.id }} {
+    left: var(--page-gutter) !important;
+    background: none !important;
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.margin_bottom_desktop | times: 0.7 | round }}px;
+      padding: {{ section.settings.padding_top_desktop | times: 0.7 | round }}px 0 {{ section.settings.padding_bottom_desktop | times: 0.7 | round }}px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} {
+      margin: {{ section.settings.margin_top_desktop }}px 0 {{ section.settings.margin_bottom_desktop }}px;
+      padding: {{ section.settings.padding_top_desktop }}px 0 {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+{%- endstyle -%}
+<script src="{{ 'component-find-your-tub.js' | asset_url }}" defer></script>
+
+{%- if section.index <= 2 or request.design_mode -%}
+  <link id="swiper-css" href="{{ 'swiper.min.css' | asset_url }}" media="all" rel="stylesheet">
+  <script id="swiper-js" src="{{ 'swiper.min.js' | asset_url }}"></script>
+  {%- assign lazyLoad = false -%}
+  {%- assign checkLazy = false -%}
+{%- endif -%}
+<div class="page-width d--flex sm--flex-column gap-16 mb-40 lg-up--mb-70 justify--space-between">
+  <div class="lg-up--50">
+    <h2>{{ section.settings.title }}</h2>
+    {%- if section.settings.subtitle != blank and metaobject.spas.value != blank -%}
+      <p class="h5">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+  <div class="lg-up--50 d--flex flex-center">
+    {%- assign total_pages = 0 -%}
+    {%- paginate shop.metaobjects[section.settings.metaobject_type].values by 50 -%}
+      {%- assign total_pages = paginate.pages -%}
+    {%- endpaginate -%}
+    <tcg-find-your-tub-section
+      class="d--flex width--100"
+      data-meta-type="{{ section.settings.metaobject_type }}"
+      data-selected-brand="{{ metaobject.name }}"
+      data-pages="{{ total_pages }}"
+    >
+      <select class="d--none" name="brands" id="brands-{{ section.id }}"></select>
+      <select class="m-0 width-100" name="models" id="models-{{ section.id }}" disabled></select>
+      <button
+        class="button button--primary flex-shrink-0 ml-16"
+        data-url="{{ section.settings.cover_product.url }}"
+        disabled
+      >
+        {{- section.settings.submit | default: "Get Started" -}}
+      </button>
+    </tcg-find-your-tub-section>
+  </div>
+</div>
+<div class="page-width page-width--peek relative lg-down--p-bottom-10">
+  <div
+    id="swiper-{{ section.id }}"
+    class="featured-content swiper card-slider"
+    {% if section.index > 2 %}
+      data-swiper-init="{{ section.id }}"
+    {% endif %}
+  >
+    <div class="swiper-wrapper d--flex">
+      {%- for spa in metaobject.spas.value -%}
+        {%- liquid
+          if checkLazy
+            if forloop.index > 5
+              assign lazyLoad = true
+            else
+              assign lazyLoad = false
+            endif
+          endif
+        -%}
+        {%- assign url_encoded_brand = metaobject.name | url_encode -%}
+        {%- assign url_encoded_model = spa.model.value | url_encode -%}
+        {%- assign cover_url = section.settings.cover_product.url
+          | append: '?brand='
+          | append: url_encoded_brand
+          | append: '&model='
+          | append: url_encoded_model
+        -%}
+        <div class="swiper-slide card-slide" {{ spa.shopify_attributes }}>
+          {%- render 'component-card-content',
+            url: cover_url,
+            image: spa.image.value,
+            image_url: cover_url,
+            title: spa.model.vaule,
+            lazyLoad: lazyLoad,
+            link_text_1: spa.model.value,
+            link_url_1: cover_url
+          -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  <div class="swiper-scrollbar mt-20 lg-up--hide swiper-scrollbar-{{ section.id }}"></div>
+</div>
+
+{%- liquid
+  assign swiper_maxitems = 5
+-%}
+
+<script>
+  window.swiperOptions["{{ section.id }}"] = {
+    keyboard: true,
+    slidesPerView: 1.75,
+    autoHeight: true,
+    breakpoints: {
+      640: {slidesPerView: 2.5},
+      768: {slidesPerView: 3.5,slidesPerGroup: 3.5},
+      1024: {slidesPerView: {{ swiper_maxitems }},slidesPerGroup: {{ swiper_maxitems }}, autoHeight: false}
+    },
+    scrollbar: {
+      el: '.swiper-scrollbar-{{ section.id }}',
+      draggable: true,
+      snapOnRelease: true,
+      hide: true
+    }
+  };
+  {%- if section.index <= 2 or request.design_mode -%}
+    window.addEventListener('DOMContentLoaded',() => {
+      var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+    });
+    {% if request.design_mode %}
+      window.addEventListener('shopify:section:load',() => {
+        var swiper = new Swiper("#swiper-{{ section.id }}", window.swiperOptions["{{ section.id }}"]);
+      });
+    {%- endif -%}
+  {%- endif -%}
+</script>
+
+{% schema %}
+{
+  "name": "Model Selector",
+  "tag": "section",
+  "class": "overflow-hidden",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding Top (desktop)",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding Top (mobile)",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Bottom (desktop)",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Bottom (mobile)",
+      "min": 0,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_top_desktop",
+      "label": "Margin Top (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "label": "Margin Top (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_desktop",
+      "label": "Margin Bottom (desktop)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "label": "Margin Bottom (mobile)",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "border_radius_top",
+      "label": "Border Radius Top",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_radius_bottom",
+      "label": "Border Radius Bottom",
+      "min": -180,
+      "max": 180,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color",
+      "options": [
+        {
+          "value": "black",
+          "label": "Black"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "select",
+      "id": "background_color",
+      "label": "Background Color",
+      "options": [
+        {
+          "value": "white",
+          "label": "White"
+        },
+        {
+          "value": "black-bg",
+          "label": "Black"
+        },
+        {
+          "value": "teal",
+          "label": "Teal"
+        },
+        {
+          "value": "teal-dark",
+          "label": "Dark Teal"
+        },
+        {
+          "value": "gray",
+          "label": "Gray"
+        },
+        {
+          "value": "gray-light",
+          "label": "Light Gray"
+        },
+        {
+          "value": "red",
+          "label": "Red"
+        },
+        {
+          "value": "yellow",
+          "label": "Yellow"
+        }
+      ],
+      "default": "black-bg"
+    },
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subitle"
+    },
+    {
+      "type": "product",
+      "id": "cover_product",
+      "label": "Cover Product"
+    },
+    {
+      "type": "text",
+      "id": "submit",
+      "label": "Submit Button Text",
+      "default": "Get Started"
+    },
+    {
+      "type": "select",
+      "id": "metaobject_type",
+      "label": "Metaobject Type",
+      "options": [
+        {
+          "value": "hot_tub",
+          "label": "Hot Tub"
+        },
+        {
+          "value": "swim_spa",
+          "label": "Swim Spa"
+        },
+        {
+          "value": "cold_tub",
+          "label": "Cold Tub"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Model Selector"
+    }
+  ]
+}
+{% endschema %}

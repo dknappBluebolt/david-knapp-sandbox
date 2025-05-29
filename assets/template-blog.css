@@ -1,0 +1,35 @@
+body.blog, body.blog #MainContent {
+    background-color: var(--color-gray-off-white);
+}
+
+.blog-page {
+    padding-bottom: 30px;
+}
+
+.blog-page .h3 {
+    line-height: 120%;
+}
+
+.bg-transparent {
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, .33);
+    background-color: rgba(255, 255, 255, .33);
+}
+
+.featured-article--neg-mt {
+    margin-top: -10%;
+    order: 2;
+}
+
+@media (min-width: 768px) {
+    .featured-article--neg-ml {
+        margin-left: -5%;
+    }
+    .featured-article--neg-mt {
+        margin-top: 0;
+        order: -1;
+    }
+    .blog-page {
+        padding-bottom: 60px;
+    }
+}

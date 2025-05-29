@@ -1,0 +1,20 @@
+<div class="menu-right-column v-stack gap-10">
+  <a href="{{ url }}" class="card-content__image d--block round round--md ratio megamenu-image">
+    <img class="card-content__img d--block ratio__content ratio__content--cover" srcset="{{ image | image_url: width: 228 }} 228w, {{ image | image_url: width: 456 }} 456w" sizes="228px" width="228" height="{{ 228 | divided_by: image.aspect_ratio | round }}" alt="{{ image.alt | escape }}" loading="lazy">
+  </a>
+  <div class="content-megamenu v-stack gap-6">
+    {%- if pretitle != blank -%}
+      <p class="megamenu-pretitle text--semibold d--flex align-items--center gap-6 text--xs">
+        {{- pretitle -}}
+      </p>
+    {%- endif -%}
+    <p class="megamenu-title text--bold">
+      {{- heading -}}
+    </p>
+    {%- if cta != blank -%}
+      <a class="button button--primary text--xs mt-5" href="{{ url }}">
+        {{- cta -}}
+      </a>
+    {%- endif -%}
+  </div>
+</div>

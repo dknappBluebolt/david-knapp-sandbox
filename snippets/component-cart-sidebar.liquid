@@ -1,0 +1,73 @@
+{% comment %} 
+  Accepts:
+    - compareDiscounts: {Number}
+    - cover_error: {Boolean}
+{% endcomment %}
+<div class="cart-sidebar {{ class }}">
+  <h3 class="h4 cart-sidebar__box bg-color--black color--white round--top py-20 m-0">
+    {{- 'customer.account.order.title' | t -}}
+  </h3>
+  <div class="cart-sidebar__box round--bottom bg-color--gray-off-white gap-20 py-30 d--flex flex-column" style="border: 1px solid var(--color-border);border-top: 0;">
+    <div class="order-summary d--flex justify--space-between gap-10">
+      <div class="h5 m-0">{{ 'customer.account.order.subtotal' | t }}</div>
+      <div class="cart-sidebar__value text--right">{{ cart.original_total_price | plus: compareDiscounts | money }}</div>
+    </div>
+    {%- if cart.total_discounts > 0 or compareDiscounts > 0 -%}
+      <div>
+        <div class="d--flex justify--space-between align-items--center gap-10">
+          <div class="h5 m-0">
+            {{ 'customer.account.order.discount' | t }}
+          </div>
+          <div class="cart-sidebar__value text--right text--no-wrap">&ndash;{{ cart.total_discount | plus: compareDiscounts | money }}</div>
+        </div>
+        <div class="d--flex text--normal color--gray-text text--center text--sm line-height-1 text--truncate">
+          {%- liquid if compareDiscounts > 0
+            echo 'templates.cart.headings.discount_price' | t
+            if cart.total_discounts > 0
+              echo ', '
+            endif
+          endif
+          if cart.total_discounts > 0
+            echo cart.discount_applications | map: 'title' | join: ', '
+          endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    <div class="d--flex justify--space-between gap-10">
+      <div class="h5 m-0">{{ 'customer.account.order.shipping' | t }}</div>
+      {%- if cart.requires_shipping  -%}
+        <div class="cart-sidebar__value text--right line-height-1">{{ 'templates.cart.calculated_in_checkout' | t }}</div>
+      {%- else -%}
+        <div class="cart-sidebar__value text--right line-height-1">FREE*</div>
+      {%- endif -%}
+    </div>
+    <div class="d--flex justify--space-between gap-10">
+      <div class="h5 m-0">{{ 'customer.account.order.taxes' | t }}</div>
+      <div class="cart-sidebar__value text--right line-height-1">{{ 'templates.cart.calculated_in_checkout' | t }}</div>
+    </div>
+    <div class="d--flex justify--space-between gap-10">
+      <div class="h5 m-0">{{ 'customer.account.order.total' | t }}</div>
+      <div class="cart-sidebar__value text--right text--bold">{{ cart.total_price | money }}</div>
+    </div>
+    <button
+      type="submit"
+      id="checkout"
+      class="cart__checkout-button button button--primary button--lg"
+      name="checkout"
+      {% if cart == empty or disableCheckout or cover_error %}
+        disabled
+      {% endif %}
+      form="cart"
+    >
+      {{- 'templates.cart.checkout' | t -}}
+    </button>
+    {%- if customer.tags contains 'CSR' -%}
+      <a class="button button--primary cs-save-trigger" data-location="" data-redirect="https://admin.shopify.com/store/973929-be/draft_orders?selectedView=all" data-clear-cart="false" href="/a/saved-carts/new">
+        {{- 'templates.cart.convert_to_draft_order' | t -}}
+      </a>
+    {%- endif -%}
+    {%- if localization.country.iso_code == 'US' -%}
+      <p class="affirm-as-low-as" data-amount="{{cart.total_price}}" data-affirm-color="blue" data-learnmore-show="true" data-page-type="product"></p>
+    {%- endif -%}
+  </div>
+</div>

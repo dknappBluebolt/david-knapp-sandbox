@@ -1,0 +1,149 @@
+{%- comment -%}
+  Accepts:
+    - line_item: {Object} line_item shopify object
+    - line_items: {Object} list of line items
+    - is_mobile: {Boolean} determines if the section is rendered mobile or desktop
+    - line_index: {Int} (Optional) line index for adjusting quantity
+    - reorder: {Boolean} determines if the item is coming from an order or the cart
+{%- endcomment -%}
+
+{%- assign total_line_price = line_item.final_line_price -%}
+{%- assign sub_items_html = '' -%}
+{%- assign variant_ids = line_item.variant.id -%}
+{%- assign quantities = line_item.quantity -%}
+{%- assign properties = '' -%}
+{%- assign keys = line_item.key -%}
+{%- assign upgrade_product_ids = '' -%}
+
+{%- assign upgrade_ids = line_item.product.metafields.custom.cover_configurator.value.upgrades.value | map: 'id' | join: ';' -%}
+{%- assign accessory_ids = line_item.product.metafields.custom.cover_configurator.value.accessories.value | map: 'id' | join: ';' -%}
+
+{%- assign upgrade_product_ids = upgrade_ids | append: ';' | append: accessory_ids -%}
+{%- for property in line_item.properties -%}
+  {%- assign properties = properties | append: ';' | append: property.first | append: ':' | append: property.last -%}
+{%- endfor -%}
+{%- assign properties = properties | remove_first: ';' -%}
+{%- for sub_line_item in line_items -%}
+  {%- if sub_line_item.properties._cover_id == line_item.properties._cover_id and sub_line_item.key != line_item.key %}
+    {%- assign total_line_price = total_line_price | plus: sub_line_item.final_line_price -%}
+    {%- assign variant_ids = variant_ids | append: '|' | append: sub_line_item.variant_id -%}
+    {%- assign quantities = quantities | append: '|' | append: sub_line_item.quantity -%}
+    {%- assign keys = keys | append: '|' | append: sub_line_item.key -%}
+    {%- assign properties = properties | append: '|' -%}
+    {%- assign current_properties = '' -%}
+    {%- for property in line_item.properties -%}
+      {%- if property.first == '_cover_id' -%}
+        {%- assign current_properties = current_properties
+          | append: ';'
+          | append: property.first
+          | append: ':'
+          | append: property.last
+        -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- assign current_properties = current_properties | remove_first: ';' -%}
+    {%- assign properties = properties | append: current_properties -%}
+    {%- capture sub_items_html -%}
+        {{ sub_items_html }}
+        <div class="d--flex justify--space-between align-items--start">
+            <div>
+              {%- liquid 
+                if sub_line_item.product.title == "Skirt Length"
+                  echo sub_line_item.product.title
+                  echo ' - '
+                elsif upgrade_product_ids contains sub_line_item.product.id and sub_line_item.product.has_only_default_variant != true
+                  echo sub_line_item.product.title
+                  echo ' - '
+              endif
+              if sub_line_item.product.has_only_default_variant
+                echo sub_line_item.product.title
+              else
+                echo sub_line_item.variant.title
+              endif -%}
+              
+              {% if sub_line_item.selling_plan_allocation.selling_plan.name %}<small class="d--block color--gray-text">{{ sub_line_item.selling_plan_allocation.selling_plan.name }}</small>{% endif %}
+            </div>
+            <div class="d--flex">
+              <div class="text--bold d--flex sm--flex-column text--right">
+                {%- if sub_line_item.final_line_price == 0 -%}
+                  {{- 'templates.cart.free' | t -}}
+                {%- else -%}
+                  {%- if sub_line_item.original_line_price != sub_line_item.final_line_price -%}
+                    <s class="md-up--pr-10">{{ sub_line_item.original_line_price | money }}</s>
+                  {%- elsif sub_line_item.variant.compare_at_price > sub_line_item.final_price -%}
+                    <s class="md-up--pr-10">
+                      {{- sub_line_item.variant.compare_at_price | times: sub_line_item.quantity | money -}}
+                    </s>
+                  {%- endif -%}
+                  {{ sub_line_item.final_line_price | money -}}
+                {%- endif -%}
+              </div>
+            {%- if line_index != blank -%}
+              {%- assign tub_info = '' -%}
+              {% if line_item.properties._brand != blank %}
+                {%- assign tub_info = tub_info | append: '&brand=' | append: line_item.properties._brand -%}
+              {% endif %}
+              {% if line_item.properties._model != blank %}
+                {%- assign tub_info = tub_info | append: '&model=' | append: line_item.properties._model -%}
+              {% endif %}
+              <div class="d--flex">
+                <div>
+                  <a href="{{ line_item.product.url }}?step={{ sub_line_item.properties._step }}&key={{ line_item.key }}{{ tub_info }}" class="link text--sm ml-24">
+                    {{- 'templates.cart.edit' | t -}}
+                  </a>
+                </div>
+              </div>
+            {%- endif -%}
+            </div>
+        </div>
+    {%- endcapture -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if is_mobile -%}
+  {%- render 'component-line-item-mobile',
+    line_item: line_item,
+    class: 'pt-30',
+    final_price: total_line_price,
+    variant_ids: variant_ids,
+    quantities: quantities,
+    properties: properties,
+    adjustable_quantity: false,
+    line_index: line_index,
+    keys: keys,
+    reorder: reorder
+  -%}
+  <div class="pb-30 border-b--gray">
+    <fieldset class="round">
+      <legend class="text--bold px-20">Additional Details</legend>
+      <div class="p-20 d--flex flex-column gap-20">
+        {{- sub_items_html -}}
+      </div>
+    </fieldset>
+  </div>
+{%- else -%}
+  {%- render 'component-line-item-desktop',
+    line_item: line_item,
+    class: 'order-item-bundle',
+    final_price: total_line_price,
+    variant_ids: variant_ids,
+    quantities: quantities,
+    properties: properties,
+    adjustable_quantity: false,
+    line_index: line_index,
+    keys: keys,
+    reorder: reorder
+  -%}
+  <tr class="order-item-bundle-section" role="row">
+    <td></td>
+    <td colspan="3">
+      <fieldset class="mt-16 round py-2 px-10">
+        <legend class="text--bold px-20">Additional Details</legend>
+        <div class="p-20 d--flex flex-column gap-20">
+          {{- sub_items_html -}}
+        </div>
+      </fieldset>
+    </td>
+    <td colspan="1"></td>
+  </tr>
+{%- endif -%}
