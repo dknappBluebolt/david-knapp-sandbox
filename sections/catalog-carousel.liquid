@@ -1,0 +1,144 @@
+{% stylesheet %}
+  .catalog-carousel-section {
+    row-gap: var(--gap);
+  }
+{% endstylesheet %}
+
+{% liquid
+  assign collection = section.settings.collection
+
+  if collection == blank
+    assign products = null
+    if request.design_mode
+      for i in (1..section.settings.max_products)
+        assign products = products | append: ', '
+      endfor
+      assign products = products | split: ','
+    endif
+  else
+    assign products = collection.products
+  endif
+
+  capture styles
+    echo '--column-count: ' | append: section.settings.columns | append: ';'
+    echo '--column-count-mobile: ' | append: section.settings.mobile_columns | append: ';'
+    echo '--resource-list-column-gap-desktop: ' | append: section.settings.columns_gap | append: 'px;'
+    echo '--resource-list-row-gap-desktop: ' | append: section.settings.rows_gap | append: 'px;'
+    echo '--resource-list-columns: repeat(' | append: section.settings.columns | append: ', 1fr);'
+    echo '--resource-list-columns-mobile: repeat(' | append: section.settings.mobile_columns | append: ', 1fr);'
+  endcapture
+%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="
+    section
+    section--{{ section.settings.section_width }}
+    color-{{ section.settings.color_scheme }}
+    catalog-carousel-section
+    spacing-style
+    gap-style
+    {% if collection == blank and request.design_mode == false %}
+      in-onboarding-state
+    {% endif %}
+  "
+  style="
+    {% render 'spacing-style', settings: section.settings %}
+    {% render 'gap-style', value: section.settings.gap %}
+    {{ styles }}
+  "
+>
+  <div class="catalog-carousel-section__content">
+    {% content_for 'blocks' %}
+  </div>
+
+  {% capture list_items %}
+    {% for product in products limit: section.settings.max_products %}
+      <div class="resource-list__item">
+        {% content_for 'block', type: 'product-card', id: 'static-product-card', closest.product: product %}
+      </div>
+      {% unless forloop.last %}
+        <!--@list/split-->
+      {% endunless %}
+    {% endfor %}
+  {% endcapture %}
+
+  {% assign slides = list_items | strip | split: '<!--@list/split-->' %}
+
+  <div
+    class="resource-list resource-list--{{ section.id }} resource-list__carousel force-full-width"
+  >
+    {% render 'resource-list-carousel',
+      ref: 'catalogCarousel',
+      slides: slides,
+      slide_count: slides.size,
+      settings: section.settings,
+      section_id: section.id
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.catalog_carousel",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" },
+    { "type": "text" },
+    { "type": "icon" },
+    { "type": "image" },
+    { "type": "button" },
+    { "type": "video" },
+    { "type": "group" },
+    { "type": "spacer" },
+    { "type": "_divider" }
+  ],
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "t:settings.collection" },
+    { "type": "range", "id": "max_products", "label": "t:settings.product_count", "min": 1, "max": 20, "step": 1, "default": 8 },
+    { "type": "range", "id": "columns", "label": "t:settings.columns", "min": 1, "max": 8, "step": 1, "default": 4 },
+    { "type": "select", "id": "mobile_columns", "label": "t:settings.mobile_columns", "options": [
+        { "value": "1", "label": "t:options.one_number" },
+        { "value": "2", "label": "t:options.two_number" }
+      ], "default": "2" },
+    { "type": "range", "id": "columns_gap", "label": "t:settings.horizontal_gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "rows_gap", "label": "t:settings.vertical_gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 16 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "select", "id": "section_width", "label": "t:settings.width", "options": [
+        { "value": "page-width", "label": "t:options.page" },
+        { "value": "full-width", "label": "t:options.full" }
+      ], "default": "page-width" },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 8 },
+    { "type": "select", "id": "icons_style", "label": "t:settings.icon", "options": [
+        { "value": "arrow", "label": "t:options.arrows" },
+        { "value": "chevron", "label": "t:options.chevrons" },
+        { "value": "arrows_large", "label": "t:options.arrows_large" },
+        { "value": "chevron_large", "label": "t:options.chevron_large" },
+        { "value": "none", "label": "t:options.none" }
+      ], "default": "arrow" },
+    { "type": "select", "id": "icons_shape", "label": "t:settings.icon_background", "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "circle", "label": "t:options.circle" },
+        { "value": "square", "label": "t:options.square" }
+      ], "default": "none", "visible_if": "{{ section.settings.icons_style != 'none' }}" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.catalog_carousel",
+      "category": "t:categories.products",
+      "blocks": {
+        "static-product-card": {
+          "type": "product-card",
+          "static": true,
+          "settings": {
+            "product": "{{ closest.product }}"
+          }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}
